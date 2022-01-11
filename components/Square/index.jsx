@@ -30,7 +30,8 @@ export function Square({ position, children }) {
       className={styles.square}
     >
       {children}
-      {isOver && (<div>hi</div>)}
+      <div className={styles.positionOverlay}>{position}</div>
+      {isOver && (<div className={styles.isOver} />)}
     </div>
   )
 }

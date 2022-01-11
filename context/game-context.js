@@ -1,7 +1,15 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
 
 export const GameContext = React.createContext({
-  currentBoardPositions: '................................................................',
+  currentBoardPositions: [
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',
+    '','','','','','','','',],
   setCurrentBoardPositions: () => {},
   boardWidth: 560,
   screenSize: 560,
@@ -14,7 +22,16 @@ export const GameProvider = ({
   children
 }) => {
   // position stored and displayed on board
-  const [currentBoardPositions, setCurrentBoardPositions] = useState('.s.........a.........h...i..........s........h......n....u......');
+  const [currentBoardPositions, setCurrentBoardPositions] = useState([
+    '','s','','','','','','',
+    '','','','','','a','','',
+    '','','','h','','','','',
+    '','','','','i','','','',
+    '','','','','','','','s',
+    '','','h','','','','','',
+    '','','','','','n','','',
+    'u','','','','','','',''
+  ]);
 
   // screen size
   const [screenSize, setScreenSize] = useState(undefined);
@@ -35,11 +52,11 @@ export const GameProvider = ({
       return;
     }
 
-    const newBoardPositions = currentBoardPositions.split('');
-    newBoardPositions[sourceSq] = '.';
+    const newBoardPositions = [ ...currentBoardPositions ];
+    newBoardPositions[sourceSq] = '';
     newBoardPositions[targetSq] = piece;
 
-    setCurrentBoardPositions(newBoardPositions.join(''));
+    setCurrentBoardPositions(newBoardPositions);
   }
 
   return (

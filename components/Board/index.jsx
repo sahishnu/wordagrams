@@ -6,7 +6,7 @@ import { useGameContext } from '../../context/game-context';
 import styles from './styles.module.scss';
 
 function renderSquare(i, contents) {
-  const tile = contents === '.' ? null : <Tile position={i} contents={contents} />
+  const tile = contents === '' ? null : <Tile position={i} contents={contents} />
 
   return (
     <div key={i} style={{ width: '12.5%', height: '12.5%' }}>
@@ -21,7 +21,7 @@ export function Board() {
     boardWidth
   } = useGameContext();
 
-  const positions = currentBoardPositions.split('');
+  const positions = [ ...currentBoardPositions ];
   const squares = []
   for (let i = 0; i < 64; i++) {
     squares.push(renderSquare(i, positions[i]))
