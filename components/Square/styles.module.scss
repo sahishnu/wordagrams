@@ -22,9 +22,12 @@
   width: 100%;
   z-index: 1;
   background-color: #819DAD;
-  border-radius: 16px;
+  border-radius: 8px;
   opacity: 0.5;
   pointer-events: none;
+  @media (min-width: 512px) {
+    border-radius: 16px;
+  }
 }
 
 .positionOverlay {

@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.scss'
 
+import {isMobile} from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -25,7 +26,7 @@ export default function MainGame() {
       <main className={styles.main}>
         <div></div>
         <div className={styles.game}>
-          <DndProvider backend={HTML5Backend}>
+          <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
               <h1>Cool Name Here</h1>
               {/* <CustomDragLayer /> */}
                 <Board />
