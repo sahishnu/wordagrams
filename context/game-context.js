@@ -30,8 +30,13 @@ export const GameProvider = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // handles dropping a piece in a new spot
+  // has to be an empty spot, different than the old spot
   const handleChangePosition = (sourceSq, targetSq, piece) => {
     if (sourceSq === targetSq) {
+      return;
+    }
+    if (currentBoardPositions[targetSq].letter !== '') {
       return;
     }
 

@@ -23,18 +23,19 @@ export default function MainGame() {
       </Head>
 
       <main className={styles.main}>
-        {/* <h1>Solitairagrams</h1> */}
-        <h1>Cool Name Here</h1>
-        <DndProvider backend={HTML5Backend}>
-            {/* <CustomDragLayer /> */}
-              <Board />
-              {/* <Rack /> */}
-        </DndProvider>
-
+        <div></div>
+        <div className={styles.game}>
+          <DndProvider backend={HTML5Backend}>
+              <h1>Cool Name Here</h1>
+              {/* <CustomDragLayer /> */}
+                <Board />
+                {/* <Rack /> */}
+          </DndProvider>
+        </div>
+        <footer className={styles.footer}>
+          Made with {Emojis[Math.floor(Math.random() * (Emojis.length - 1))]} by Sahishnu
+        </footer>
       </main>
-      <footer className={styles.footer}>
-        Made with {Emojis[Math.floor(Math.random() * (Emojis.length - 1))]} by Sahishnu
-      </footer>
 
     </div>
   )

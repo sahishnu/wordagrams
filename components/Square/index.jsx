@@ -9,16 +9,12 @@ import styles from './styles.module.scss';
 export function Square({ position, children }) {
   const {
     handleChangePosition,
-    currentPositions,
-    setCurrentPositions
   } = useGameContext();
 
   const [{ isOver }, drop] = useDrop(
     () => ({
       accept: ItemTypes.TILE,
-      drop: (tile) => {
-        handleChangePosition(tile.position, position, tile.contents)
-      },
+      drop: (tile) => handleChangePosition(tile.position, position, tile.contents),
       collect: (monitor) => ({
         isOver: !!monitor.isOver()
       })
