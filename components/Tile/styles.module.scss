@@ -1,16 +1,29 @@
 .tile {
-  color: #FFEFEF;
-  background-color: #92A9BD;
+  color: #1F295B;
+  background-color: #CE82C7;
   width: 100%;
   height: 100%;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-family: 'Rubik', sans-serif;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 8px;
   cursor: pointer;
-  text-transform: uppercase;
-  font-weight: bold;
-  transform: scale(1.1);
+  transform: scale(1.05);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+  // transition: all 0.4s ease-in-out;
+  // &:hover {
+  //   transform: scale(1.05);
+  // }
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.25), inset 0px 3px 0px rgba(0, 0, 0, 0.25);
+
+  @media (min-width: 512px) {
+  border-radius: 16px;
+  font-size: 32px;
+  }
 }
 
 .tileDragging {

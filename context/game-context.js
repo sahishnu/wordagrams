@@ -1,18 +1,11 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
+import { BOARD_SIZE } from '../constants';
+import { initBoard } from '../utils';
 
 export const GameContext = React.createContext({
-  currentBoardPositions: [
-    '','','','','','','','',
-    '','','','','','','','',
-    '','','','','','','','',
-    '','','','','','','','',
-    '','','','','','','','',
-    '','','','','','','','',
-    '','','','','','','','',
-    '','','','','','','','',],
+  currentBoardPositions: initBoard(BOARD_SIZE),
   setCurrentBoardPositions: () => {},
   boardWidth: 560,
-  screenSize: 560,
   handleChangePosition: () => {},
 });
 
@@ -22,17 +15,7 @@ export const GameProvider = ({
   children
 }) => {
   // position stored and displayed on board
-  const [currentBoardPositions, setCurrentBoardPositions] = useState([
-    '','s','','','','','','',
-    '','','','','','a','','',
-    '','','','h','','','','',
-    '','','','','i','','','',
-    '','','','','','','','s',
-    '','','h','','','','','',
-    '','','','','','n','','',
-    'u','','','','','','',''
-  ]);
-
+  const [currentBoardPositions, setCurrentBoardPositions] = useState(initBoard(BOARD_SIZE));
   // screen size
   const [screenSize, setScreenSize] = useState(undefined);
 
@@ -47,14 +30,14 @@ export const GameProvider = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  function handleChangePosition(sourceSq, targetSq, piece) {
+  const handleChangePosition = (sourceSq, targetSq, piece) => {
     if (sourceSq === targetSq) {
       return;
     }
 
-    const newBoardPositions = [ ...currentBoardPositions ];
-    newBoardPositions[sourceSq] = '';
-    newBoardPositions[targetSq] = piece;
+    const newBoardPositions = Object.assign({}, currentBoardPositions);
+    newBoardPositions[sourceSq].letter = '';
+    newBoardPositions[targetSq].letter = piece;
 
     setCurrentBoardPositions(newBoardPositions);
   }
@@ -64,8 +47,7 @@ export const GameProvider = ({
       value={{
         currentBoardPositions,
         setCurrentBoardPositions,
-        screenSize,
-        handleChangePosition
+        handleChangePosition,
       }}
     >
       {children}

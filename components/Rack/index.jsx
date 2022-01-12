@@ -2,34 +2,33 @@ import React from 'react'
 import { Square } from '../Square'
 import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
-import { BOARD_SIZE } from '../../constants';
+
 import styles from './styles.module.scss';
 
 function renderSquare(i, contents) {
   const tile = contents === '' ? null : <Tile position={i} contents={contents} />
 
   return (
-    <Square key={i} position={i}>{tile}</Square>
-  );
-  return (
-    <div key={i} style={{ width: `${100/BOARD_SIZE}%`, height: `${100/BOARD_SIZE}%`}}>
+    <div key={i} style={{ width: '12.5%', height: '100%' }}>
       <Square position={i}>{tile}</Square>
     </div>
   );
 }
 
-export function Board() {
+export function Rack() {
   const {
-    currentBoardPositions,
+    currentRackPositions,
+    boardWidth
   } = useGameContext();
 
+  const positions = [ ...currentRackPositions ];
   const squares = []
-  for (let i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
-    squares.push(renderSquare(i, currentBoardPositions[i].letter))
+  for (let i = 0; i < 8; i++) {
+    squares.push(renderSquare(i, positions[i]))
   }
   return (
     <div
-      className={styles.board}
+      className={styles.rack}
     >
       {squares}
     </div>

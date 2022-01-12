@@ -9,6 +9,8 @@ import styles from './styles.module.scss';
 export function Square({ position, children }) {
   const {
     handleChangePosition,
+    currentPositions,
+    setCurrentPositions
   } = useGameContext();
 
   const [{ isOver }, drop] = useDrop(
@@ -30,7 +32,7 @@ export function Square({ position, children }) {
       className={styles.square}
     >
       {children}
-      <div className={styles.positionOverlay}>{position}</div>
+      {/* <div className={styles.positionOverlay}>{position}</div> */}
       {isOver && (<div className={styles.isOver} />)}
     </div>
   )
