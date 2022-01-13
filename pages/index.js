@@ -9,6 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import { Board } from '../components/Board';
 import { Rack } from '../components/Rack';
+import { Instructions } from '../components/Instructions';
 import { Emojis } from '../constants';
 
 export default function MainGame() {
@@ -26,12 +27,13 @@ export default function MainGame() {
       <main className={styles.main}>
         <div></div>
         <div className={styles.game}>
+          <h1>Cool Name Here</h1>
           <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-              <h1>Cool Name Here</h1>
               {/* <CustomDragLayer /> */}
                 <Board />
                 {/* <Rack /> */}
           </DndProvider>
+          <Instructions />
         </div>
         <footer className={styles.footer}>
           Made with {Emojis[Math.floor(Math.random() * (Emojis.length - 1))]} by Sahishnu

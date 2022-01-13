@@ -14,7 +14,7 @@
   
   & h1 {
     font-size: 20px;
-    color: white;
+    color: #D2D2D7;
     text-transform: uppercase;
     font-family: 'Rubik', sans-serif;
     letter-spacing: 6px;
@@ -29,6 +29,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 350px;
+  @media (min-width: 512px) {
+    max-width: 500px;
+  }
 }
 
 .footer {

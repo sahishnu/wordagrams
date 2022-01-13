@@ -7,7 +7,7 @@ export const initBoard = (size) => {
   console.log(puzzle);
 
   const totalSquares = size * size;
-  const lastRowStart = size * (size - 1);
+  const puzzleTileStarts = totalSquares - puzzleLetters.length;
 
   const board = {};
 
@@ -17,10 +17,10 @@ export const initBoard = (size) => {
       letter: '',
     };
 
-    if (i >= lastRowStart && i < (lastRowStart + puzzleLetters.length)) {
+    if (i >= puzzleTileStarts) {
       board[i] = {
         id: i,
-        letter: puzzleLetters[i - lastRowStart],
+        letter: puzzleLetters[i - puzzleTileStarts],
       };
     }
   }
