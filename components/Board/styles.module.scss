@@ -4,26 +4,28 @@
   position: relative;
   width: 350px;
   height: 350px;
-  border: 10px solid #5A6583;
-  border-radius: 16px;
+  border: 5px solid #5A6583;
+  border-radius: 8px;
   background-color: #5A6583;
 
   display: grid;
   grid-template-columns: repeat($max-columns, 1fr);
   grid-template-rows: repeat($max-columns, 1fr);
-  row-gap: 4px;
-  column-gap: 4px;
+  row-gap: 2px;
+  column-gap: 2px;
 
   @media (min-width: 512px) {
     width: 500px;
     height: 500px;
+    border: 10px solid #5A6583;
+    border-radius: 16px;
   }
-  @media (min-width: 768px) {
-    width: 500px;
-    height: 500px;
-  }
-  @media (min-width: 1024px) {
-    width: 500px;
-    height: 500px;
-  }
+  // @media (min-width: 768px) {
+  //   width: 500px;
+  //   height: 500px;
+  // }
+  // @media (min-width: 1024px) {
+  //   width: 500px;
+  //   height: 500px;
+  // }
 }
