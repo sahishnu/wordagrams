@@ -32,7 +32,9 @@ function generateAPuzzle() {
   while (startingLength < 3) {
     startingLength = Math.floor(randn_bm() * 10) + 1;
   }
-  const possibleWords = dictionary.filter(word => word.length === startingLength);
+  const possibleWords = dictionary.filter(word => (
+    word.length === startingLength
+  ));
   const startingWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
 
   const secondWord = findSecondaryWord(startingWord, dictionary);
@@ -122,15 +124,19 @@ function createPuzzleFile() {
 
   for (let i = 0; i < runs; i++) {
     const puzzle = generateAPuzzle();
-    puzzles.push(`${puzzle.letters}, ${puzzle.words[0]}, ${puzzle.words[1]}`);
+    puzzles.push(puzzle);
+    console.log(`${puzzle.letters}, ${puzzle.words.join(', ')}`);
   }
 
-  const puzzleFile = fs.createWriteStream('puzzles.txt');
-  puzzles.forEach(puzzle => {
-    puzzleFile.write(puzzle + '\n');
-    console.log(puzzle);
-  })
-  puzzleFile.end();
+  const jsonContent = JSON.stringify(puzzles);
+
+  fs.writeFile("puzzles.json", jsonContent, 'utf8', function (err) {
+    if (err) {
+        console.log("An error occured while writing JSON Object to File.");
+        return console.log(err);
+    }
+  });
+
   console.log(`\n${puzzles.length} puzzles created!`);
 }
 

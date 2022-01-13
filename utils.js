@@ -1,9 +1,13 @@
 import { ALL_DICE } from "./constants";
+import PUZZLES from './puzzles.json';
 
 export const initBoard = (size) => {
+  const puzzle = getRandomPuzzleFromFile();
+  const puzzleLetters = puzzle.letters;
+  console.log(puzzle);
+
   const totalSquares = size * size;
-  const middleRowBottomLimit = Math.floor(size / 2) * size;
-  const middleRowTopLimit = middleRowBottomLimit + size - 1;
+  const lastRowStart = size * (size - 1);
 
   const board = {};
 
@@ -13,11 +17,18 @@ export const initBoard = (size) => {
       letter: '',
     };
 
-    if (i >= middleRowBottomLimit && i <= middleRowTopLimit) {
-      const randomNumberLessThan6 = Math.floor(Math.random() * 6);
-      board[i].letter = ALL_DICE[i % size][randomNumberLessThan6];
+    if (i >= lastRowStart && i < (lastRowStart + puzzleLetters.length)) {
+      board[i] = {
+        id: i,
+        letter: puzzleLetters[i - lastRowStart],
+      };
     }
   }
 
   return board;
+}
+
+const getRandomPuzzleFromFile = () => {
+  const puzzle = PUZZLES[Math.floor(Math.random() * PUZZLES.length)];
+  return puzzle;
 }
