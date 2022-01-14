@@ -10,7 +10,7 @@ export function Tile({ contents, position, solved }) {
     () => ({
       type: ItemTypes.TILE,
       item: { contents, position },
-      canDrag: !solved,
+      canDrag: monitor => !solved,
       collect: monitor => ({
         isDragging: !!monitor.isDragging(),
       }),

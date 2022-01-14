@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 export function Square({ position, children }) {
   const {
     handleChangePosition,
+    solvedPuzzle
   } = useGameContext();
 
   const [{ isOver }, drop] = useDrop(
@@ -16,7 +17,8 @@ export function Square({ position, children }) {
       drop: (tile) => handleChangePosition(tile.position, position, tile.contents),
       collect: (monitor) => ({
         isOver: !!monitor.isOver()
-      })
+      }),
+      canDrop: monitor => !solvedPuzzle,
     }),
     // [square, currentPosition, onPieceDrop, waitingForAnimation, lastPieceColour]
   );
