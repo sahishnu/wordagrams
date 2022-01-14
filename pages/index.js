@@ -10,7 +10,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Board } from '../components/Board';
 import { Rack } from '../components/Rack';
 import { Instructions } from '../components/Instructions';
-import { Button } from '../components/Button';
 import { Emojis } from '../constants';
 
 export default function MainGame() {
@@ -34,7 +33,6 @@ export default function MainGame() {
                 <Board />
                 {/* <Rack /> */}
           </DndProvider>
-          <Button />
           <Instructions />
         </div>
         <footer className={styles.footer}>

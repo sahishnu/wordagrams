@@ -3,35 +3,30 @@ import { Square } from '../Square'
 import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
 import { BOARD_SIZE } from '../../constants';
+import { Button } from '../Button';
+import { SolvedLabel } from '../SolvedLabel';
 import styles from './styles.module.scss';
-
-function renderSquare(i, contents) {
-  const tile = contents === '' ? null : <Tile position={i} contents={contents} />
-
-  return (
-    <Square key={i} position={i}>{tile}</Square>
-  );
-  return (
-    <div key={i} style={{ width: `${100/BOARD_SIZE}%`, height: `${100/BOARD_SIZE}%`}}>
-      <Square position={i}>{tile}</Square>
-    </div>
-  );
-}
 
 export function Board() {
   const {
     currentBoardPositions,
+    checkBoardSolution,
+    solvedPuzzle
   } = useGameContext();
 
-  const squares = []
-  for (let i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
-    squares.push(renderSquare(i, currentBoardPositions[i].letter))
-  }
   return (
-    <div
-      className={styles.board}
-    >
-      {squares}
-    </div>
+    <>
+      <div
+        className={styles.board}
+      >
+        {Object.keys(currentBoardPositions).map(key => {
+          const sq = currentBoardPositions[key];
+          const tile = sq.letter === '' ? null : <Tile solved={solvedPuzzle} position={key} contents={sq.letter} />
+
+          return <Square key={key} position={key}>{tile}</Square>;
+        })}
+      </div>
+      {solvedPuzzle ? <SolvedLabel /> : <Button onClick={checkBoardSolution} />}
+    </>
   )
 }

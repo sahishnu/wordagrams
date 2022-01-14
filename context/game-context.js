@@ -1,12 +1,14 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import { BOARD_SIZE } from '../constants';
-import { initBoard } from '../utils';
+import { initBoard, isLetterAbove, isLetterLeft, validateBoard, checkBoard } from '../utils';
 
 export const GameContext = React.createContext({
   currentBoardPositions: initBoard(BOARD_SIZE),
   setCurrentBoardPositions: () => {},
   boardWidth: 560,
   handleChangePosition: () => {},
+  checkBoardSolution: () => {},
+  solvedPuzzle: false
 });
 
 export const useGameContext = () => useContext(GameContext);
@@ -16,19 +18,15 @@ export const GameProvider = ({
 }) => {
   // position stored and displayed on board
   const [currentBoardPositions, setCurrentBoardPositions] = useState(initBoard(BOARD_SIZE));
-  // screen size
-  const [screenSize, setScreenSize] = useState(undefined);
+  const [solvedPuzzle, setSolvedPuzzle] = useState(false);
 
-  // init screen size listener to update screen size on any window size changes
-  useEffect(() => {
-    function handleResize() {
-      setScreenSize({ width: window.innerWidth, height: window.innerHeight });
-    }
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  /**
+   * Go through all tiles and check if words are valid
+   */
+  const checkBoardSolution = () => {
+    const solved = checkBoard(currentBoardPositions)
+    setSolvedPuzzle(solved);
+  };
 
   // handles dropping a piece in a new spot
   // has to be an empty spot, different than the old spot
@@ -53,6 +51,8 @@ export const GameProvider = ({
         currentBoardPositions,
         setCurrentBoardPositions,
         handleChangePosition,
+        checkBoardSolution,
+        solvedPuzzle
       }}
     >
       {children}

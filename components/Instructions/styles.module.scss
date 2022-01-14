@@ -1,5 +1,18 @@
 .instructions {
   color: #D2D2D7;
-  opacity: 0.5;
   line-height: 24px;
+
+  ol li {
+    counter-increment: muffins;
+  }
+
+  ol li:before {
+    content: counter(muffins) ". ";
+    color: #CE82C7;
+  }
+
+  ol {
+    list-style: none;
+    counter-reset: muffins;
+  }
 }

@@ -8,6 +8,7 @@ export const ItemTypes = {
 export const Emojis = ['❤️', '💩', '😄', '🎮', '💪🏽', '🎼', '🤪', '💙', '🧡', '💜', '🖤', '🤌🏽', '🙏🏽'];
 
 export const BOARD_SIZE = COLS;
+export const MIN_WORD_LENGTH = 3;
 
 // object with all letters
 export const Letters = {
