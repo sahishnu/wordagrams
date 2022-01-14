@@ -132,7 +132,7 @@ const getLetterSequencesOnBoard = (boardPositions) => {
       if (letter !== '') {
         // if there is a buffer, see if letter is adjacent
         if (buffer.length) {
-          const lastletterInBuffer = buffer.at(-1).pos;
+          const lastletterInBuffer = buffer[buffer.length - 1].pos;
           const isAdjacent = isLetterLeft(lastletterInBuffer, col, BOARD_SIZE)
 
           if (isAdjacent) {
@@ -178,7 +178,7 @@ const getLetterSequencesOnBoard = (boardPositions) => {
       if (letter !== '') {
         // if there is a buffer, see if letter is adjacent
         if (buffer.length) {
-          const lastletterInBuffer = buffer.at(-1).pos;
+          const lastletterInBuffer = buffer[buffer.length - 1].pos;
           const isAdjacent = isLetterLeft(lastletterInBuffer, col, BOARD_SIZE)
 
           if (isAdjacent) {
