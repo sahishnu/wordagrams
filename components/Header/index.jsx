@@ -32,6 +32,7 @@ export const Header = () => {
         className={styles.modal}
         overlayClassName={styles.overlay}
         contentLabel="Instructions"
+        onRequestClose={() => setModalIsOpen(false)}
         ariaHideApp={false}
       >
         <div className={styles.modalHeader}>

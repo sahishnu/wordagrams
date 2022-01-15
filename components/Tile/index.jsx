@@ -20,7 +20,7 @@ export function Tile({ contents, position, solved }) {
 
   return (
     <div
-      ref={drag}
+      ref={solved ? null : drag}
       data-letter={contents}
       className={
         classnames({
