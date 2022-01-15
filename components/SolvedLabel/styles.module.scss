@@ -1,3 +1,8 @@
 .solved {
   color: #0AB377;
+  font-size: 20px;
+
+  @media (min-width: 512px) {
+    font-size: 24px;
+  }
 }
