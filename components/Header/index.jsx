@@ -16,7 +16,7 @@ export const Header = () => {
     }
   }, [])
   return (
-    <div className={styles.header}>
+    <header className={styles.header}>
       <h1>
         Cool Name Here
       </h1>
@@ -50,6 +50,6 @@ export const Header = () => {
         </div>
         <div className={styles.modalFooter}>Good luck, have fun! 🤓</div>
       </Modal>
-    </div>
+    </header>
   )
 }
