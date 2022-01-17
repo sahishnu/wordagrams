@@ -1,6 +1,7 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { BOARD_SIZE } from '../constants';
-import { initBoard, isLetterAbove, isLetterLeft, validateBoard, checkBoard } from '../utils';
+import { initBoard, checkBoard } from '../utils';
 
 export const GameContext = React.createContext({
   currentBoardPositions: initBoard(BOARD_SIZE),
@@ -14,10 +15,11 @@ export const GameContext = React.createContext({
 export const useGameContext = () => useContext(GameContext);
 
 export const GameProvider = ({
-  children
+  children,
+  puzzle
 }) => {
   // position stored and displayed on board
-  const [currentBoardPositions, setCurrentBoardPositions] = useState(initBoard(BOARD_SIZE));
+  const [currentBoardPositions, setCurrentBoardPositions] = useState(initBoard(BOARD_SIZE, puzzle));
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
 
   /**
@@ -25,6 +27,9 @@ export const GameProvider = ({
    */
   const checkBoardSolution = () => {
     const solved = checkBoard(currentBoardPositions)
+    if (!solved) {
+      toast('Errors on board');
+    }
     setSolvedPuzzle(solved);
   };
 

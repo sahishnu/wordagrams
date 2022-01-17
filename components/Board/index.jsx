@@ -2,7 +2,6 @@ import React from 'react'
 import { Square } from '../Square'
 import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
-import { BOARD_SIZE } from '../../constants';
 import { Button } from '../Button';
 import { SolvedLabel } from '../SolvedLabel';
 import styles from './styles.module.scss';
@@ -26,7 +25,13 @@ export function Board() {
           return <Square key={key} position={key}>{tile}</Square>;
         })}
       </div>
-      {solvedPuzzle ? <SolvedLabel /> : <Button onClick={checkBoardSolution} />}
+      {solvedPuzzle ? <SolvedLabel /> : (
+        <div className={styles.buttonRow}>
+          {/* <Button label={<img src='/undo.svg' />} color='orange' onClick={checkBoardSolution} /> */}
+          <Button label={<img src='/shuffle.svg' />} color='orange' onClick={checkBoardSolution} />
+          <Button label="Submit" onClick={checkBoardSolution} />
+        </div>
+      )}
     </>
   )
 }

@@ -3,12 +3,9 @@ import PUZZLES from './puzzles.json';
 import { BOARD_SIZE, MIN_WORD_LENGTH } from "./constants";
 import DICTIONARY from './dictionary.json';
 
-export const initBoard = (size) => {
-  const puzzle = getRandomPuzzleFromFile();
-  const puzzleLetters = puzzle.letters;
+export const initBoard = (size, puzzleObj) => {
 
   const totalSquares = size * size;
-  const puzzleTileStarts = totalSquares - puzzleLetters.length;
 
   const board = {};
 
@@ -17,8 +14,14 @@ export const initBoard = (size) => {
       id: i,
       letter: '',
     };
+  }
 
-    if (i >= puzzleTileStarts) {
+  if (puzzleObj?.letters) {
+    console.log(puzzleObj);
+    const puzzleLetters = puzzleObj.letters;
+    const puzzleTileStarts = totalSquares - puzzleLetters.length;
+
+    for (let i = puzzleTileStarts; i < totalSquares; i++) {
       board[i] = {
         id: i,
         letter: puzzleLetters[i - puzzleTileStarts],

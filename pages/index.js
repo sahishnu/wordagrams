@@ -5,12 +5,15 @@ import {isMobile} from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { Toaster } from 'react-hot-toast';
 
+import { GameProvider } from '../context/game-context';
 import { Board } from '../components/Board';
 import { Header } from '../components/Header';
 import { Emojis } from '../constants';
 
-export default function MainGame() {
+export default function MainGame({ puzzle, emoji }) {
+
   return (
     <div className={styles.container}>
       <Head>
@@ -22,21 +25,44 @@ export default function MainGame() {
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet" />
       </Head>
 
-      <main className={styles.main}>
-        <div></div>
-        <div className={styles.game}>
-          <Header />
-          <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-              {/* <CustomDragLayer /> */}
-                <Board />
-                {/* <Rack /> */}
-          </DndProvider>
-        </div>
-        <footer className={styles.footer}>
-          Made with {Emojis[Math.floor(Math.random() * (Emojis.length - 1))]} by Sahishnu
-        </footer>
-      </main>
+      <GameProvider puzzle={puzzle}>
+        <main className={styles.main}>
+          <div></div>
+          <div className={styles.game}>
+            <Header />
+            <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+                {/* <CustomDragLayer /> */}
+                  <Board puzzle={puzzle} />
+            </DndProvider>
+          </div>
+          <Toaster
+            containerClassName={styles.toasterContainer}
+            toastOptions={{
+              duraction: 10000,
+              position: 'bottom-center',
+              className: styles.toaster,
+            }}
+          />
+          <footer className={styles.footer}>
+            Made with {emoji} by Sahishnu
+          </footer>
+        </main>
+      </GameProvider>
 
     </div>
   )
+}
+
+// This function gets called at build time
+export async function getStaticProps() {
+  // Call an external API endpoint to get posts
+  const res = await fetch(`${process.env.BASE_URL}/api/puzzle`);
+  const puzzle = await res.json()
+
+  return {
+    props: {
+      puzzle,
+      emoji: Emojis[Math.floor(Math.random() * (Emojis.length - 1))]
+    },
+  }
 }
