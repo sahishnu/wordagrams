@@ -12,7 +12,6 @@ import styles from './styles.module.scss';
 export function Board() {
   const {
     currentBoardPositions,
-    setCurrentBoardPositions,
     checkBoardSolution,
     solvedPuzzle,
     puzzle
@@ -30,7 +29,7 @@ export function Board() {
           return <Square key={key} position={key}>{tile}</Square>;
         })}
       </div>
-      {solvedPuzzle ? <SolvedLabel /> : (
+      {solvedPuzzle ? <SolvedLabel board={currentBoardPositions} /> : (
         <div className={styles.buttonRow}>
           {/* <Button label={<img src='/undo.svg' />} color='orange' onClick={checkBoardSolution} /> */}
           {/* <Button label={<img src='/shuffle.svg' />} color='orange' onClick={handleShuffle} /> */}

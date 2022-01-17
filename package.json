@@ -12,6 +12,7 @@
     "dayjs": "^1.10.7",
     "next": "12.0.7",
     "react": "17.0.2",
+    "react-countdown": "^2.3.2",
     "react-device-detect": "^2.1.2",
     "react-dnd": "^14.0.5",
     "react-dnd-html5-backend": "^14.1.0",
