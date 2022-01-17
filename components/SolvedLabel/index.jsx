@@ -6,6 +6,17 @@ import styles from './styles.module.scss';
 dayjs.extend(require('dayjs/plugin/relativeTime'));
 
 export function SolvedLabel() {
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Word Puzzle Name Here',
+        url: window.location.href,
+        text: "I've just solved this puzzle! Can you do it?"
+      })
+    } else {
+
+    }
+  }
   return (
     <div className={styles.solvedContainer}>
       <h2 className={styles.solvedMessage}>
@@ -17,7 +28,7 @@ export function SolvedLabel() {
           <div className={styles.countdown}>{dayjs().to(getTomorrow())}</div>
         </div>
         <div>
-          <Button color='green' label={<img src='/share.svg' />} />
+          <Button color='green' onClick={handleShare} label={<img src='/share.svg' />} />
         </div>
       </div>
     </div>
