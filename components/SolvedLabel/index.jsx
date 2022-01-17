@@ -16,6 +16,9 @@ export function SolvedLabel({ board }) {
 
     }
   }
+  // gets time till midnight
+  const today = dayjs();
+  const midnight = today.add(1, 'day').startOf('day');
   return (
     <div className={styles.solvedContainer}>
       <h2 className={styles.solvedMessage}>
@@ -25,7 +28,7 @@ export function SolvedLabel({ board }) {
         <div className={styles.nextPuzzleSection}>
           Next puzzle
           <CountDown
-            date={getTomorrow()}
+            date={midnight}
             zeroPadTime={2}
             renderer={props => (<div
               className={styles.countdown}>
@@ -40,9 +43,3 @@ export function SolvedLabel({ board }) {
     </div>
   )
 };
-
-const getTomorrow = () => {
-  const today = dayjs();
-
-  return today.add(1, 'day').format('YYYY-MM-DD');
-}

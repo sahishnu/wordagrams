@@ -114,7 +114,7 @@ const testAreAllWordsInDictionary = (words) => {
   words.forEach(word => {
     const inDictionary = DICTIONARY.includes(word)
     if (word.length >= MIN_WORD_LENGTH && !inDictionary) {
-      errors.push(`'${word.toUpperCase()}' is not in the dictionary!\n`);
+      errors.push(`${word.toUpperCase()} is not in the dictionary!\n`);
     }
   });
   if (errors.length >= 3) {
@@ -128,7 +128,7 @@ const testAreAllWordsValidLength = (words) => {
   words.forEach(word => {
     const validLength = word.length >= MIN_WORD_LENGTH;
     if (!validLength) {
-      errors.push(`'${word.toUpperCase()}' is not long enough!\n`);
+      errors.push(`${word.toUpperCase()} is not long enough!\n`);
     }
   });
   if (errors.length >= 3) {
