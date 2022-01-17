@@ -4,9 +4,10 @@ import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Toaster } from 'react-hot-toast';
+import dayjs from 'dayjs';
 
 import styles from '../styles/Home.module.scss'
-import puzzles from '../puzzles.json';
+import PUZZLES from '../puzzles.json';
 import { GameProvider } from '../context/game-context';
 import { Board } from '../components/Board';
 import { Header } from '../components/Header';
@@ -82,7 +83,7 @@ export default function MainGame({ puzzle, emoji }) {
 
 // This function gets called at each page request
 export async function getServerSideProps() {
-  const puzzle = puzzles[0];
+  const puzzle = PUZZLES.find(p => p.date === dayjs().format('YYYY-MM-DD')) || PUZZLES[0];
 
   return {
     props: {
