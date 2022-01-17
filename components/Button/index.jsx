@@ -11,6 +11,7 @@ export function Button({ onClick, label, color = 'purple' }) {
         {
           [styles.purpleEdge]: color === 'purple',
           [styles.orangeEdge]: color === 'orange',
+          [styles.greenEdge]: color === 'green',
         }
       )}></span>
       <span className={classnames(
@@ -18,6 +19,7 @@ export function Button({ onClick, label, color = 'purple' }) {
         {
           [styles.purpleFront]: color === 'purple',
           [styles.orangeFront]: color === 'orange',
+          [styles.greenFront]: color === 'green',
         }
       )}>
         {label}

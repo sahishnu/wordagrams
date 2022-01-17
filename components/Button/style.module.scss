@@ -69,6 +69,15 @@
     #630907 100%
   );
 }
+.greenEdge {
+  background: linear-gradient(
+    to left,
+    #1C5E46 0%,
+    #17845D 8%,
+    #17845D 92%,
+    #1C5E46 100%
+  );
+}
 .edge {
   position: absolute;
   top: 0;
@@ -85,10 +94,14 @@
   color: white;
   background: #D84E4B;
 }
+.greenFront {
+  color: white;
+  background: #0AB377;
+}
 .front {
   display: block;
   position: relative;
-  padding: 10px 18px;
+  padding: 10px 24px;
   border-radius: 12px;
   font-size: 16px;
   img {

@@ -44,7 +44,7 @@ export default function MainGame({ puzzle, emoji }) {
             }}
           />
           <footer className={styles.footer}>
-            Made with {emoji} by Sahishnu
+            Made with <span>{emoji}</span> by Sahishnu
           </footer>
         </main>
       </GameProvider>

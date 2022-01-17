@@ -1,8 +1,31 @@
-.solved {
+.solvedContainer {
+
+}
+
+.solvedMessage {
   color: #0AB377;
   font-size: 20px;
 
   @media (min-width: 512px) {
     font-size: 24px;
   }
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nextPuzzleSection {
+  color: white;
+  // text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown {
+  text-transform: uppercase;
+  margin-top: 4px;
 }
