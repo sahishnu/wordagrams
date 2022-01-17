@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { shuffleBoard } from '../../utils';
-import { BOARD_SIZE } from '../../constants';
 import { Square } from '../Square'
 import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';

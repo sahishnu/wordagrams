@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import styles from './style.module.scss';
+import styles from './styles.module.scss';
 
 export function Button({ onClick, label, color = 'purple' }) {
 

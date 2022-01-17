@@ -4,7 +4,6 @@ import CountDown from 'react-countdown';
 import { Button } from '../Button';
 import styles from './styles.module.scss';
 import { getShareString } from '../../utils';
-dayjs.extend(require('dayjs/plugin/relativeTime'));
 
 export function SolvedLabel({ board }) {
   const handleShare = () => {

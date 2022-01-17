@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-import styles from './styles.module.scss';
 
-import { Instructions } from '../Instructions';
+import styles from './styles.module.scss';
+import { InstructionsModal } from '../InstructionsModal';
 
 export const Header = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -27,29 +26,10 @@ export const Header = () => {
         onClick={() => setModalIsOpen(true)}
         src='/help-circle.svg'
       />
-      <Modal
+      <InstructionsModal
         isOpen={modalIsOpen}
-        className={styles.modal}
-        overlayClassName={styles.overlay}
-        contentLabel="Instructions"
-        onRequestClose={() => setModalIsOpen(false)}
-        ariaHideApp={false}
-      >
-        <div className={styles.modalHeader}>
-          How to play
-        </div>
-        <img
-          alt='Close instructions modal'
-          className={styles.close}
-          onClick={() => setModalIsOpen(false)}
-          src='/x.svg'
-        />
-        <Instructions />
-        <div className={styles.imageContainer}>
-          <img className={styles.instructionImage} src='/instructions.png' alt='screenshot' />
-        </div>
-        <div className={styles.modalFooter}>Good luck, have fun! 🤓</div>
-      </Modal>
+        onClose={() => setModalIsOpen(false)}
+      />
     </header>
   )
 }
