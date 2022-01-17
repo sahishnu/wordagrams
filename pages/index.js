@@ -27,7 +27,7 @@ export default function MainGame({ puzzle, emoji }) {
 
         {/* Open Graph */}
         <meta property="og:url" content={META_CONTENT.url} key="ogurl" />
-        <meta property="og:image" content='/preview.png'} key="ogimage" />
+        <meta property="og:image" content='/preview.png' key="ogimage" />
         <meta property="og:site_name" content={META_CONTENT.title} key="ogsitename" />
         <meta property="og:title" content={META_CONTENT.title} key="ogtitle" />
         <meta property="og:description" content={META_CONTENT.description} key="ogdesc" />
