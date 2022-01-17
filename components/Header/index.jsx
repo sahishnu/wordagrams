@@ -10,8 +10,8 @@ export const Header = () => {
     // if this is users first time on page, show instructions
     const isFirstTime = localStorage.getItem('firstTime') === null;
     if (isFirstTime) {
-      localStorage.setItem('firstTime', 'false');
       setModalIsOpen(true);
+      localStorage.setItem('firstTime', 'false');
     }
   }, [])
   return (

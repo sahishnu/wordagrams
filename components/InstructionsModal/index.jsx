@@ -5,14 +5,6 @@ import styles from './styles.module.scss';
 
 export const InstructionsModal = ({ isOpen, onClose }) => {
 
-  useEffect(() => {
-    // if this is users first time on page, show instructions
-    const isFirstTime = localStorage.getItem('firstTime') === null;
-    if (isFirstTime) {
-      localStorage.setItem('firstTime', 'false');
-    }
-  }, [])
-
   return (
       <Modal
         isOpen={isOpen}
