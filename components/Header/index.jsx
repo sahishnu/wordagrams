@@ -17,7 +17,7 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <h1>
-        Cool Name Here
+        Word Cross
       </h1>
       {/*  */}
       <img

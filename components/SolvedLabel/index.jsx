@@ -9,7 +9,7 @@ export function SolvedLabel({ board }) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: 'Word Puzzle Name Here',
+        title: 'Word Cross',
         text: getShareString(board)
       })
     } else {

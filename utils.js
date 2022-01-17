@@ -316,7 +316,7 @@ export const getSmallestBoundingBox = (board) => {
 
 export const getShareString = (board) => {
   const boundingBox = getSmallestBoundingBox(board);
-  const shareString = '[Game Name Here]\n\n';
+  const shareString = 'Word Cross\n\n';
 
   for (let row = boundingBox.top; row <= boundingBox.bottom; row++) {
     const leftLim = row * BOARD_SIZE + boundingBox.left;
