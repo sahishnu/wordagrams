@@ -5,7 +5,11 @@ export const ItemTypes = {
   TILE: 'tile'
 }
 
-export const Emojis = ['❤️', '💩', '😄', '🎮', '💪🏽', '🎼', '🤪', '💙', '🧡', '💜', '🖤', '🤌🏽', '🙏🏽'];
+export const Emojis = [
+  '🤪', '💩', '😄', '🎮', '💪🏽',
+  '🫀', '❤️', '💙', '🧡', '💜',
+  '🎼', '🤌🏽', '🙏🏽' ,'🤖', '🦾'
+];
 
 export const BOARD_SIZE = COLS;
 export const MIN_WORD_LENGTH = 3;
