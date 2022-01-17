@@ -325,7 +325,9 @@ export const getShareString = (board) => {
       const letter = board[col].letter;
       shareString += letter === '' ? '⬛' : '🟩';
     }
-    shareString += '\n';
+    if (row < boundingBox.bottom) {
+      shareString += '\n';
+    }
   }
 
   return shareString;
