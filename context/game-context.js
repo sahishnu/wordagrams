@@ -29,22 +29,21 @@ export const GameProvider = ({
     setSolvedPuzzle(game.solved);
   }, [])
 
-  // useEffect(() => {
-  //   if (currentBoardPositions && Object.keys(currentBoardPositions).length > 0) {
-  //     checkBoardSolution();
-  //   }
-  // }, [currentBoardPositions])
-
   /**
    * Go through all tiles and check if words are valid
    */
   const checkBoardSolution = () => {
-    const solved = checkBoard(currentBoardPositions)
-    // if (!solved) {
-    //   toast('Errors on board');
-    // }
-    saveGameState(currentBoardPositions, puzzle, solved);
-    setSolvedPuzzle(solved);
+    const check = checkBoard(currentBoardPositions)
+
+    if (check.pass) {
+      toast.success("Congratulations! You solved the puzzle!");
+      saveGameState(currentBoardPositions, puzzle, check.pass);
+      setSolvedPuzzle(true);
+    } else {
+      toast.error(
+        check.errors
+      )
+    }
   };
 
   // handles dropping a piece in a new spot

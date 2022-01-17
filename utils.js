@@ -93,39 +93,57 @@ export const checkBoard = (boardPositions) => {
   const stringWords = convertObjectsToWords(words);
 
   // console.log({flags});
-  const pass = testAreAllWordsValidLength(stringWords) &&
-    testAreAllWordsInDictionary(stringWords) &&
-    testAreNoUnusedTiles(flags);
+  const validLengthErrors = testAreAllWordsValidLength(stringWords);
+  const inDictionaryErrors = testAreAllWordsInDictionary(stringWords);
+  const unusedTilesErrors = testAreNoUnusedTiles(flags);
 
-  return pass;
+  const check = {
+    pass: validLengthErrors.length === 0 && inDictionaryErrors.length === 0 && unusedTilesErrors.length === 0,
+    errors: [
+      ...validLengthErrors,
+      ...inDictionaryErrors,
+      unusedTilesErrors
+    ]
+  };
+
+  return check;
 }
 
 const testAreAllWordsInDictionary = (words) => {
-  return words.every(word => {
+  const errors = [];
+  words.forEach(word => {
     const inDictionary = DICTIONARY.includes(word)
-    if (!inDictionary) {
-      console.log(`${word} is not in the dictionary!`);
+    if (word.length >= MIN_WORD_LENGTH && !inDictionary) {
+      errors.push(`'${word.toUpperCase()}' is not in the dictionary!\n`);
     }
-    return inDictionary;
   });
+  if (errors.length >= 3) {
+    errors = ['Many words are not in the dictionary!\n'];
+  }
+  return errors;
 }
 
 const testAreAllWordsValidLength = (words) => {
-  return words.every(word => {
+  const errors = [];
+  words.forEach(word => {
     const validLength = word.length >= MIN_WORD_LENGTH;
     if (!validLength) {
-      console.log(`${word} is not long enough!`);
+      errors.push(`'${word.toUpperCase()}' is not long enough!\n`);
     }
-    return validLength;
   });
+  if (errors.length >= 3) {
+    errors = ['Many words are not long enough!\n'];
+  }
+  return errors;
 }
 
 const testAreNoUnusedTiles = (flags) => {
+  const errors = [];
   const unusedTiles = flags.length === 0;
   if (!unusedTiles) {
-    console.log(`There are unused tiles!`);
+    errors.push('There are unused tiles!');
   }
-  return flags.length === 0;
+  return errors;
 }
 
 // converts an array of letter objects to a single string
