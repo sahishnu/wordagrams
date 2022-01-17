@@ -24,7 +24,7 @@ export default function MainGame({ puzzle, emoji }) {
         {/* Twitter */}
         <meta name="twitter:card" content="summary" key="twcard" />
         <meta name="twitter:creator" content={META_CONTENT.twitter.handle} key="twhandle" />
-
+        <meta name="twitter:image" content="/preview.png" />
         {/* Open Graph */}
         <meta property="og:url" content={META_CONTENT.url} key="ogurl" />
         <meta property="og:image" content='/preview.png' key="ogimage" />

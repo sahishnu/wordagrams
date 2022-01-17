@@ -29,14 +29,20 @@ export const GameProvider = ({
     setSolvedPuzzle(game.solved);
   }, [])
 
+  // useEffect(() => {
+  //   if (currentBoardPositions && Object.keys(currentBoardPositions).length > 0) {
+  //     checkBoardSolution();
+  //   }
+  // }, [currentBoardPositions])
+
   /**
    * Go through all tiles and check if words are valid
    */
   const checkBoardSolution = () => {
     const solved = checkBoard(currentBoardPositions)
-    if (!solved) {
-      toast('Errors on board');
-    }
+    // if (!solved) {
+    //   toast('Errors on board');
+    // }
     saveGameState(currentBoardPositions, puzzle, solved);
     setSolvedPuzzle(solved);
   };
