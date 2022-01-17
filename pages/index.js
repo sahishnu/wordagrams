@@ -55,7 +55,7 @@ export default function MainGame({ puzzle, emoji }) {
 
 // This function gets called at each page request
 export async function getServerSideProps() {
-  const puzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
+  const puzzle = puzzles[0];
 
   return {
     props: {

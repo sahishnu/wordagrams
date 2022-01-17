@@ -1,10 +1,11 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BOARD_SIZE } from '../constants';
-import { initBoard, checkBoard } from '../utils';
+import { initGame, checkBoard } from '../utils';
+import { saveGameState } from '../storedGameState';
 
 export const GameContext = React.createContext({
-  currentBoardPositions: initBoard(BOARD_SIZE),
+  currentBoardPositions: {},
   setCurrentBoardPositions: () => {},
   boardWidth: 560,
   handleChangePosition: () => {},
@@ -19,8 +20,14 @@ export const GameProvider = ({
   puzzle
 }) => {
   // position stored and displayed on board
-  const [currentBoardPositions, setCurrentBoardPositions] = useState(initBoard(BOARD_SIZE, puzzle));
+  const [currentBoardPositions, setCurrentBoardPositions] = useState({});
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
+
+  useEffect(() => {
+    const game = initGame(BOARD_SIZE, puzzle);
+    setCurrentBoardPositions(game.board);
+    setSolvedPuzzle(game.solved);
+  }, [])
 
   /**
    * Go through all tiles and check if words are valid
@@ -30,6 +37,7 @@ export const GameProvider = ({
     if (!solved) {
       toast('Errors on board');
     }
+    saveGameState(currentBoardPositions, puzzle, solved);
     setSolvedPuzzle(solved);
   };
 
@@ -47,6 +55,7 @@ export const GameProvider = ({
     newBoardPositions[sourceSq].letter = '';
     newBoardPositions[targetSq].letter = piece;
 
+    saveGameState(newBoardPositions, puzzle, solvedPuzzle);
     setCurrentBoardPositions(newBoardPositions);
   }
 
@@ -57,7 +66,8 @@ export const GameProvider = ({
         setCurrentBoardPositions,
         handleChangePosition,
         checkBoardSolution,
-        solvedPuzzle
+        solvedPuzzle,
+        puzzle
       }}
     >
       {children}

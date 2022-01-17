@@ -1,4 +1,7 @@
 import React from 'react'
+
+import { shuffleBoard } from '../../utils';
+import { BOARD_SIZE } from '../../constants';
 import { Square } from '../Square'
 import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
@@ -9,8 +12,10 @@ import styles from './styles.module.scss';
 export function Board() {
   const {
     currentBoardPositions,
+    setCurrentBoardPositions,
     checkBoardSolution,
-    solvedPuzzle
+    solvedPuzzle,
+    puzzle
   } = useGameContext();
 
   return (
@@ -28,7 +33,7 @@ export function Board() {
       {solvedPuzzle ? <SolvedLabel /> : (
         <div className={styles.buttonRow}>
           {/* <Button label={<img src='/undo.svg' />} color='orange' onClick={checkBoardSolution} /> */}
-          <Button label={<img src='/shuffle.svg' />} color='orange' onClick={checkBoardSolution} />
+          {/* <Button label={<img src='/shuffle.svg' />} color='orange' onClick={handleShuffle} /> */}
           <Button label="Submit" onClick={checkBoardSolution} />
         </div>
       )}

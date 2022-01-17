@@ -1,13 +1,30 @@
-import { ALL_DICE } from "./constants";
-import PUZZLES from './puzzles.json';
 import { BOARD_SIZE, MIN_WORD_LENGTH } from "./constants";
 import DICTIONARY from './dictionary.json';
+import { getSavedGameState, saveGameState } from "./storedGameState";
 
-export const initBoard = (size, puzzleObj) => {
+export const initGame = (size, puzzleObj) => {
+  const game = {};
 
-  const totalSquares = size * size;
+  if (hasExistingGame(puzzleObj)) {
+    // initialize from saved state
+    game = initFromSavedState();
+  } else {
+    game = initFreshGame(size, puzzleObj);
+  }
 
+
+  return game;
+}
+
+const initFromSavedState = () => {
+  const savedGameState = getSavedGameState();
+
+  return savedGameState;
+}
+
+const initFreshGame = (size, puzzleObj) => {
   const board = {};
+  const totalSquares = size * size;
 
   for (let i = 0; i < (totalSquares); i++) {
     board[i] = {
@@ -17,7 +34,6 @@ export const initBoard = (size, puzzleObj) => {
   }
 
   if (puzzleObj?.letters) {
-    console.log(puzzleObj);
     const puzzleLetters = puzzleObj.letters;
     const puzzleTileStarts = totalSquares - puzzleLetters.length;
 
@@ -28,13 +44,24 @@ export const initBoard = (size, puzzleObj) => {
       };
     }
   }
-
-  return board;
+  saveGameState(board, puzzleObj, false);
+  return {
+    board,
+    puzzle: puzzleObj,
+    solved: false,
+  };
 }
 
-const getRandomPuzzleFromFile = () => {
-  const puzzle = PUZZLES[Math.floor(Math.random() * PUZZLES.length)];
-  return puzzle;
+const hasExistingGame = (puzzle) => {
+  if (typeof window !== "undefined") {
+    const savedGameState = getSavedGameState();
+
+    if (savedGameState?.puzzle?.letters === puzzle?.letters) {
+      return true;
+    }
+  } else {
+    return false;
+  }
 }
 
 // transpose a 2d array (really this is a mapped 1D array)
@@ -229,4 +256,18 @@ const getLetterSequencesOnBoard = (boardPositions) => {
   });
 
   return { words, flags };
+}
+
+const shuffleString = (value) => {
+  const letters = value.split('');
+  const len = letters.length;
+
+  for (let i = len - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let temp = letters[i];
+    letters[i] = letters[j];
+    letters[j] = temp;
+  }
+
+  return letters.join('');
 }
