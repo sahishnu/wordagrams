@@ -17,8 +17,7 @@
     "react-dnd-touch-backend": "^14.1.0",
     "react-dom": "17.0.2",
     "react-hot-toast": "^2.2.0",
-    "react-modal": "^3.14.4",
-    "swr": "^1.1.2"
+    "react-modal": "^3.14.4"
   },
   "devDependencies": {
     "eslint": "8.6.0",

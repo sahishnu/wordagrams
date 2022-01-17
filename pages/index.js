@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.scss'
 import {isMobile} from 'react-device-detect';
@@ -7,6 +6,7 @@ import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Toaster } from 'react-hot-toast';
 
+import puzzles from '../puzzles.json';
 import { GameProvider } from '../context/game-context';
 import { Board } from '../components/Board';
 import { Header } from '../components/Header';
@@ -53,11 +53,9 @@ export default function MainGame({ puzzle, emoji }) {
   )
 }
 
-// This function gets called at build time
-export async function getStaticProps() {
-  // Call an external API endpoint to get posts
-  const res = await fetch(`${process.env.BASE_URL}/api/puzzle`);
-  const puzzle = await res.json()
+// This function gets called at each page request
+export async function getServerSideProps() {
+  const puzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
 
   return {
     props: {
