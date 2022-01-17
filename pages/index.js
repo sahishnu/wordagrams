@@ -1,24 +1,37 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.scss'
 import {isMobile} from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Toaster } from 'react-hot-toast';
 
+import styles from '../styles/Home.module.scss'
 import puzzles from '../puzzles.json';
 import { GameProvider } from '../context/game-context';
 import { Board } from '../components/Board';
 import { Header } from '../components/Header';
-import { Emojis } from '../constants';
+import { Emojis, META_CONTENT } from '../constants';
 
 export default function MainGame({ puzzle, emoji }) {
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Anagram Solitaire</title>
-        <meta name="description" content="An anagram-solitaire game" />
+        <title>{META_CONTENT.title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={META_CONTENT.description} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary" key="twcard" />
+        <meta name="twitter:creator" content={META_CONTENT.twitter.handle} key="twhandle" />
+
+        {/* Open Graph */}
+        <meta property="og:url" content={META_CONTENT.url} key="ogurl" />
+        <meta property="og:image" content='/preview.png'} key="ogimage" />
+        <meta property="og:site_name" content={META_CONTENT.title} key="ogsitename" />
+        <meta property="og:title" content={META_CONTENT.title} key="ogtitle" />
+        <meta property="og:description" content={META_CONTENT.description} key="ogdesc" />
+
         <link rel="icon" href="/favicon.ico" />
         <link href="/favicon-32x32.png" rel="icon shortcut" sizes="3232" />
         <link href="/apple-touch-icon.png" rel="apple-touch-icon" />
