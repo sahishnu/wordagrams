@@ -3,7 +3,7 @@ import CountDown from 'react-countdown';
 
 import { Button } from '../Button';
 import styles from './styles.module.scss';
-import { getShareString } from '../../utils';
+import { getShareString } from '../../utils/share';
 
 export function SolvedLabel({ board }) {
   const handleShare = () => {

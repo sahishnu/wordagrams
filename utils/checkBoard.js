@@ -1,83 +1,5 @@
-import { BOARD_SIZE, MIN_WORD_LENGTH } from "./constants";
-import DICTIONARY from './dictionary.json';
-import { getSavedGameState, saveGameState } from "./storedGameState";
-
-export const initGame = (size, puzzleObj) => {
-  const game = {};
-
-  if (hasExistingGame(puzzleObj)) {
-    // initialize from saved state
-    game = initFromSavedState();
-  } else {
-    game = initFreshGame(size, puzzleObj);
-  }
-
-
-  return game;
-}
-
-const initFromSavedState = () => {
-  const savedGameState = getSavedGameState();
-
-  return savedGameState;
-}
-
-const initFreshGame = (size, puzzleObj) => {
-  const board = {};
-  const totalSquares = size * size;
-
-  for (let i = 0; i < (totalSquares); i++) {
-    board[i] = {
-      id: i,
-      letter: '',
-    };
-  }
-
-  if (puzzleObj?.letters) {
-    const puzzleLetters = puzzleObj.letters;
-    const puzzleTileStarts = totalSquares - puzzleLetters.length;
-
-    for (let i = puzzleTileStarts; i < totalSquares; i++) {
-      board[i] = {
-        id: i,
-        letter: puzzleLetters[i - puzzleTileStarts],
-      };
-    }
-  }
-  saveGameState(board, puzzleObj, false);
-  return {
-    board,
-    puzzle: puzzleObj,
-    solved: false,
-  };
-}
-
-const hasExistingGame = (puzzle) => {
-  if (typeof window !== "undefined") {
-    const savedGameState = getSavedGameState();
-
-    if (savedGameState?.puzzle?.letters === puzzle?.letters) {
-      return true;
-    }
-  } else {
-    return false;
-  }
-}
-
-// transpose a 2d array (really this is a mapped 1D array)
-const tranposeBoard = (board) => {
-  const newBoard = {};
-
-  Object.keys(board).forEach(key => {
-    const row = Math.floor(key / BOARD_SIZE);
-    const col = key % BOARD_SIZE;
-
-    const newKey = (col * BOARD_SIZE) + row;
-    newBoard[newKey] = board[key];
-  });
-
-  return newBoard;
-}
+import { BOARD_SIZE, MIN_WORD_LENGTH } from "../constants";
+import DICTIONARY from '../dictionary.json';
 
 /**
  * 1. find all word/letter sequences on board
@@ -90,6 +12,7 @@ const tranposeBoard = (board) => {
  */
 export const checkBoard = (boardPositions) => {
   const { words, flags } = getLetterSequencesOnBoard(boardPositions);
+  console.log(words, flags);
   const stringWords = convertObjectsToWords(words);
 
   // console.log({flags});
@@ -102,7 +25,7 @@ export const checkBoard = (boardPositions) => {
     errors: [
       ...validLengthErrors,
       ...inDictionaryErrors,
-      unusedTilesErrors
+      ...unusedTilesErrors
     ]
   };
 
@@ -114,11 +37,11 @@ const testAreAllWordsInDictionary = (words) => {
   words.forEach(word => {
     const inDictionary = DICTIONARY.includes(word)
     if (word.length >= MIN_WORD_LENGTH && !inDictionary) {
-      errors.push(`${word.toUpperCase()} is not in the dictionary!\n`);
+      errors.push(`${word.toUpperCase()} is not in the dictionary!`);
     }
   });
   if (errors.length >= 3) {
-    errors = ['Many words are not in the dictionary!\n'];
+    errors = ['Many words are not in the dictionary!'];
   }
   return errors;
 }
@@ -128,11 +51,11 @@ const testAreAllWordsValidLength = (words) => {
   words.forEach(word => {
     const validLength = word.length >= MIN_WORD_LENGTH;
     if (!validLength) {
-      errors.push(`${word.toUpperCase()} is not long enough!\n`);
+      errors.push(`${word.toUpperCase()} is not long enough!`);
     }
   });
   if (errors.length >= 3) {
-    errors = ['Many words are not long enough!\n'];
+    errors = ['Many words are not long enough!'];
   }
   return errors;
 }
@@ -155,13 +78,28 @@ const convertObjectsToWords = (wordArray) => {
   });
 }
 
+// transpose a 2d array (really this is a mapped 1D array)
+const tranposeBoard = (board) => {
+  const newBoard = {};
+
+  Object.keys(board).forEach(key => {
+    const row = Math.floor(key / BOARD_SIZE);
+    const col = key % BOARD_SIZE;
+
+    const newKey = (col * BOARD_SIZE) + row;
+    newBoard[newKey] = board[key];
+  });
+
+  return newBoard;
+}
+
 // checks if letter TOP is above letter BOTTOM
-export const isLetterAbove = (top, bottom, size) => {
+const isLetterAbove = (top, bottom, size) => {
   return (top - bottom) === -size;
 }
 
 // checks if letter LEFT is to the left of letter RIGHT
-export const isLetterLeft = (left, right, size) => {
+const isLetterLeft = (left, right, size) => {
   return (left - right) === -1;
 }
 
@@ -237,7 +175,9 @@ const getLetterSequencesOnBoard = (boardPositions) => {
 
             // if buffer only had 1 letter, need to double check its part of a word
             if (buffer.length === 1) {
-              doubleCheck.push(buffer[0])
+              if (!isLetterInDoubleCheck(buffer[0], doubleCheck)) {
+                doubleCheck.push(buffer[0])
+              }
             } else {
               words.push(buffer);
             }
@@ -252,7 +192,9 @@ const getLetterSequencesOnBoard = (boardPositions) => {
     // before moving to next row, check if there is a buffer
     // if buffer only had 1 letter, need to double check its part of a word
     if (buffer.length === 1) {
-      doubleCheck.push(buffer[0])
+      if (!isLetterInDoubleCheck(buffer[0], doubleCheck)) {
+        doubleCheck.push(buffer[0])
+      }
     } else if (buffer.length > 1) {
       words.push(buffer);
     }
@@ -276,60 +218,8 @@ const getLetterSequencesOnBoard = (boardPositions) => {
   return { words, flags };
 }
 
-const shuffleString = (value) => {
-  const letters = value.split('');
-  const len = letters.length;
-
-  for (let i = len - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    let temp = letters[i];
-    letters[i] = letters[j];
-    letters[j] = temp;
-  }
-
-  return letters.join('');
-}
-
-export const getSmallestBoundingBox = (board) => {
-  let smallestBox = {
-    top: BOARD_SIZE,
-    left: BOARD_SIZE,
-    bottom: 0,
-    right: 0
-  };
-
-  Object.keys(board).forEach(key => {
-    const { letter } = board[key];
-    const col = key % BOARD_SIZE;
-    const row = Math.floor(key / BOARD_SIZE);
-
-    if (letter != '') {
-      smallestBox.top = Math.min(smallestBox.top, row);
-      smallestBox.left = Math.min(smallestBox.left, col);
-      smallestBox.bottom = Math.max(smallestBox.bottom, row);
-      smallestBox.right = Math.max(smallestBox.right, col);
-    }
+const isLetterInDoubleCheck = (letter, doubleCheck) => {
+  return doubleCheck.some(letterToCheck => {
+    return letterToCheck.id === letter.id;
   });
-
-  return smallestBox;
-}
-
-export const getShareString = (board) => {
-  const boundingBox = getSmallestBoundingBox(board);
-  const shareString = 'Word Cross\n\n';
-
-  for (let row = boundingBox.top; row <= boundingBox.bottom; row++) {
-    const leftLim = row * BOARD_SIZE + boundingBox.left;
-    const rightLim = leftLim + (boundingBox.right - boundingBox.left);
-    for (let col = leftLim; col <= rightLim; col++) {
-      const letter = board[col].letter;
-      shareString += letter === '' ? '⬛' : '🟩';
-    }
-    if (row < boundingBox.bottom) {
-      shareString += '\n';
-    }
-  }
-
-  return shareString;
-
 }

@@ -15,12 +15,12 @@ export function Tile({ contents, position, solved }) {
         isDragging: !!monitor.isDragging(),
       }),
     }),
-    [contents, position]
+    [contents, position, solved]
   );
 
   return (
     <div
-      ref={solved ? null : drag}
+      ref={drag}
       data-letter={contents}
       className={
         classnames({

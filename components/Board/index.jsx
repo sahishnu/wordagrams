@@ -12,7 +12,7 @@ export function Board() {
     currentBoardPositions,
     checkBoardSolution,
     solvedPuzzle,
-    puzzle
+    resetGame
   } = useGameContext();
 
   return (
@@ -30,7 +30,7 @@ export function Board() {
       {solvedPuzzle ? <SolvedLabel board={currentBoardPositions} /> : (
         <div className={styles.buttonRow}>
           {/* <Button label={<img src='/undo.svg' />} color='orange' onClick={checkBoardSolution} /> */}
-          {/* <Button label={<img src='/shuffle.svg' />} color='orange' onClick={handleShuffle} /> */}
+          <Button label={<img src='/shuffle.svg' />} color='orange' onClick={resetGame} />
           <Button label="Submit" onClick={checkBoardSolution} />
         </div>
       )}

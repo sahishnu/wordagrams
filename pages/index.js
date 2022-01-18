@@ -66,9 +66,14 @@ export default function MainGame({ puzzle, emoji }) {
           <Toaster
             containerClassName={styles.toasterContainer}
             toastOptions={{
-              duraction: 10000,
+              // duration: 100000,
               position: 'bottom-center',
               className: styles.toaster,
+              style: {
+                background: '#141A32',
+                color: '#fff',
+                border: '2px solid #2F3763'
+              },
             }}
           />
           <footer className={styles.footer}>

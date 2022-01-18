@@ -1,15 +1,16 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BOARD_SIZE } from '../constants';
-import { initGame, checkBoard } from '../utils';
+import { checkBoard } from '../utils/checkBoard';
+import { initGame } from '../utils/initGame';
 import { saveGameState } from '../storedGameState';
 
 export const GameContext = React.createContext({
   currentBoardPositions: {},
   setCurrentBoardPositions: () => {},
-  boardWidth: 560,
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
+  resetGame: () => {},
   solvedPuzzle: false
 });
 
@@ -27,7 +28,12 @@ export const GameProvider = ({
     const game = initGame(BOARD_SIZE, puzzle);
     setCurrentBoardPositions(game.board);
     setSolvedPuzzle(game.solved);
-  }, [])
+  }, []);
+
+  const resetGame = () => {
+    const game = initGame(BOARD_SIZE, puzzle, true);
+    setCurrentBoardPositions(game.board);
+  };
 
   /**
    * Go through all tiles and check if words are valid
@@ -40,9 +46,8 @@ export const GameProvider = ({
       saveGameState(currentBoardPositions, puzzle, check.pass);
       setSolvedPuzzle(true);
     } else {
-      toast.error(
-        check.errors
-      )
+      console.log(check.errors);
+      check.errors.forEach(error => toast.error(error));
     }
   };
 
@@ -72,7 +77,8 @@ export const GameProvider = ({
         handleChangePosition,
         checkBoardSolution,
         solvedPuzzle,
-        puzzle
+        puzzle,
+        resetGame
       }}
     >
       {children}

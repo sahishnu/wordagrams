@@ -20,7 +20,7 @@ export function Square({ position, children }) {
       }),
       canDrop: monitor => !solvedPuzzle,
     }),
-    // [square, currentPosition, onPieceDrop, waitingForAnimation, lastPieceColour]
+    [position, children, handleChangePosition, solvedPuzzle]
   );
   return (
     <div
