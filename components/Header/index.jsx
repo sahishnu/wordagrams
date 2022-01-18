@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { META_CONTENT } from '../../constants';
 import styles from './styles.module.scss';
 import { InstructionsModal } from '../InstructionsModal';
 
@@ -17,7 +18,7 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <h1>
-        Word Cross
+        {META_CONTENT.title}
       </h1>
       {/*  */}
       <img

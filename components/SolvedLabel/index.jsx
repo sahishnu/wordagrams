@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import CountDown from 'react-countdown';
+import toast from 'react-hot-toast';
 
 import { Button } from '../Button';
 import styles from './styles.module.scss';
@@ -9,11 +10,15 @@ export function SolvedLabel({ board }) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: 'Word Cross',
         text: getShareString(board)
       })
     } else {
-
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(getShareString(board))
+        .then(() => {
+          toast.success('Copied to clipboard');
+        });
+      }
     }
   }
   // gets time till midnight

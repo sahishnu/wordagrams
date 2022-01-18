@@ -16,7 +16,7 @@ export const MIN_WORD_LENGTH = 3;
 
 export const META_CONTENT = {
   description: 'Arrange all your letters to form words on the board! A new puzzle is released every day.',
-  title: 'Word Cross',
+  title: 'Crossed Words',
   twitter: {
     handle: '@sahishnuk',
   },

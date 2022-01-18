@@ -1,4 +1,4 @@
-import { BOARD_SIZE } from "../constants";
+import { BOARD_SIZE, META_CONTENT } from "../constants";
 
 const getSmallestBoundingBox = (board) => {
   let smallestBox = {
@@ -26,7 +26,7 @@ const getSmallestBoundingBox = (board) => {
 
 export const getShareString = (board) => {
   const boundingBox = getSmallestBoundingBox(board);
-  const shareString = 'Word Cross\n\n';
+  const shareString = `${META_CONTENT.title}\n\n`;
 
   for (let row = boundingBox.top; row <= boundingBox.bottom; row++) {
     const leftLim = row * BOARD_SIZE + boundingBox.left;
