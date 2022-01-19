@@ -61,7 +61,6 @@ export default function MainGame({ puzzle, emoji, hits }) {
           <Header />
           <div className={styles.game}>
             <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-                {/* <CustomDragLayer /> */}
                   <Board puzzle={puzzle} />
             </DndProvider>
           </div>

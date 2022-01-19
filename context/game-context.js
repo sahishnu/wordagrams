@@ -4,10 +4,9 @@ import dayjs from 'dayjs';
 
 import { BOARD_SIZE } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
-import { initGame } from '../utils/initGame';
-import { saveGameState } from '../storedGameState';
+import { initGame, shuffleBoard } from '../utils/initGame';
+import { saveGameState } from '../utils/storedGameState';
 
-const fetcher = (...args) => fetch(...args).then(res => res.json())
 const todaySlug = dayjs().format('YYYY-MM-DD');
 
 export const GameContext = React.createContext({
@@ -32,7 +31,18 @@ export const GameProvider = ({
   const [solvedCount, setSolvedCount] = useState(0);
 
   useEffect(() => {
-    const game = initGame(BOARD_SIZE, puzzle);
+    initBoardOnMount();
+  }, []);
+
+  // initializes the game on mount
+  // if there is a saved game state, use that, otherwise get fresh game
+  // fetch the solved count to display
+  const initBoardOnMount = () => {
+    const game = initGame({
+      size: BOARD_SIZE,
+      puzzle,
+      todaySlug
+    });
     setCurrentBoardPositions(game.board);
     setSolvedPuzzle(game.solved);
     fetch(`api/solved-count?slug=${todaySlug}`)
@@ -41,16 +51,22 @@ export const GameProvider = ({
       if (data?.hits) {
         setSolvedCount(data.hits);
       }
-    })
-  }, []);
+    });
+  }
 
+  // shuffles tiles on board
   const resetGame = () => {
-    const game = initGame(BOARD_SIZE, puzzle, true);
+    const game = shuffleBoard(BOARD_SIZE, puzzle);
     setCurrentBoardPositions(game.board);
   };
 
   /**
    * Go through all tiles and check if words are valid
+   *
+   * if valid, update solved state in localStorage and useState
+   * hit api to increment solved count
+   *
+   * if invalid, display toasters with approprate message
    */
   const checkBoardSolution = async () => {
     const check = await checkBoard(currentBoardPositions)
@@ -68,7 +84,6 @@ export const GameProvider = ({
           }
         })
     } else {
-      console.log(check.errors);
       check.errors.forEach(error => toast.error(error));
     }
 

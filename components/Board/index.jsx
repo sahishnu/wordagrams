@@ -5,6 +5,7 @@ import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
 import { Button } from '../Button';
 import { SolvedLabel } from '../SolvedLabel';
+import { TimeTaken } from '../TimeTaken';
 import styles from './styles.module.scss';
 
 export function Board() {
@@ -17,6 +18,7 @@ export function Board() {
 
   return (
     <>
+      <TimeTaken solved={solvedPuzzle} />
       <div
         className={styles.board}
       >

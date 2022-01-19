@@ -1,14 +1,13 @@
 import { useGameContext } from '../../context/game-context';
 import styles from './styles.module.scss';
 
-const fetcher = (...args) => fetch(...args).then(res => res.json())
-
 export const SolveCounter = ({  }) => {
   const { solvedCount } = useGameContext();
 
+  const peopleHave = solvedCount === 1 ? 'person has' : 'people have';
   return (
     <div className={styles.text}>
-      So far, {solvedCount} people have solved this puzzle
+      So far, {solvedCount} {peopleHave} solved this puzzle
     </div>
   );
 }

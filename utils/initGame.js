@@ -1,16 +1,28 @@
-
+import dayjs from "dayjs";
 import { getSavedGameState, saveGameState } from "./storedGameState";
 
-export const initGame = (size, puzzleObj, forceReset) => {
+export const initGame = ({
+  size,
+  puzzle: puzzleObj,
+  todaySlug
+}) => {
   const game = {};
 
-  if (forceReset || !hasExistingGame(puzzleObj)) {
+  if (!hasExistingGame(puzzleObj)) {
+    console.info('No saved game state found, initializing fresh game!');
+    localStorage.setItem('timeTaken', 0);
     game = initFreshGame(size, puzzleObj);
   } else{
+    console.info('Saved game state found, loading it up!');
     game = initFromSavedState();
   }
 
   return game;
+}
+
+export const shuffleBoard = (size, puzzle) => {
+  console.info('Mixing up the board!');
+  return initFreshGame(size, puzzle);
 }
 
 const initFromSavedState = () => {
@@ -49,11 +61,18 @@ const initFreshGame = (size, puzzleObj) => {
   };
 }
 
+// we know game exists if
+// localStorage has a saved game state dated from today
 const hasExistingGame = (puzzle) => {
+  const todaySlug = dayjs().format('YYYY-MM-DD');
+
   if (typeof window !== "undefined") {
     const savedGameState = getSavedGameState();
 
-    if (savedGameState?.puzzle?.letters === puzzle?.letters) {
+    if (
+      (savedGameState?.puzzle?.letters === puzzle?.letters) &&
+      (savedGameState?.puzzle?.date === todaySlug)
+    ) {
       return true;
     }
   } else {

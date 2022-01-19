@@ -12,10 +12,8 @@ import DICTIONARY from '../dictionary.json';
  */
 export const checkBoard = async (boardPositions) => {
   const { words, flags } = getLetterSequencesOnBoard(boardPositions);
-  console.log(words, flags);
   const stringWords = convertObjectsToWords(words);
 
-  // console.log({flags});
   const validLengthErrors = testAreAllWordsValidLength(stringWords);
   const inDictionaryErrors = await testAreAllWordsInDictionary(stringWords);
   const unusedTilesErrors = testAreNoUnusedTiles(flags);
