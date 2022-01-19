@@ -10,14 +10,14 @@ import DICTIONARY from '../dictionary.json';
  * return true if all words are valid
  * return false if any words are invalid
  */
-export const checkBoard = (boardPositions) => {
+export const checkBoard = async (boardPositions) => {
   const { words, flags } = getLetterSequencesOnBoard(boardPositions);
   console.log(words, flags);
   const stringWords = convertObjectsToWords(words);
 
   // console.log({flags});
   const validLengthErrors = testAreAllWordsValidLength(stringWords);
-  const inDictionaryErrors = testAreAllWordsInDictionary(stringWords);
+  const inDictionaryErrors = await testAreAllWordsInDictionary(stringWords);
   const unusedTilesErrors = testAreNoUnusedTiles(flags);
 
   const check = {
@@ -32,8 +32,24 @@ export const checkBoard = (boardPositions) => {
   return check;
 }
 
-const testAreAllWordsInDictionary = (words) => {
+const testAreAllWordsInDictionary = async (words) => {
   const errors = [];
+  // const data = await Promise.all(
+  //   words.map(word => fetch(
+  //     `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`, {
+  //       headers: {
+  //         "content-type":"application/octet-stream",
+  //         "x-rapidapi-host":"wordsapiv1.p.rapidapi.com",
+  //         "x-rapidapi-key":`${process.env.NEXT_PUBLIC_WORDS_API_KEY}`,
+  //       }
+  //     }
+  //   ).then(response => response.json()))
+  // )
+
+  // console.log(data);
+
+
+
   words.forEach(word => {
     const inDictionary = DICTIONARY.includes(word)
     if (word.length >= MIN_WORD_LENGTH && !inDictionary) {

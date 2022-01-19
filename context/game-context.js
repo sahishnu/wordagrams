@@ -23,6 +23,7 @@ export const GameProvider = ({
   // position stored and displayed on board
   const [currentBoardPositions, setCurrentBoardPositions] = useState({});
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
+  const [checkingBoard, setCheckingBoard] = useState(false);
 
   useEffect(() => {
     const game = initGame(BOARD_SIZE, puzzle);
@@ -38,8 +39,8 @@ export const GameProvider = ({
   /**
    * Go through all tiles and check if words are valid
    */
-  const checkBoardSolution = () => {
-    const check = checkBoard(currentBoardPositions)
+  const checkBoardSolution = async () => {
+    const check = await checkBoard(currentBoardPositions)
 
     if (check.pass) {
       toast.success("Congratulations! You solved the puzzle!");

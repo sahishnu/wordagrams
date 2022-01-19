@@ -41,13 +41,25 @@
 
 .footer {
   display: flex;
-  padding-bottom: 2rem;
-  color: white;
+  padding-bottom: 1rem;
   justify-content: center;
   align-items: center;
-
+  flex-direction: column;
   span {
     margin: 0 12px 0 8px;
+  }
+  
+  .subtext {
+    color: #6E6D6E;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+
+    @media (min-width: 512px) {
+      font-size: 11px;
+    }
   }
 }
 

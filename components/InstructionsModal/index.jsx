@@ -36,7 +36,7 @@ export const InstructionsModal = ({ isOpen, onClose }) => {
         </div>
         <div className={styles.modalFooter}>
           <div className={styles.message}>Good luck, have fun! 🤓</div>
-          {/* <div className={styles.feedback}>Email me with feedback & bugs 🐛</div> */}
+          <div className={styles.feedback}>Made by Sahishnu</div>
         </div>
       </Modal>
   )

@@ -5,6 +5,7 @@ import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Toaster } from 'react-hot-toast';
 import dayjs from 'dayjs';
+import faunadb from 'faunadb';
 
 import styles from '../styles/Home.module.scss'
 import PUZZLES from '../puzzles.json';
@@ -13,7 +14,7 @@ import { Board } from '../components/Board';
 import { Header } from '../components/Header';
 import { Emojis, META_CONTENT } from '../constants';
 
-export default function MainGame({ puzzle, emoji }) {
+export default function MainGame({ puzzle, emoji, hits }) {
 
   return (
     <div className={styles.container}>
@@ -77,7 +78,8 @@ export default function MainGame({ puzzle, emoji }) {
             }}
           />
           <footer className={styles.footer}>
-            Made with <span>{emoji}</span> by Sahishnu
+            {/* Made with <span>{emoji}</span> by Sahishnu */}
+            <div className={styles.subtext}>So far, {hits} Crossed Words have been solved</div>
           </footer>
         </main>
       </GameProvider>
@@ -89,11 +91,65 @@ export default function MainGame({ puzzle, emoji }) {
 // This function gets called at each page request
 export async function getServerSideProps() {
   const puzzle = PUZZLES.find(p => p.date === dayjs().format('YYYY-MM-DD')) || PUZZLES[0];
+  let hits = 0;
+  try {
+
+    const q = faunadb.query;
+    const client = new faunadb.Client({
+      secret: process.env.NEXT_PUBLIC_FAUNA_SECRET_KEY,
+      domain: 'db.us.fauna.com',
+    });
+
+    const slug = 'home';
+
+    const doesDocExist = await client.query(
+      q.Exists(q.Match(q.Index('hits_by_slug'), slug))
+    );
+
+    if (!doesDocExist) {
+      await client.query(
+        q.Create(q.Collection('hits'), {
+          data: { slug: slug, hits: 0 },
+        })
+      );
+    }
+
+    // Fetch the document for-real
+    const document = await client.query(
+      q.Get(q.Match(q.Index('hits_by_slug'), slug))
+    );
+
+    await client.query(
+      q.Update(document.ref, {
+        data: {
+          hits: document.data.hits + 1,
+        },
+      })
+    );
+
+    hits = document.data.hits;
+  } catch (err) {
+    console.log(err);
+  }
+
+  // Fetch the document for-real
+  // const document = await client.query(
+  //   q.Get(q.Match(q.Index('hits_by_slug'), slug))
+  // );
+
+  // if (!doesDocExist) {
+  //   await client.query(
+  //     q.Create(q.Collection('hits'), {
+  //       data: { slug: slug, hits: 0 },
+  //     })
+  //   );
+  // }
 
   return {
     props: {
       puzzle,
-      emoji: Emojis[Math.floor(Math.random() * (Emojis.length - 1))]
+      emoji: Emojis[Math.floor(Math.random() * (Emojis.length - 1))],
+      hits
     },
   }
 }
