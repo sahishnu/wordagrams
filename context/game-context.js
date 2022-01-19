@@ -1,9 +1,14 @@
 import React, { forwardRef, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import dayjs from 'dayjs';
+
 import { BOARD_SIZE } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame } from '../utils/initGame';
 import { saveGameState } from '../storedGameState';
+
+const fetcher = (...args) => fetch(...args).then(res => res.json())
+const todaySlug = dayjs().format('YYYY-MM-DD');
 
 export const GameContext = React.createContext({
   currentBoardPositions: {},
@@ -11,7 +16,8 @@ export const GameContext = React.createContext({
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
   resetGame: () => {},
-  solvedPuzzle: false
+  solvedPuzzle: false,
+  solvedCount: 0,
 });
 
 export const useGameContext = () => useContext(GameContext);
@@ -23,12 +29,19 @@ export const GameProvider = ({
   // position stored and displayed on board
   const [currentBoardPositions, setCurrentBoardPositions] = useState({});
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
-  const [checkingBoard, setCheckingBoard] = useState(false);
+  const [solvedCount, setSolvedCount] = useState(0);
 
   useEffect(() => {
     const game = initGame(BOARD_SIZE, puzzle);
     setCurrentBoardPositions(game.board);
     setSolvedPuzzle(game.solved);
+    fetch(`api/solved-count?slug=${todaySlug}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (data?.hits) {
+        setSolvedCount(data.hits);
+      }
+    })
   }, []);
 
   const resetGame = () => {
@@ -46,10 +59,20 @@ export const GameProvider = ({
       toast.success("Congratulations! You solved the puzzle!");
       saveGameState(currentBoardPositions, puzzle, check.pass);
       setSolvedPuzzle(true);
+      // update solved count
+      fetch(`api/solved-count?slug=${todaySlug}`, { method: 'POST' })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.hits) {
+            setSolvedCount(data.hits);
+          }
+        })
     } else {
       console.log(check.errors);
       check.errors.forEach(error => toast.error(error));
     }
+
+    return check.pass;
   };
 
   // handles dropping a piece in a new spot
@@ -78,7 +101,8 @@ export const GameProvider = ({
         checkBoardSolution,
         solvedPuzzle,
         puzzle,
-        resetGame
+        resetGame,
+        solvedCount
       }}
     >
       {children}

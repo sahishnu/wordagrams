@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import dayjs from 'dayjs';
 import faunadb from 'faunadb';
 
+import { SolveCounter } from '../components/SolveCounter';
 import styles from '../styles/Home.module.scss'
 import PUZZLES from '../puzzles.json';
 import { GameProvider } from '../context/game-context';
@@ -78,8 +79,7 @@ export default function MainGame({ puzzle, emoji, hits }) {
             }}
           />
           <footer className={styles.footer}>
-            {/* Made with <span>{emoji}</span> by Sahishnu */}
-            <div className={styles.subtext}>So far, {hits} Crossed Words have been solved</div>
+            <SolveCounter />
           </footer>
         </main>
       </GameProvider>
@@ -90,47 +90,46 @@ export default function MainGame({ puzzle, emoji, hits }) {
 
 // This function gets called at each page request
 export async function getServerSideProps() {
-  const puzzle = PUZZLES.find(p => p.date === dayjs().format('YYYY-MM-DD')) || PUZZLES[0];
-  let hits = 0;
-  try {
+  const slug = dayjs().format('YYYY-MM-DD');
+  const puzzle = PUZZLES.find(p => p.date === slug) || PUZZLES[0];
+  // let hits = 0;
+  // try {
 
-    const q = faunadb.query;
-    const client = new faunadb.Client({
-      secret: process.env.NEXT_PUBLIC_FAUNA_SECRET_KEY,
-      domain: 'db.us.fauna.com',
-    });
+  //   const q = faunadb.query;
+  //   const client = new faunadb.Client({
+  //     secret: process.env.NEXT_PUBLIC_FAUNA_SECRET_KEY,
+  //     domain: 'db.us.fauna.com',
+  //   });
 
-    const slug = 'home';
+  //   const doesDocExist = await client.query(
+  //     q.Exists(q.Match(q.Index('hits_by_slug'), slug))
+  //   );
 
-    const doesDocExist = await client.query(
-      q.Exists(q.Match(q.Index('hits_by_slug'), slug))
-    );
+  //   if (!doesDocExist) {
+  //     await client.query(
+  //       q.Create(q.Collection('hits'), {
+  //         data: { slug: slug, hits: 0 },
+  //       })
+  //     );
+  //   }
 
-    if (!doesDocExist) {
-      await client.query(
-        q.Create(q.Collection('hits'), {
-          data: { slug: slug, hits: 0 },
-        })
-      );
-    }
+  //   // Fetch the document for-real
+  //   const document = await client.query(
+  //     q.Get(q.Match(q.Index('hits_by_slug'), slug))
+  //   );
 
-    // Fetch the document for-real
-    const document = await client.query(
-      q.Get(q.Match(q.Index('hits_by_slug'), slug))
-    );
+  //   await client.query(
+  //     q.Update(document.ref, {
+  //       data: {
+  //         hits: document.data.hits + 1,
+  //       },
+  //     })
+  //   );
 
-    await client.query(
-      q.Update(document.ref, {
-        data: {
-          hits: document.data.hits + 1,
-        },
-      })
-    );
-
-    hits = document.data.hits;
-  } catch (err) {
-    console.log(err);
-  }
+  //   hits = document.data.hits;
+  // } catch (err) {
+  //   console.log(err);
+  // }
 
   // Fetch the document for-real
   // const document = await client.query(
@@ -149,7 +148,7 @@ export async function getServerSideProps() {
     props: {
       puzzle,
       emoji: Emojis[Math.floor(Math.random() * (Emojis.length - 1))],
-      hits
+      hits: 0
     },
   }
 }
