@@ -14,3 +14,22 @@
   position: absolute;
   right: 0;
 }
+
+.title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.byline {
+  font-size: 12px;
+  opacity: 0.3;
+  letter-spacing: 7px;
+
+
+  @media (min-width: 512px) {
+    font-size: 18px;
+    letter-spacing: 8px;
+  }
+}

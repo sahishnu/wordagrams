@@ -17,8 +17,10 @@ export const Header = () => {
   }, [])
   return (
     <header className={styles.header}>
-      <h1>
+      <h1 className={styles.title}>
         {META_CONTENT.title}
+        <br />
+        <span className={styles.byline}>By Sahishnu</span>
       </h1>
       {/*  */}
       <img
