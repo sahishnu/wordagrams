@@ -58,13 +58,12 @@ export const GameProvider = ({
     if (sourceSq === targetSq) {
       return;
     }
-    if (currentBoardPositions[targetSq].letter !== '') {
-      return;
-    }
 
     const newBoardPositions = Object.assign({}, currentBoardPositions);
-    newBoardPositions[sourceSq].letter = '';
-    newBoardPositions[targetSq].letter = piece;
+
+    const temp = newBoardPositions[sourceSq].letter;
+    newBoardPositions[sourceSq].letter = newBoardPositions[targetSq].letter;
+    newBoardPositions[targetSq].letter = temp;
 
     saveGameState(newBoardPositions, puzzle, solvedPuzzle);
     setCurrentBoardPositions(newBoardPositions);

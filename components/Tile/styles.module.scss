@@ -15,14 +15,17 @@
   transform: scale(1.05);
   // text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
   transition: all 0.1s ease-in-out;
-  &:hover {
-    transform: translate(0, -8px) scale(1.05);
-    filter: brightness(110%);
-  }
-  box-shadow:
-    inset 0px 1px 0px rgba(255, 255, 255, 0.25),
-    inset 0px -3px 0px rgba(0, 0, 0, 0.25);
 
+  box-shadow:
+  inset 0px 1px 0px rgba(255, 255, 255, 0.25),
+  inset 0px -3px 0px rgba(0, 0, 0, 0.25);
+
+  @media (pointer: fine) {
+    &:hover {
+      transform: translate(0, -8px) scale(1.05);
+      filter: brightness(110%);
+    }
+  }
   @media (min-width: 512px) {
     border-radius: 16px;
     font-size: 32px;
