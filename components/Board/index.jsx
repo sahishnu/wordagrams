@@ -18,7 +18,7 @@ export function Board() {
 
   return (
     <>
-      <TimeTaken solved={solvedPuzzle} />
+      {/* <TimeTaken solved={solvedPuzzle} /> */}
       <div
         className={styles.board}
       >
