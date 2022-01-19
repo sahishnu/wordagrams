@@ -8,7 +8,7 @@ export const initGame = ({
 }) => {
   const game = {};
 
-  if (!hasExistingGame(puzzleObj)) {
+  if (!hasExistingGame(puzzleObj, todaySlug)) {
     console.info('No saved game state found, initializing fresh game!');
     localStorage.setItem('timeTaken', 0);
     game = initFreshGame(size, puzzleObj);
@@ -63,8 +63,7 @@ const initFreshGame = (size, puzzleObj) => {
 
 // we know game exists if
 // localStorage has a saved game state dated from today
-const hasExistingGame = (puzzle) => {
-  const todaySlug = dayjs().format('YYYY-MM-DD');
+const hasExistingGame = (puzzle, todaySlug) => {
 
   if (typeof window !== "undefined") {
     const savedGameState = getSavedGameState();

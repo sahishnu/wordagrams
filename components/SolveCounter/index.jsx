@@ -7,7 +7,7 @@ export const SolveCounter = ({  }) => {
   const peopleHave = solvedCount === 1 ? 'person has' : 'people have';
   return (
     <div className={styles.text}>
-      So far, {solvedCount} {peopleHave} solved this puzzle
+      So far, {solvedCount} {peopleHave} solved todays puzzle
     </div>
   );
 }

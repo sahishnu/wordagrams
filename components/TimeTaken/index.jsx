@@ -22,20 +22,18 @@ export const TimeTaken = ({ solved }) => {
     setTimeTaken(getStoredTime());
   }, [])
 
-  const display = timeTaken < 3600
-    ? new Date(timeTaken * 1000).toISOString().substr(14, 5)
-    : new Date(timeTaken * 1000).toISOString().substr(11, 8);
-
   return (<div
     onClick={() => setHidden(!hide)}
     className={
       classnames({
-        [styles.timeTaken]: true,
+        [styles.timeContainer]: true,
         [styles.hidden]: hide
       })
     }
   >
-    {display}
+    <div className={styles.timeTaken}>
+      {getDisplay(timeTaken)}
+    </div>
   </div>);
 }
 
@@ -60,4 +58,24 @@ const getStoredTime = () => {
   }
 
   return 0;
+}
+
+const getDisplay = (timeTaken) => {
+  return timeTaken < 3600
+    ? new Date(timeTaken * 1000).toISOString().substr(14, 5)
+    : new Date(timeTaken * 1000).toISOString().substr(11, 8);
+}
+
+const PersonalBest = () => {
+  if (typeof window !== "undefined") {
+    const personalBest = localStorage.getItem('personalBest');
+
+    if (!personalBest) {
+      return null;
+    } else {
+      return (<div>{personalBest}</div>)
+    }
+  } else {
+    return null;
+  }
 }

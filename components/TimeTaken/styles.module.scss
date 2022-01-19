@@ -1,9 +1,15 @@
-.timeTaken {
+.timeContainer {
   color: #6E6D6E;
-  align-self: flex-end;
   margin-top: -6px;
   margin-bottom: 6px;
   opacity: 0.4;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.timeTaken {
+  align-self: flex-end;
+
 }
 
 .hidden {

@@ -75,6 +75,7 @@ export const GameProvider = ({
       toast.success("Congratulations! You solved the puzzle!");
       saveGameState(currentBoardPositions, puzzle, check.pass);
       setSolvedPuzzle(true);
+      updatePersonalBest();
       // update solved count
       fetch(`api/solved-count?slug=${todaySlug}`, { method: 'POST' })
         .then((res) => res.json())
@@ -89,6 +90,21 @@ export const GameProvider = ({
 
     return check.pass;
   };
+
+  const updatePersonalBest = () => {
+    const timeTaken = localStorage.getItem('timeTaken');
+    const personalBest = localStorage.getItem('personalBest');
+
+    if (!timeTaken) {
+      return;
+    }
+
+    if (!personalBest) {
+      localStorage.setItem('personalBest', timeTaken);
+    } else if (timeTaken < personalBest) {
+      localStorage.setItem('personalBest', timeTaken);
+    };
+  }
 
   // handles dropping a piece in a new spot
   // has to be an empty spot, different than the old spot
