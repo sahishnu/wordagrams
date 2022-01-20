@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { getSavedGameState, saveGameState } from "./storedGameState";
 
 export const initGame = ({

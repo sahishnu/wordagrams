@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+dayjs.extend(require('dayjs/plugin/utc'));
+dayjs.extend(require('dayjs/plugin/timezone'));
 import CountDown from 'react-countdown';
 import toast from 'react-hot-toast';
 
@@ -22,7 +24,7 @@ export function SolvedLabel({ board }) {
     }
   }
   // gets time till midnight
-  const today = dayjs();
+  const today = dayjs().tz("America/New_York");
   const midnight = today.add(1, 'day').startOf('day');
   return (
     <div className={styles.solvedContainer}>

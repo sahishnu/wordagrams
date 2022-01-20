@@ -5,6 +5,8 @@ import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Toaster } from 'react-hot-toast';
 import dayjs from 'dayjs';
+dayjs.extend(require('dayjs/plugin/utc'));
+dayjs.extend(require('dayjs/plugin/timezone'));
 import faunadb from 'faunadb';
 
 import { SolveCounter } from '../components/SolveCounter';
@@ -89,59 +91,34 @@ export default function MainGame({ puzzle, emoji, hits }) {
 
 // This function gets called at each page request
 export async function getServerSideProps() {
-  const slug = dayjs().format('YYYY-MM-DD');
-  const puzzle = PUZZLES.find(p => p.date === slug) || PUZZLES[0];
-  // let hits = 0;
-  // try {
+  const date = dayjs().tz("America/New_York").format('YYYY-MM-DD');
+  const puzzle = PUZZLES.find(p => p.date === date) || PUZZLES[0];
+  try {
+    const q = faunadb.query;
+    const client = new faunadb.Client({
+      secret: process.env.NEXT_PUBLIC_FAUNA_SECRET_KEY,
+      domain: 'db.us.fauna.com',
+    });
 
-  //   const q = faunadb.query;
-  //   const client = new faunadb.Client({
-  //     secret: process.env.NEXT_PUBLIC_FAUNA_SECRET_KEY,
-  //     domain: 'db.us.fauna.com',
-  //   });
+    const doesDocExist = await client.query(
+      q.Exists(q.Match(q.Index('puzzle_by_day'), date))
+    );
 
-  //   const doesDocExist = await client.query(
-  //     q.Exists(q.Match(q.Index('hits_by_slug'), slug))
-  //   );
+    if (!doesDocExist) {
+      // handle is no puzzle exists for today
+      // maybe fallback to a random puzzle?
+    }
 
-  //   if (!doesDocExist) {
-  //     await client.query(
-  //       q.Create(q.Collection('hits'), {
-  //         data: { slug: slug, hits: 0 },
-  //       })
-  //     );
-  //   }
+    // Fetch the document for-real
+    const document = await client.query(
+      q.Get(q.Match(q.Index('puzzle_by_day'), date))
+    );
 
-  //   // Fetch the document for-real
-  //   const document = await client.query(
-  //     q.Get(q.Match(q.Index('hits_by_slug'), slug))
-  //   );
+    console.log(document.data);
 
-  //   await client.query(
-  //     q.Update(document.ref, {
-  //       data: {
-  //         hits: document.data.hits + 1,
-  //       },
-  //     })
-  //   );
-
-  //   hits = document.data.hits;
-  // } catch (err) {
-  //   console.log(err);
-  // }
-
-  // Fetch the document for-real
-  // const document = await client.query(
-  //   q.Get(q.Match(q.Index('hits_by_slug'), slug))
-  // );
-
-  // if (!doesDocExist) {
-  //   await client.query(
-  //     q.Create(q.Collection('hits'), {
-  //       data: { slug: slug, hits: 0 },
-  //     })
-  //   );
-  // }
+  } catch (err) {
+    console.log(err);
+  }
 
   return {
     props: {

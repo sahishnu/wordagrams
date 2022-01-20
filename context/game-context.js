@@ -1,13 +1,14 @@
-import React, { forwardRef, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
-
+dayjs.extend(require('dayjs/plugin/utc'));
+dayjs.extend(require('dayjs/plugin/timezone'));
 import { BOARD_SIZE } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame, shuffleBoard } from '../utils/initGame';
 import { saveGameState } from '../utils/storedGameState';
 
-const todaySlug = dayjs().format('YYYY-MM-DD');
+const todaySlug = dayjs().tz("America/New_York").format('YYYY-MM-DD');
 
 export const GameContext = React.createContext({
   currentBoardPositions: {},
