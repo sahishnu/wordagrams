@@ -41,17 +41,16 @@ const initFreshGame = (size, puzzleObj) => {
       letter: '',
     };
   }
-
   if (puzzleObj?.letters) {
     const puzzleLetters = shuffleString(puzzleObj.letters);
-    const puzzleTileStarts = totalSquares - puzzleLetters.length;
+    const initPositions = getTileInitPositions(size, puzzleLetters);
 
-    for (let i = puzzleTileStarts; i < totalSquares; i++) {
-      board[i] = {
-        id: i,
-        letter: puzzleLetters[i - puzzleTileStarts],
+    initPositions.forEach((pos, ind) => {
+      board[pos] = {
+        id: pos,
+        letter: puzzleLetters[ind],
       };
-    }
+    })
   }
   saveGameState(board, puzzleObj, false);
   return {
@@ -88,4 +87,19 @@ const shuffleString = (value) => {
   }
 
   return letters.join('');
+}
+
+const getTileInitPositions = (BOARD_SIZE, puzzle) => {
+
+  if (BOARD_SIZE === 9 && puzzle.length === 12) {
+    return [65, 66, 67, 68, 69, 73, 74, 75, 76, 77, 78, 79];
+  } else {
+    const totalSquares = BOARD_SIZE * BOARD_SIZE;
+    const puzzleTileStarts = totalSquares - puzzle.length;
+    const positions = Array(puzzle.length).fill(0).map((_, ind) => {
+      console.log(puzzleTileStarts+ind);
+      return puzzleTileStarts + ind;
+    });
+    return positions;
+  }
 }
