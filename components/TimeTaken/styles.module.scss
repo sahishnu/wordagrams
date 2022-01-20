@@ -2,16 +2,15 @@
   color: #6E6D6E;
   margin-top: -6px;
   margin-bottom: 6px;
-  opacity: 0.4;
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  opacity: 0.2;
 }
 .timeTaken {
   align-self: flex-end;
-
 }
 
-.hidden {
-  opacity: 0.1;
+.solved {
+  opacity: 1;
 }

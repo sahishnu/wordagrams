@@ -10,11 +10,12 @@ export const initGame = ({
 
   if (!hasExistingGame(puzzleObj, todaySlug)) {
     console.info('No saved game state found, initializing fresh game!');
-    LocalStorage.setItem('timeTaken', 0);
     game = initFreshGame(size, puzzleObj);
+    game.newGame = true;
   } else{
     console.info('Saved game state found, loading it up!');
     game = initFromSavedState();
+    game.newGame = false;
   }
 
   return game;
@@ -64,15 +65,15 @@ const initFreshGame = (size, puzzleObj) => {
 // LocalStorage has a saved game state dated from today
 const hasExistingGame = (puzzle, todaySlug) => {
 
-    const savedGameState = getSavedGameState();
+  const savedGameState = getSavedGameState();
 
-    if (
-      (savedGameState?.puzzle?.letters === puzzle?.letters) &&
-      (savedGameState?.puzzle?.date === todaySlug)
-    ) {
-      return true;
-    }
-    return false;
+  if (
+    (savedGameState?.puzzle?.letters === puzzle?.letters) &&
+    (savedGameState?.puzzle?.date === todaySlug)
+  ) {
+    return true;
+  }
+  return false;
 }
 
 const shuffleString = (value) => {

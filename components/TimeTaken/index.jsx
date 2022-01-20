@@ -3,13 +3,16 @@ import classnames from "classnames";
 
 import styles from "./styles.module.scss";
 
-export const TimeTaken = ({ solved }) => {
+export const TimeTaken = ({ solved, gameInitialized }) => {
   const [timeTaken, setTimeTaken] = useState(0);
   const [hide, setHidden] = useState(false);
 
+  // update time taken each second
+  // IF game is NOT solved & game is initialized
+  // this is written to local storage for persistence
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!solved) {
+      if (!solved && gameInitialized) {
         localStorage.setItem('timeTaken', timeTaken + 1);
         setTimeTaken(timeTaken + 1);
       }
@@ -18,6 +21,7 @@ export const TimeTaken = ({ solved }) => {
     return () => clearTimeout(timer);
   });
 
+  // on mount, read stored time from local storage
   useEffect(() => {
     setTimeTaken(getStoredTime());
   }, [])
@@ -26,12 +30,13 @@ export const TimeTaken = ({ solved }) => {
     onClick={() => setHidden(!hide)}
     className={
       classnames({
+        [styles.solved]: solved,
         [styles.timeContainer]: true,
-        [styles.hidden]: hide
       })
     }
   >
     <div className={styles.timeTaken}>
+      {solved ? 'Solved in ' : ''}
       {getDisplay(timeTaken)}
     </div>
   </div>);
@@ -60,22 +65,10 @@ const getStoredTime = () => {
   return 0;
 }
 
+// if less than an hour, return minutes:seconds
+// else return hours:minutes:seconds
 const getDisplay = (timeTaken) => {
   return timeTaken < 3600
     ? new Date(timeTaken * 1000).toISOString().substr(14, 5)
     : new Date(timeTaken * 1000).toISOString().substr(11, 8);
-}
-
-const PersonalBest = () => {
-  if (typeof window !== "undefined") {
-    const personalBest = localStorage.getItem('personalBest');
-
-    if (!personalBest) {
-      return null;
-    } else {
-      return (<div>{personalBest}</div>)
-    }
-  } else {
-    return null;
-  }
 }

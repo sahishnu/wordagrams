@@ -7,6 +7,7 @@ import { BOARD_SIZE } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame, shuffleBoardPositions } from '../utils/initGame';
 import { saveGameState } from '../utils/storedGameState';
+import { LocalStorage } from '../utils/LocalStorage';
 
 const todaySlug = dayjs().tz("America/New_York").format('YYYY-MM-DD');
 
@@ -18,6 +19,7 @@ export const GameContext = React.createContext({
   shuffleBoard: () => {},
   solvedPuzzle: false,
   solvedCount: 0,
+  gameInitialized: false
 });
 
 export const useGameContext = () => useContext(GameContext);
@@ -32,6 +34,7 @@ export const GameProvider = ({
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
   // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
+  const [gameInitialized, setGameInitialized] = useState(false);
 
   useEffect(() => {
     initBoardOnMount();
@@ -48,6 +51,10 @@ export const GameProvider = ({
     });
     setCurrentBoardPositions(game.board);
     setSolvedPuzzle(game.solved);
+    if (game.newGame) {
+      LocalStorage.setItem('timeTaken', 0);
+    }
+    setGameInitialized(true);
     fetch(`api/solved-count?slug=${todaySlug}`)
     .then((res) => res.json())
     .then((data) => {
@@ -78,7 +85,7 @@ export const GameProvider = ({
       toast.success("Congratulations! You solved the puzzle!");
       saveGameState(currentBoardPositions, puzzle, check.pass);
       setSolvedPuzzle(true);
-      // updatePersonalBest();
+
       if (process.env.NODE_ENV === 'production') {
         // update solved count
         fetch(`api/solved-count?slug=${todaySlug}`, { method: 'POST' })
@@ -96,21 +103,6 @@ export const GameProvider = ({
 
     return check.pass;
   };
-
-  const updatePersonalBest = () => {
-    const timeTaken = localStorage.getItem('timeTaken');
-    const personalBest = localStorage.getItem('personalBest');
-
-    if (!timeTaken) {
-      return;
-    }
-
-    if (!personalBest) {
-      localStorage.setItem('personalBest', timeTaken);
-    } else if (timeTaken < personalBest) {
-      localStorage.setItem('personalBest', timeTaken);
-    };
-  }
 
   // handles dropping a piece in a new spot
   // has to be an empty spot, different than the old spot
@@ -138,6 +130,7 @@ export const GameProvider = ({
         checkBoardSolution,
         solvedPuzzle,
         puzzle,
+        gameInitialized,
         shuffleBoard,
         solvedCount
       }}
