@@ -3,16 +3,17 @@ import { useEffect, useState } from 'react';
 import { META_CONTENT } from '../../constants';
 import styles from './styles.module.scss';
 import { InstructionsModal } from '../InstructionsModal';
+import { LocalStorage } from '../../utils/LocalStorage';
 
 export const Header = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     // if this is users first time on page, show instructions
-    const isFirstTime = localStorage.getItem('firstTime') === null;
+    const isFirstTime = LocalStorage.getItem('firstTime') === null;
     if (isFirstTime) {
       setModalIsOpen(true);
-      localStorage.setItem('firstTime', 'false');
+      LocalStorage.setItem('firstTime', 'false');
     }
   }, [])
   return (

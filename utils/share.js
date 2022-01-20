@@ -28,6 +28,8 @@ export const getShareString = (board) => {
   const boundingBox = getSmallestBoundingBox(board);
   const shareString = `${META_CONTENT.title}\n\n`;
 
+  // shareString += `${getSolve}`;
+
   for (let row = boundingBox.top; row <= boundingBox.bottom; row++) {
     const leftLim = row * BOARD_SIZE + boundingBox.left;
     const rightLim = leftLim + (boundingBox.right - boundingBox.left);
@@ -41,5 +43,19 @@ export const getShareString = (board) => {
   }
 
   return shareString;
+}
 
+const getNumberSuffix = (number) => {
+  const mod = number % 10;
+  if (mod === 0) {
+    return '';
+  } else if (mod === 1) {
+    return 'st';
+  } else if (mod === 2) {
+    return 'nd'
+  } else if (mod === 3) {
+    return 'rd';
+  } else {
+    return 'th';
+  }
 }

@@ -18,12 +18,23 @@ export const checkBoard = async (boardPositions) => {
   const inDictionaryErrors = await testAreAllWordsInDictionary(stringWords);
   const unusedTilesErrors = testAreNoUnusedTiles(flags);
 
+  let multipleIslandsErrors = [];
+  if (unusedTilesErrors.length === 0) {
+    multipleIslandsErrors = testAreMultipleIslands(boardPositions);
+  }
+
   const check = {
-    pass: validLengthErrors.length === 0 && inDictionaryErrors.length === 0 && unusedTilesErrors.length === 0,
+    pass: (
+      validLengthErrors.length === 0
+      && inDictionaryErrors.length === 0
+      && unusedTilesErrors.length === 0
+      && multipleIslandsErrors.length === 0
+    ),
     errors: [
       ...validLengthErrors,
       ...inDictionaryErrors,
-      ...unusedTilesErrors
+      ...unusedTilesErrors,
+      ...multipleIslandsErrors
     ]
   };
 
@@ -80,6 +91,19 @@ const testAreNoUnusedTiles = (flags) => {
   if (!unusedTiles) {
     errors.push('There are unused tiles!');
   }
+  return errors;
+}
+
+const testAreMultipleIslands = (boardPositions) => {
+  const board2D = positionsTo2DArray(boardPositions);
+  const numberOfIslands = countNumberOfIslands(board2D);
+
+  const errors = [];
+
+  if (numberOfIslands > 1) {
+    errors.push('All the words must connect!');
+  }
+
   return errors;
 }
 
@@ -236,4 +260,47 @@ const isLetterInDoubleCheck = (letter, doubleCheck) => {
   return doubleCheck.some(letterToCheck => {
     return letterToCheck.id === letter.id;
   });
+}
+
+const positionsTo2DArray = (positions) => {
+  const board = Array(BOARD_SIZE).fill([]).map(() => Array(BOARD_SIZE).fill(''));
+
+  Object.keys(positions).forEach(key => {
+    const row = Math.floor(key / BOARD_SIZE);
+    const col = key % BOARD_SIZE;
+    board[row][col] = positions[key];
+  });
+
+  return board;
+}
+
+const countNumberOfIslands = (board2D) => {
+  let counter = 0;
+
+  const dfs = (i, j) => {
+    if (
+      i >= 0 &&
+      j >= 0 &&
+      i < board2D.length &&
+      j < board2D[i].length &&
+      board2D[i][j] === '1'
+    ) {
+      board2D[i][j] = '0';
+      dfs(i + 1, j); // top
+      dfs(i, j + 1); // right
+      dfs(i - 1, j); // bottom
+      dfs(i, j - 1); // left
+    }
+  };
+
+  for (let i = 0; i < board2D.length; i += 1) {
+    for (let j = 0; j < board2D[i].length; j += 1) {
+      if (board2D[i][j] !== '') {
+        counter += 1;
+        dfs(i, j);
+      }
+    }
+  }
+
+  return counter;
 }

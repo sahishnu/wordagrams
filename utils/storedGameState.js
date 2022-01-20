@@ -1,22 +1,24 @@
+import { LocalStorage } from "./LocalStorage";
+
 export const saveGameState = (board, puzzle, solved) => {
-  localStorage.removeItem('board');
+  LocalStorage.removeItem('board');
   const saveGameState = {
     board,
     puzzle,
     solved
   }
 
-  localStorage.setItem('board', JSON.stringify(saveGameState));
+  LocalStorage.setItem('board', JSON.stringify(saveGameState));
 }
 
 export const getSavedGameState = () => {
-  const savedGameState = localStorage.getItem('board');
+  const savedGameState = LocalStorage.getItem('board');
 
   return JSON.parse(savedGameState);
 }
 
 export const saveBoardPositionsToState = (boardPositions) => {
-  const savedGameState = localStorage.getItem('board');
+  const savedGameState = LocalStorage.getItem('board');
 
   const currentState = JSON.parse(savedGameState);
   const newState = {
@@ -24,5 +26,5 @@ export const saveBoardPositionsToState = (boardPositions) => {
     board: boardPositions
   }
 
-  localStorage.setItem('board', JSON.stringify(newState));
+  LocalStorage.setItem('board', JSON.stringify(newState));
 }

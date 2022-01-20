@@ -15,7 +15,7 @@ export const GameContext = React.createContext({
   setCurrentBoardPositions: () => {},
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
-  resetGame: () => {},
+  shuffleBoard: () => {},
   solvedPuzzle: false,
   solvedCount: 0,
 });
@@ -28,7 +28,9 @@ export const GameProvider = ({
 }) => {
   // position stored and displayed on board
   const [currentBoardPositions, setCurrentBoardPositions] = useState({});
+  // stores whether puzzle is solved or not
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
+  // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ export const GameProvider = ({
   }
 
   // shuffles tiles on board
-  const resetGame = () => {
+  const shuffleBoard = () => {
     const game = shuffleBoard(BOARD_SIZE, puzzle);
     setCurrentBoardPositions(game.board);
   };
@@ -133,7 +135,7 @@ export const GameProvider = ({
         checkBoardSolution,
         solvedPuzzle,
         puzzle,
-        resetGame,
+        shuffleBoard,
         solvedCount
       }}
     >

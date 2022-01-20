@@ -27,7 +27,7 @@ export const InstructionsModal = ({ isOpen, onClose }) => {
           <ol>
             <li>Arrange the letters on the board to form words.</li>
             <li>Each word must be at least 3 letters.</li>
-            <li>The words must connect horizontall or vertically.</li>
+            <li>The words must connect horizontally or vertically.</li>
             <li>All the letters must be used!</li>
           </ol>
           <div className={styles.imageContainer}>
