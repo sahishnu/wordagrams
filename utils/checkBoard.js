@@ -268,7 +268,7 @@ const positionsTo2DArray = (positions) => {
   Object.keys(positions).forEach(key => {
     const row = Math.floor(key / BOARD_SIZE);
     const col = key % BOARD_SIZE;
-    board[row][col] = positions[key];
+    board[row][col] = positions[key].letter;
   });
 
   return board;
@@ -283,9 +283,9 @@ const countNumberOfIslands = (board2D) => {
       j >= 0 &&
       i < board2D.length &&
       j < board2D[i].length &&
-      board2D[i][j] === '1'
+      board2D[i][j] !== ''
     ) {
-      board2D[i][j] = '0';
+      board2D[i][j] = '';
       dfs(i + 1, j); // top
       dfs(i, j + 1); // right
       dfs(i - 1, j); // bottom

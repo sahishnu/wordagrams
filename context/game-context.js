@@ -78,15 +78,18 @@ export const GameProvider = ({
       toast.success("Congratulations! You solved the puzzle!");
       saveGameState(currentBoardPositions, puzzle, check.pass);
       setSolvedPuzzle(true);
-      updatePersonalBest();
-      // update solved count
-      fetch(`api/solved-count?slug=${todaySlug}`, { method: 'POST' })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data?.hits) {
-            setSolvedCount(data.hits);
-          }
-        })
+      // updatePersonalBest();
+      if (process.env.NODE_ENV === 'production') {
+        // update solved count
+        fetch(`api/solved-count?slug=${todaySlug}`, { method: 'POST' })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data?.hits) {
+              setSolvedCount(data.hits);
+            }
+          })
+      }
+      console.log(process.env.NODE_ENV);
     } else {
       check.errors.forEach(error => toast.error(error));
     }
