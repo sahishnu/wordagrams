@@ -20,5 +20,5 @@ export const META_CONTENT = {
   twitter: {
     handle: '@sahishnuk',
   },
-  url: 'https://wordagrams.vercel.app/'
+  url: 'https://crossemup.xyz/'
 }
