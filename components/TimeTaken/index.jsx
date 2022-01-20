@@ -21,7 +21,7 @@ export const TimeTaken = ({ solved, gameInitialized }) => {
     return () => clearTimeout(timer);
   });
 
-  // on mount, read stored time from local storage
+  // on mount, read stored time from local storage  and set timeTaken
   useEffect(() => {
     setTimeTaken(getStoredTime());
   }, [])
@@ -37,7 +37,7 @@ export const TimeTaken = ({ solved, gameInitialized }) => {
   >
     <div className={styles.timeTaken}>
       {solved ? 'Solved in ' : ''}
-      {getDisplay(timeTaken)}
+      {getTimeDisplay(timeTaken)}
     </div>
   </div>);
 }
@@ -67,7 +67,7 @@ const getStoredTime = () => {
 
 // if less than an hour, return minutes:seconds
 // else return hours:minutes:seconds
-const getDisplay = (timeTaken) => {
+export const getTimeDisplay = (timeTaken) => {
   return timeTaken < 3600
     ? new Date(timeTaken * 1000).toISOString().substr(14, 5)
     : new Date(timeTaken * 1000).toISOString().substr(11, 8);

@@ -14,12 +14,19 @@ export function Board() {
     checkBoardSolution,
     solvedPuzzle,
     shuffleBoard,
-    gameInitialized
+    gameInitialized,
+    fastestTime,
   } = useGameContext();
 
   return (
     <>
-      {gameInitialized ? <TimeTaken gameInitialized={gameInitialized} solved={solvedPuzzle} /> : null}
+      {gameInitialized ? (
+        <TimeTaken
+          gameInitialized={gameInitialized}
+          solved={solvedPuzzle}
+          fastestTime={fastestTime}
+        />
+      ) : null}
       <div
         className={styles.board}
       >

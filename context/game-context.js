@@ -19,7 +19,8 @@ export const GameContext = React.createContext({
   shuffleBoard: () => {},
   solvedPuzzle: false,
   solvedCount: 0,
-  gameInitialized: false
+  gameInitialized: false,
+  fastestTime: 0
 });
 
 export const useGameContext = () => useContext(GameContext);
@@ -35,6 +36,7 @@ export const GameProvider = ({
   // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
   const [gameInitialized, setGameInitialized] = useState(false);
+  const [fastestTime, setFastestTime] = useState(0);
 
   useEffect(() => {
     initBoardOnMount();
@@ -60,6 +62,9 @@ export const GameProvider = ({
     .then((data) => {
       if (data?.hits) {
         setSolvedCount(data.hits);
+      }
+      if (data?.fastestTime) {
+        setFastestTime(data.fastestTime);
       }
     });
   }
@@ -88,11 +93,23 @@ export const GameProvider = ({
 
       if (process.env.NODE_ENV === 'production') {
         // update solved count
-        fetch(`api/solved-count?slug=${todaySlug}`, { method: 'POST' })
+        const timeTaken = parseInt(LocalStorage.getItem('timeTaken'));
+        const isTimeTakenValid = !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60*60*24;
+
+        fetch(`api/solved-count?slug=${todaySlug}`, {
+          method: 'POST',
+          // include timetaken if it's valid
+          ...(isTimeTakenValid ? {
+            body: JSON.stringify({ timeTaken})
+          } : {}),
+        })
           .then((res) => res.json())
           .then((data) => {
             if (data?.hits) {
               setSolvedCount(data.hits);
+            }
+            if (data?.fastestTime) {
+              setFastestTime(data.fastestTime);
             }
           })
       }
@@ -132,7 +149,8 @@ export const GameProvider = ({
         puzzle,
         gameInitialized,
         shuffleBoard,
-        solvedCount
+        solvedCount,
+        fastestTime
       }}
     >
       {children}

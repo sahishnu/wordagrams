@@ -35,20 +35,32 @@ export default async function handler(req, res) {
   );
 
   if (req.method === 'POST') {
+    const body = JSON.parse(req.body);
+    const { timeTaken } = body;
+
+    const currFastestTime = document.data.fastestTime || 0;
+    let newFastestTime = currFastestTime;
+    if (!currFastestTime || timeTaken < currFastestTime) {
+      newFastestTime = timeTaken;
+    }
+
     await client.query(
       q.Update(document.ref, {
         data: {
           hits: document.data.hits + 1,
+          fastestTime: newFastestTime,
         },
       })
     );
 
     return res.status(200).json({
       hits: document.data.hits + 1,
+      fastestTime: newFastestTime,
     });
   }
 
   return res.status(200).json({
     hits: document.data.hits,
+    fastestTime: document.data.fastestTime,
   });
 }
