@@ -5,7 +5,7 @@ dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
 import { BOARD_SIZE } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
-import { initGame, shuffleBoard } from '../utils/initGame';
+import { initGame, shuffleBoardPositions } from '../utils/initGame';
 import { saveGameState } from '../utils/storedGameState';
 
 const todaySlug = dayjs().tz("America/New_York").format('YYYY-MM-DD');
@@ -59,7 +59,7 @@ export const GameProvider = ({
 
   // shuffles tiles on board
   const shuffleBoard = () => {
-    const game = shuffleBoard(BOARD_SIZE, puzzle);
+    const game = shuffleBoardPositions(BOARD_SIZE, puzzle);
     setCurrentBoardPositions(game.board);
   };
 

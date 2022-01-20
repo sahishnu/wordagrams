@@ -1,5 +1,6 @@
 import { getSavedGameState, saveGameState } from "./storedGameState";
 import { LocalStorage } from "./LocalStorage";
+
 export const initGame = ({
   size,
   puzzle: puzzleObj,
@@ -19,7 +20,7 @@ export const initGame = ({
   return game;
 }
 
-export const shuffleBoard = (size, puzzle) => {
+export const shuffleBoardPositions = (size, puzzle) => {
   console.info('Mixing up the board!');
   return initFreshGame(size, puzzle);
 }
