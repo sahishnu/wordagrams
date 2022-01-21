@@ -15,6 +15,14 @@
   right: 0;
 }
 
+.leaderboardIcon {
+  filter: invert(0);
+  opacity: 0.5;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+}
+
 .title {
   display: flex;
   flex-direction: column;
