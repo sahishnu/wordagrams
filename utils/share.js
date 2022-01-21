@@ -1,4 +1,6 @@
+import { getTimeDisplay } from "../components/TimeTaken";
 import { BOARD_SIZE, META_CONTENT } from "../constants";
+import { LocalStorage } from "./LocalStorage";
 
 const getSmallestBoundingBox = (board) => {
   let smallestBox = {
@@ -28,7 +30,10 @@ export const getShareString = (board) => {
   const boundingBox = getSmallestBoundingBox(board);
   const shareString = `${META_CONTENT.title}\n\n`;
 
-  // shareString += `${getSolve}`;
+  const timeTaken = LocalStorage.getItem('timeTaken');
+  if (timeTaken) {
+    shareString += `Solved in: ${getTimeDisplay(timeTaken)}\n\n`;
+  }
 
   for (let row = boundingBox.top; row <= boundingBox.bottom; row++) {
     const leftLim = row * BOARD_SIZE + boundingBox.left;

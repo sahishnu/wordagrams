@@ -1,5 +1,4 @@
 import { getSavedGameState, saveGameState } from "./storedGameState";
-import { LocalStorage } from "./LocalStorage";
 
 export const initGame = ({
   size,
