@@ -5,7 +5,6 @@ import styles from "./styles.module.scss";
 
 export const TimeTaken = ({ solved, gameInitialized }) => {
   const [timeTaken, setTimeTaken] = useState(0);
-  const [hide, setHidden] = useState(false);
 
   // update time taken each second
   // IF game is NOT solved & game is initialized
@@ -26,20 +25,25 @@ export const TimeTaken = ({ solved, gameInitialized }) => {
     setTimeTaken(getStoredTime());
   }, [])
 
-  return (<div
-    onClick={() => setHidden(!hide)}
-    className={
-      classnames({
-        [styles.solved]: solved,
-        [styles.timeContainer]: true,
-      })
-    }
-  >
-    <div className={styles.timeTaken}>
-      {solved ? 'Solved in ' : ''}
-      {getTimeDisplay(timeTaken)}
+  if (solved && timeTaken === 0) {
+    return null;
+  }
+
+  return (
+    <div
+      className={
+        classnames({
+          [styles.solved]: solved,
+          [styles.timeContainer]: true,
+        })
+      }
+    >
+      <div className={styles.timeTaken}>
+        {solved ? 'Solved in ' : ''}
+        {getTimeDisplay(timeTaken)}
+      </div>
     </div>
-  </div>);
+  );
 }
 
 
