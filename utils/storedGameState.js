@@ -28,3 +28,15 @@ export const saveBoardPositionsToState = (boardPositions) => {
 
   LocalStorage.setItem('board', JSON.stringify(newState));
 }
+
+export const getSavedUserPreferences = () => {
+  const savedUserPreferences = LocalStorage.getItem('userPreferences');
+
+  return JSON.parse(savedUserPreferences);
+}
+
+export const saveUserPreferencesToState = (userPreferences) => {
+  const userPref = JSON.stringify(userPreferences);
+
+  LocalStorage.setItem('userPreferences', userPref);
+}

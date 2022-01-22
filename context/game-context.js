@@ -6,7 +6,7 @@ dayjs.extend(require('dayjs/plugin/timezone'));
 import { BOARD_SIZE, MIN_TIME_FIRST_HINT } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame, shuffleBoardPositions } from '../utils/initGame';
-import { saveGameState } from '../utils/storedGameState';
+import { getSavedUserPreferences, saveGameState, saveUserPreferencesToState } from '../utils/storedGameState';
 import { LocalStorage } from '../utils/LocalStorage';
 import { getTimeDisplay } from '../components/TimeTaken';
 
@@ -18,7 +18,13 @@ export const GameContext = React.createContext({
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
   shuffleBoard: () => {},
+  changeShowHintButtonPreference: () => {},
+  changeShowTimerPreference: () => {},
   showHint: () => {},
+  userPreferences: {
+    showTimer: true,
+    showHintButton: true
+  },
   solvedPuzzle: false,
   solvedCount: 0,
   timeTaken: 0,
@@ -45,9 +51,25 @@ export const GameProvider = ({
   const [fastestTime, setFastestTime] = useState(0);
   const [takenHint1, setTakenHint1] = useState(false);
   const [past4MinMark, setPast4MinMark] = useState(false);
+  const [userPreferences, setUserPreferences] = useState({
+    showTimer: true,
+    showHintButton: true
+  });
 
   useEffect(() => {
+    // init board on mount
     initBoardOnMount();
+    // init user preferences
+    const savedUserPrefs = getSavedUserPreferences();
+    if (savedUserPrefs) {
+      const savedPrefTimer = savedUserPrefs.showTimer;
+      const savedPrefHintButton = savedUserPrefs.showHintButton;
+      setUserPreferences({
+        showTimer: savedPrefTimer,
+        showHintButton: savedPrefHintButton
+      });
+    }
+    // on mount, read stored time from local storage and set timeTaken
     setTimeTaken(getStoredTime());
   }, []);
 
@@ -68,11 +90,6 @@ export const GameProvider = ({
 
     return () => clearTimeout(timer);
   });
-
-  // on mount, read stored time from local storage  and set timeTaken
-  useEffect(() => {
-    setTimeTaken(getStoredTime());
-  }, [])
 
   // initializes the game on mount
   // if there is a saved game state, use that, otherwise get fresh game
@@ -183,6 +200,23 @@ export const GameProvider = ({
 
   }
 
+  useEffect(()=> {
+    saveUserPreferencesToState(userPreferences);
+  }, [userPreferences])
+
+  const changeShowTimerPreference = (val) => {
+    setUserPreferences({
+      ...userPreferences,
+      showTimer: val
+    });
+  }
+  const changeShowHintButtonPreference = (val) => {
+    setUserPreferences({
+      ...userPreferences,
+      showHintButton: val
+    });
+  }
+
   return (
     <GameContext.Provider
       value={{
@@ -200,6 +234,9 @@ export const GameProvider = ({
         timeTaken,
         past4MinMark,
         takenHint1,
+        userPreferences,
+        changeShowHintButtonPreference,
+        changeShowTimerPreference
       }}
     >
       {children}

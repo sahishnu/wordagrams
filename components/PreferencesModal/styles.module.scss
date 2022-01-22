@@ -1,0 +1,112 @@
+.modalContent {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.close {
+  cursor: pointer;
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  opacity: 0.7;
+}
+
+.settingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+
+  @media (min-width: 512px) {
+    padding: 0 2rem;
+  }
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.settings {
+  color: white;
+
+  ul {
+    & > :not(:last-child) {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  background-color: #141A32;
+  border-radius: 16px;
+  border: 2px solid #2F3763;
+  color: white;
+  padding: 16px;
+  line-height: 20px;
+  width: 300px;
+  height: 500px;
+  margin: auto auto;
+
+  & ul {
+    padding-inline-start: 0px;
+  }
+
+  @media (min-width: 512px) {
+    width: 500px;
+    height: 500px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.message {
+  color: #CE82C7;
+  font-size: 16px;
+  margin-bottom: 16px;
+
+  @media (min-width: 512px) {
+    font-size: 20px;
+  }
+}
+
+.feedback {
+  color: #6E6D6E;
+  font-size: 16px;
+  color: #CE82C7;
+}

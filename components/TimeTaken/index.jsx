@@ -6,7 +6,8 @@ import styles from "./styles.module.scss";
 export const TimeTaken = () => {
   const {
     solvedPuzzle,
-    timeTaken
+    timeTaken,
+    userPreferences
   } = useGameContext();
 
   if (solvedPuzzle && timeTaken === 0) {
@@ -24,7 +25,7 @@ export const TimeTaken = () => {
     >
       <div className={styles.timeTaken}>
         {solvedPuzzle ? 'Solved in ' : ''}
-        {getTimeDisplay(timeTaken)}
+        {userPreferences.showTimer ? getTimeDisplay(timeTaken) : null}
       </div>
     </div>
   );

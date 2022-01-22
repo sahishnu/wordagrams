@@ -20,7 +20,8 @@
     "react-dnd-touch-backend": "^14.1.0",
     "react-dom": "17.0.2",
     "react-hot-toast": "^2.2.0",
-    "react-modal": "^3.14.4"
+    "react-modal": "^3.14.4",
+    "react-switch": "^6.0.0"
   },
   "devDependencies": {
     "eslint": "8.6.0",

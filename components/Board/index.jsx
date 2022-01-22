@@ -18,8 +18,7 @@ export function Board() {
     fastestTime,
     showHint,
     past4MinMark,
-    takenHint1,
-    timeTaken
+    userPreferences
   } = useGameContext();
 
   return (
@@ -45,13 +44,16 @@ export function Board() {
         <div className={styles.buttonRow}>
           <Button label={<img src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
           <Button label="Submit" onClick={checkBoardSolution} />
-          <Button
-            disabled={!past4MinMark}
-            narrow
-            label={<img src='/hint.svg' />}
-            color='green'
-            onClick={showHint}
-          />
+          {
+            userPreferences.showHintButton ? (
+              <Button
+                disabled={!past4MinMark}
+                narrow
+                label={<img src='/hint.svg' />}
+                color='green'
+                onClick={showHint}
+              />
+            ) : null}
         </div>
       )}
     </>
