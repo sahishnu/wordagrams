@@ -13,10 +13,8 @@ export const initGame = ({
     game = initFreshGame(size, puzzleObj);
     game.newGame = true;
     game.takenHint1 = false;
-    game.takenHint2 = false;
     LocalStorage.setItem('timeTaken', 0);
     LocalStorage.setItem('takenHint1', false);
-    LocalStorage.setItem('takenHint2', false);
   } else{
     console.info('Saved game state found, loading it up!');
     game = initFromSavedState();

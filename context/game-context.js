@@ -23,9 +23,7 @@ export const GameContext = React.createContext({
   solvedCount: 0,
   timeTaken: 0,
   past4MinMark: false,
-  past7MinMark: false,
   takenHint1: false,
-  takenHint2: false,
   gameInitialized: false,
   fastestTime: 0
 });
@@ -47,8 +45,6 @@ export const GameProvider = ({
   const [fastestTime, setFastestTime] = useState(0);
   const [takenHint1, setTakenHint1] = useState(false);
   const [past4MinMark, setPast4MinMark] = useState(false);
-  const [takenHint2, setTakenHint2] = useState(false);
-  const [past7MinMark, setPast7MinMark] = useState(false);
 
   useEffect(() => {
     initBoardOnMount();
@@ -64,11 +60,8 @@ export const GameProvider = ({
         localStorage.setItem('timeTaken', timeTaken + 1);
         setTimeTaken(timeTaken + 1);
 
-        if (timeTaken > 4*60 && !past4MinMark) {
+        if (timeTaken >= MIN_TIME_FIRST_HINT && !past4MinMark) {
           setPast4MinMark(true);
-        }
-        if (timeTaken > 7*60 && !past7MinMark) {
-          setPast7MinMark(true);
         }
       }
     }, 1000);
@@ -93,7 +86,6 @@ export const GameProvider = ({
     setCurrentBoardPositions(game.board);
     setSolvedPuzzle(game.solved);
     setTakenHint1(!!game.takenHint1);
-    setTakenHint2(!!game.takenHint2);
     setGameInitialized(true);
     fetch(`api/solved-count?slug=${todaySlug}`)
     .then((res) => res.json())
@@ -181,7 +173,7 @@ export const GameProvider = ({
     const timeLeftForHint = MIN_TIME_FIRST_HINT - timeTaken;
 
     if (timeLeftForHint > 0) {
-      toast(`You can't use a hint yet ⏲️`);
+      toast(`Hint available at 4 mins (in ${getTimeDisplay(timeLeftForHint)}) ⏲️`);
     } else {
       const hint = puzzle.words[0];
       toast(`Have you tried ${hint.toUpperCase()} 👀`);
@@ -207,9 +199,7 @@ export const GameProvider = ({
         fastestTime,
         timeTaken,
         past4MinMark,
-        past7MinMark,
         takenHint1,
-        takenHint2
       }}
     >
       {children}

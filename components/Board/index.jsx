@@ -48,11 +48,7 @@ export function Board() {
           <Button
             disabled={!past4MinMark}
             narrow
-            label={
-              timeTaken < 4* 60 ?
-                getTimeDisplay(4*60 - timeTaken) :
-                <img src='/hint.svg' />
-            }
+            label={<img src='/hint.svg' />}
             color='green'
             onClick={showHint}
           />
