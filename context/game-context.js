@@ -3,11 +3,12 @@ import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
-import { BOARD_SIZE } from '../constants';
+import { BOARD_SIZE, MIN_TIME_FIRST_HINT } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame, shuffleBoardPositions } from '../utils/initGame';
 import { saveGameState } from '../utils/storedGameState';
 import { LocalStorage } from '../utils/LocalStorage';
+import { getTimeDisplay } from '../components/TimeTaken';
 
 const todaySlug = dayjs().tz("America/New_York").format('YYYY-MM-DD');
 
@@ -17,8 +18,12 @@ export const GameContext = React.createContext({
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
   shuffleBoard: () => {},
+  showHint: () => {},
   solvedPuzzle: false,
   solvedCount: 0,
+  timeTaken: 0,
+  past4MinMark: false,
+  takenHint1: false,
   gameInitialized: false,
   fastestTime: 0
 });
@@ -35,12 +40,39 @@ export const GameProvider = ({
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
   // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
+  const [timeTaken, setTimeTaken] = useState(0);
   const [gameInitialized, setGameInitialized] = useState(false);
   const [fastestTime, setFastestTime] = useState(0);
+  const [takenHint1, setTakenHint1] = useState(false);
+  const [past4MinMark, setPast4MinMark] = useState(false);
 
   useEffect(() => {
     initBoardOnMount();
+    setTimeTaken(getStoredTime());
   }, []);
+
+  // update time taken each second
+  // IF game is NOT solved & game is initialized
+  // this is written to local storage for persistence
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!solvedPuzzle && gameInitialized) {
+        localStorage.setItem('timeTaken', timeTaken + 1);
+        setTimeTaken(timeTaken + 1);
+
+        if (timeTaken >= MIN_TIME_FIRST_HINT && !past4MinMark) {
+          setPast4MinMark(true);
+        }
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
+
+  // on mount, read stored time from local storage  and set timeTaken
+  useEffect(() => {
+    setTimeTaken(getStoredTime());
+  }, [])
 
   // initializes the game on mount
   // if there is a saved game state, use that, otherwise get fresh game
@@ -53,9 +85,7 @@ export const GameProvider = ({
     });
     setCurrentBoardPositions(game.board);
     setSolvedPuzzle(game.solved);
-    if (game.newGame) {
-      LocalStorage.setItem('timeTaken', 0);
-    }
+    setTakenHint1(!!game.takenHint1);
     setGameInitialized(true);
     fetch(`api/solved-count?slug=${todaySlug}`)
     .then((res) => res.json())
@@ -138,6 +168,21 @@ export const GameProvider = ({
     setCurrentBoardPositions(newBoardPositions);
   }
 
+  const showHint = () => {
+    const timeTaken = parseInt(LocalStorage.getItem('timeTaken'));
+    const timeLeftForHint = MIN_TIME_FIRST_HINT - timeTaken;
+
+    if (timeLeftForHint > 0) {
+      toast(`Hint available at 4 mins (in ${getTimeDisplay(timeLeftForHint)}) ⏲️`);
+    } else {
+      const hint = puzzle.words[0];
+      toast(`Have you tried ${hint.toUpperCase()} 👀`);
+      setTakenHint1(true);
+      LocalStorage.setItem('takenHint1', true);
+    }
+
+  }
+
   return (
     <GameContext.Provider
       value={{
@@ -149,11 +194,37 @@ export const GameProvider = ({
         puzzle,
         gameInitialized,
         shuffleBoard,
+        showHint,
         solvedCount,
-        fastestTime
+        fastestTime,
+        timeTaken,
+        past4MinMark,
+        takenHint1,
       }}
     >
       {children}
     </GameContext.Provider>
   );
 };
+
+// get time stored in local storage for this puzzle
+// if no time stored, return 0
+// if no game stored, return 0
+//  else return time stored
+const getStoredTime = () => {
+  if (typeof window !== "undefined") {
+
+    const savedGame = localStorage.getItem('board');
+    const timeTaken = localStorage.getItem('timeTaken');
+
+    if (!savedGame) {
+      return 0;
+    } else if (!timeTaken) {
+      return 0;
+    } else {
+      return parseInt(timeTaken);
+    }
+  }
+
+  return 0;
+}

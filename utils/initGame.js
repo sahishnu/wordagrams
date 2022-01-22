@@ -1,3 +1,4 @@
+import { LocalStorage } from "./LocalStorage";
 import { getSavedGameState, saveGameState } from "./storedGameState";
 
 export const initGame = ({
@@ -11,6 +12,9 @@ export const initGame = ({
     console.info('No saved game state found, initializing fresh game!');
     game = initFreshGame(size, puzzleObj);
     game.newGame = true;
+    game.takenHint1 = false;
+    LocalStorage.setItem('timeTaken', 0);
+    LocalStorage.setItem('takenHint1', false);
   } else{
     console.info('Saved game state found, loading it up!');
     game = initFromSavedState();
