@@ -37,7 +37,7 @@
 .buttonRow {
   display: flex;
 
-  :not(:last-child) {
+  & > :not(:last-child) {
     margin-right: 1rem;
   }
 }

@@ -1,31 +1,15 @@
-import { useState, useEffect } from "react";
 import classnames from "classnames";
 
+import { useGameContext } from "../../context/game-context";
 import styles from "./styles.module.scss";
 
-export const TimeTaken = ({ solved, gameInitialized }) => {
-  const [timeTaken, setTimeTaken] = useState(0);
+export const TimeTaken = () => {
+  const {
+    solvedPuzzle,
+    timeTaken
+  } = useGameContext();
 
-  // update time taken each second
-  // IF game is NOT solved & game is initialized
-  // this is written to local storage for persistence
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!solved && gameInitialized) {
-        localStorage.setItem('timeTaken', timeTaken + 1);
-        setTimeTaken(timeTaken + 1);
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  });
-
-  // on mount, read stored time from local storage  and set timeTaken
-  useEffect(() => {
-    setTimeTaken(getStoredTime());
-  }, [])
-
-  if (solved && timeTaken === 0) {
+  if (solvedPuzzle && timeTaken === 0) {
     return null;
   }
 
@@ -33,13 +17,13 @@ export const TimeTaken = ({ solved, gameInitialized }) => {
     <div
       className={
         classnames({
-          [styles.solved]: solved,
+          [styles.solved]: solvedPuzzle,
           [styles.timeContainer]: true,
         })
       }
     >
       <div className={styles.timeTaken}>
-        {solved ? 'Solved in ' : ''}
+        {solvedPuzzle ? 'Solved in ' : ''}
         {getTimeDisplay(timeTaken)}
       </div>
     </div>

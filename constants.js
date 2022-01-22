@@ -22,3 +22,6 @@ export const META_CONTENT = {
   },
   url: 'https://crossemup.xyz/'
 }
+
+export const MIN_TIME_FIRST_HINT = 4*60;
+export const MIN_TIME_SECOND_HINT = 7*60;

@@ -5,7 +5,7 @@ import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
 import { Button } from '../Button';
 import { SolvedLabel } from '../SolvedLabel';
-import { TimeTaken } from '../TimeTaken';
+import { getTimeDisplay, TimeTaken } from '../TimeTaken';
 import styles from './styles.module.scss';
 
 export function Board() {
@@ -16,6 +16,10 @@ export function Board() {
     shuffleBoard,
     gameInitialized,
     fastestTime,
+    showHint,
+    past4MinMark,
+    takenHint1,
+    timeTaken
   } = useGameContext();
 
   return (
@@ -39,9 +43,19 @@ export function Board() {
       </div>
       {solvedPuzzle ? <SolvedLabel board={currentBoardPositions} /> : (
         <div className={styles.buttonRow}>
-          {/* <Button label={<img src='/undo.svg' />} color='orange' onClick={checkBoardSolution} /> */}
           <Button label={<img src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
           <Button label="Submit" onClick={checkBoardSolution} />
+          <Button
+            disabled={!past4MinMark}
+            narrow
+            label={
+              timeTaken < 4* 60 ?
+                getTimeDisplay(4*60 - timeTaken) :
+                <img src='/hint.svg' />
+            }
+            color='green'
+            onClick={showHint}
+          />
         </div>
       )}
     </>
