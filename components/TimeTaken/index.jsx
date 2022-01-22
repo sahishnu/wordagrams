@@ -23,10 +23,12 @@ export const TimeTaken = () => {
         })
       }
     >
-      <div className={styles.timeTaken}>
-        {solvedPuzzle ? 'Solved in ' : ''}
-        {userPreferences.showTimer ? getTimeDisplay(timeTaken) : null}
-      </div>
+      {userPreferences.showTimer ? (
+        <div className={styles.timeTaken}>
+          {solvedPuzzle ? 'Solved in ' : ''}
+          {getTimeDisplay(timeTaken)}
+        </div>
+      ) : null}
     </div>
   );
 }
