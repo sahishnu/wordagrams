@@ -17,7 +17,7 @@ import { Board } from '../components/Board';
 import { Header } from '../components/Header';
 import { Emojis, META_CONTENT } from '../constants';
 
-export default function MainGame({ puzzle, emoji, hits }) {
+export default function MainGame({ puzzle }) {
 
   return (
     <div className={styles.container}>

@@ -1,10 +1,7 @@
 /**
  * script written by: Sahishnu
  * Date: 2022, Jan 13
- * Collected MacOS word list from /usr/share/dict/words
- * Removed all 'misspelled' words using `aspell`:
- *    $ comm -23 in.txt <(aspell list < in.txt) > out.txt
- * Then ran this script against the remaining words
+ * Converts a text file to JSON
  */
 const fs = require('fs');
 

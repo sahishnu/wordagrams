@@ -43,24 +43,9 @@ export const checkBoard = async (boardPositions) => {
 
 const testAreAllWordsInDictionary = async (words) => {
   const errors = [];
-  // const data = await Promise.all(
-  //   words.map(word => fetch(
-  //     `https://wordsapiv1.p.rapidapi.com/words/${word}/definitions`, {
-  //       headers: {
-  //         "content-type":"application/octet-stream",
-  //         "x-rapidapi-host":"wordsapiv1.p.rapidapi.com",
-  //         "x-rapidapi-key":`${process.env.NEXT_PUBLIC_WORDS_API_KEY}`,
-  //       }
-  //     }
-  //   ).then(response => response.json()))
-  // )
-
-  // console.log(data);
-
-
 
   words.forEach(word => {
-    const inDictionary = DICTIONARY.includes(word)
+    const inDictionary = DICTIONARY[word]
     if (word.length >= MIN_WORD_LENGTH && !inDictionary) {
       errors.push(`${word.toUpperCase()} is not in the dictionary!`);
     }
