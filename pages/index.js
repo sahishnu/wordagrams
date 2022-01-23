@@ -11,11 +11,10 @@ import faunadb from 'faunadb';
 
 import { SolveCounter } from '../components/SolveCounter';
 import styles from '../styles/Home.module.scss'
-import PUZZLES from '../puzzles.json';
 import { GameProvider } from '../context/game-context';
 import { Board } from '../components/Board';
 import { Header } from '../components/Header';
-import { Emojis, META_CONTENT } from '../constants';
+import { META_CONTENT } from '../constants';
 
 export default function MainGame({ puzzle }) {
 
@@ -92,7 +91,8 @@ export default function MainGame({ puzzle }) {
 // This function gets called at each page request
 export async function getServerSideProps() {
   const date = dayjs().tz("America/New_York").format('YYYY-MM-DD');
-  const puzzle = PUZZLES.find(p => p.date === date) || PUZZLES[0];
+  // let puzzle = PUZZLES.find(p => p.date === date) || PUZZLES[0];
+  let puzzle = null;
   try {
     const q = faunadb.query;
     const client = new faunadb.Client({
@@ -114,7 +114,7 @@ export async function getServerSideProps() {
       q.Get(q.Match(q.Index('puzzle_by_day'), date))
     );
 
-    console.log(document.data);
+    puzzle = document.data
 
   } catch (err) {
     console.log(err);
@@ -123,8 +123,6 @@ export async function getServerSideProps() {
   return {
     props: {
       puzzle,
-      emoji: Emojis[Math.floor(Math.random() * (Emojis.length - 1))],
-      hits: 0
     },
   }
 }

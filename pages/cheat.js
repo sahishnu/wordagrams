@@ -18,7 +18,7 @@ export default function CheatPage() {
           const byLetterCount = data.words.reduce((acc, word) => {
             const size = word.length;
             if (!acc[size]) {
-              acc[size] = [];
+              acc[size] = [word];
             } else {
               acc[size].push(word);
             }
