@@ -21,11 +21,11 @@
   margin-bottom: 8px;
   margin-right: 8px;
   opacity: 0.3;
-  cursor: pointer;
+  // cursor: pointer;
 }
 
 .letterSectionHeader {
-  display: flex;;
+  display: flex;
   align-items: center;
   color: #5A6583;
 
@@ -34,7 +34,37 @@
   }
 }
 
+.displayLetter {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-right: 6px;
+  cursor: pointer;
+  opacity: 0.3;
+}
+
 .highlighted {
   // background: #CE82C7;
   opacity: 1;
+}
+
+.importantLettersContainer {
+
+  .importantLettersRow {
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+
+    > img {
+      opacity: 0.5;
+      cursor: pointer;
+      width: 20px;
+      margin-left: 8px;
+    }
+  }
+  .instructions {
+    color: #5A6583;
+    font-size: 14px;
+  }
 }

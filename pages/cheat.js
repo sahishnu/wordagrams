@@ -11,7 +11,6 @@ export default function CheatPage() {
   const [possibleWords, setPossibleWords] = useState({});
 
   const handleSubmit = (e) => {
-    console.log(inputVal);
     fetch(`/api/possible-words?letters=${inputVal}`)
       .then((res) => res.json())
       .then((data) => {
@@ -88,7 +87,7 @@ export default function CheatPage() {
             <img onClick={handleSubmit}  className={styles.submitButton} src={'./arrow-right-circle.svg'} alt="submit" />
           </div>
         </div>
-        <WordsList words={possibleWords} />
+        <WordsList words={possibleWords} letters={inputVal} />
       </main>
 
     </div>
