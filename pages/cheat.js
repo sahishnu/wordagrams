@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head'
 
 import { META_CONTENT } from '../constants';
+import { WordsList } from '../components/WordsList';
 import styles from '../styles/Cheat.module.scss'
 
 export default function CheatPage() {
@@ -87,25 +88,7 @@ export default function CheatPage() {
             <img onClick={handleSubmit}  className={styles.submitButton} src={'./arrow-right-circle.svg'} alt="submit" />
           </div>
         </div>
-        {Object.keys(possibleWords).length > 0 ? (
-          <div className={styles.wordListContainer}>
-            <h2>Possible words</h2>
-            {Object.keys(possibleWords).map((size) => {
-              return (
-                <div key={`${size}-size-words`} className={styles.letterSection}>
-                  <div className={styles.letterSectionHeader}>
-                    <h3>{size} letters</h3> ({possibleWords[size].length} word{possibleWords[size].length > 1 ? 's' : ''})
-                  </div>
-                  <ul className={styles.wordList}>
-                    {possibleWords[size].map((word) => {
-                      return <li className={styles.word} key={word}>{word}</li>
-                    })}
-                  </ul>
-                </div>
-              )
-            })}
-          </div>
-        ) : null}
+        <WordsList words={possibleWords} />
       </main>
 
     </div>

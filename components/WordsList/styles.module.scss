@@ -1,0 +1,40 @@
+.wordListContainer {
+
+  & h2, h3 {
+    color: #CE82C7;
+  }
+  & ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.wordList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.word {
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+.letterSectionHeader {
+  display: flex;;
+  align-items: center;
+  color: #5A6583;
+
+  & h3 {
+    margin-right: 1rem;
+  }
+}
+
+.highlighted {
+  // background: #CE82C7;
+  opacity: 1;
+}
