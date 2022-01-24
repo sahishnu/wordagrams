@@ -1,7 +1,7 @@
 import dictionarySorted from './data/dictionarySorted.json';
 
 export default async function handler(req, res) {
-  const { letters } = req.query;
+  let letters = req.query.letters;
 
   if (!letters || letters.length < 3) {
     return res.status(400).json({
@@ -15,6 +15,7 @@ export default async function handler(req, res) {
     });
   }
 
+  letters = letters.toLowerCase();
   const possibleWords = [];
   const possibleCombos = combine(letters, 3);
 

@@ -25,3 +25,18 @@ export const META_CONTENT = {
 
 export const MIN_TIME_FIRST_HINT = 4*60;
 export const MIN_TIME_SECOND_HINT = 7*60;
+
+export const DICE = [
+  'MMLLBY',
+  'VFGKPP',
+  'HHNNRR',
+  'DFRLLW',
+  'RRDLGG',
+  'XKBSZN',
+  'WHHTTP',
+  'CCBTJD',
+  'CCMTTS',
+  'OIINNY',
+  'AEIOUU',
+  'AAEEOO'
+];

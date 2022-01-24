@@ -92,7 +92,7 @@ export default function CheatPage() {
             <h2>Possible words</h2>
             {Object.keys(possibleWords).map((size) => {
               return (
-                <div className={styles.letterSection}>
+                <div key={`${size}-size-words`} className={styles.letterSection}>
                   <div className={styles.letterSectionHeader}>
                     <h3>{size} letters</h3> ({possibleWords[size].length} word{possibleWords[size].length > 1 ? 's' : ''})
                   </div>
