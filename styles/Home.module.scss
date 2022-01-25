@@ -1,21 +1,10 @@
-.container {
-  max-width: 350px;
-
-  height: 100%;
-  margin: 0 auto;
-
-  @media (min-width: 512px) {
-    max-width: 500px;
-  }
-}
-
 .main {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  
+
   & h1 {
     font-size: 20px;
     color: white;
