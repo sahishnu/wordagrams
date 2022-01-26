@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
-import { BOARD_SIZE, MIN_TIME_FIRST_HINT, GAME_STATES } from '../constants';
+import { BOARD_SIZE, MIN_TIME_FIRST_HINT, GAME_STATES, Good_Luck_Messages } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame, shuffleBoardPositions } from '../utils/initGame';
 import { PersistentStorage } from '../utils/storedGameState';
@@ -18,6 +18,7 @@ export const GameContext = React.createContext({
     timeTaken: 0,
     puzzle: {},
   },
+  disableButtons: false,
   startGame: () => {},
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
@@ -46,6 +47,7 @@ export const GameProvider = ({
     timeTaken: 0,
     puzzle
   });
+  const [disableButtons, setDisableButtons] = useState(false);
   // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
   const [gameInitialized, setGameInitialized] = useState(false);
@@ -125,7 +127,11 @@ export const GameProvider = ({
   };
 
   const startGame = () => {
+    if (disableButtons) {
+      return;
+    }
     if (gameState.state === GAME_STATES.NOT_STARTED) {
+      setDisableButtons(true);
       const countdown = 3;
       Array(countdown).fill(0).map((_, i) => {
         setTimeout(() => {
@@ -133,11 +139,12 @@ export const GameProvider = ({
         }, 1000 * i);
       })
       setTimeout(() => {
-        toast('Good luck, have fun - Sahishnu');
+        toast(`${Good_Luck_Messages[Math.floor(Math.random() * Good_Luck_Messages.length)]} - Sahishnu`);
         setGameState({
           ...gameState,
           state: GAME_STATES.IN_PROGRESS,
         });
+        setDisableButtons(false);
       }, 1000 * countdown);
     } else {
       console.error('Game already started');
@@ -162,6 +169,11 @@ export const GameProvider = ({
    * if invalid, display toasters with approprate message
    */
   const checkBoardSolution = async () => {
+    if (disableButtons) {
+      return;
+    }
+    setDisableButtons(true);
+    setTimeout(() => setDisableButtons(false), 2000);
     const check = await checkBoard(gameState.board)
 
     if (check.pass) {
@@ -253,6 +265,7 @@ export const GameProvider = ({
         startGame,
         handleChangePosition,
         checkBoardSolution,
+        disableButtons,
         puzzle,
         gameInitialized,
         shuffleBoard,

@@ -11,6 +11,13 @@ export const GAME_STATES = {
   SOLVED: 'SOLVED'
 }
 
+export const Good_Luck_Messages = [
+  'Good Luck, Have Fun! 🤙🏽',
+  'Happy Puzzle Solving! 🧩',
+  'Happy Hunting! 🐯',
+  'Good luck, you will need it! 😅',
+];
+
 export const Emojis = [
   '🤪', '💩', '😄', '🎮', '💪🏽',
   '🫀', '❤️', '💙', '🧡', '💜',

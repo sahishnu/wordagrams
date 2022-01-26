@@ -17,6 +17,7 @@ export function Board() {
     gameInitialized,
     showHint,
     userPreferences,
+    disableButtons,
     gameState
   } = useGameContext();
 
@@ -54,6 +55,7 @@ export function Board() {
         <BoardButtons
           shuffleBoard={shuffleBoard}
           state={state}
+          disableButtons={disableButtons}
           startGame={startGame}
           checkBoardSolution={checkBoardSolution}
           timeTaken={timeTaken}

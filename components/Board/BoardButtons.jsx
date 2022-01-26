@@ -9,6 +9,7 @@ export const BoardButtons = ({
   startGame,
   showHint,
   state,
+  disableButtons,
   userPreferences
 }) => {
 
@@ -16,7 +17,7 @@ export const BoardButtons = ({
     case GAME_STATES.NOT_STARTED:
       return (
         <div className={styles.buttonRow}>
-          <Button label="Start Game" color="green" onClick={startGame} />
+          <Button disabled={disableButtons} label="Start Game" color="green" onClick={startGame} />
         </div>
       );
     case GAME_STATES.SOLVED:
