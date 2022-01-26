@@ -133,6 +133,7 @@ export const GameProvider = ({
         }, 1000 * i);
       })
       setTimeout(() => {
+        toast('Good luck, have fun - Sahishnu');
         setGameState({
           ...gameState,
           state: GAME_STATES.IN_PROGRESS,
