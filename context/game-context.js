@@ -136,7 +136,7 @@ export const GameProvider = ({
       const countdown = 3;
       Array(countdown).fill(0).map((_, i) => {
         setTimeout(() => {
-          toast(countdown - i, { duration: 1500 });
+          toast(countdown - i, { duration: 1000 });
         }, 1000 * i);
       })
       setTimeout(() => {
@@ -146,7 +146,7 @@ export const GameProvider = ({
           state: GAME_STATES.IN_PROGRESS,
         });
         setDisableButtons(false);
-      }, 1250 * countdown);
+      }, 1000 * countdown);
     } else {
       console.error('Game already started');
     }
