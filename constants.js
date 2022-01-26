@@ -5,6 +5,12 @@ export const ItemTypes = {
   TILE: 'tile'
 }
 
+export const GAME_STATES = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  SOLVED: 'SOLVED'
+}
+
 export const Emojis = [
   '🤪', '💩', '😄', '🎮', '💪🏽',
   '🫀', '❤️', '💙', '🧡', '💜',

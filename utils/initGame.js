@@ -1,5 +1,5 @@
-import { LocalStorage } from "./LocalStorage";
-import { getSavedGameState, saveGameState } from "./storedGameState";
+import { GAME_STATES } from "../constants";
+import { PersistentStorage } from "./storedGameState";
 
 export const initGame = ({
   size,
@@ -12,13 +12,14 @@ export const initGame = ({
     console.info('No saved game state found, initializing fresh game!');
     game = initFreshGame(size, puzzleObj);
     game.newGame = true;
-    game.takenHint1 = false;
-    LocalStorage.setItem('timeTaken', 0);
-    LocalStorage.setItem('takenHint1', false);
+    game.state = GAME_STATES.NOT_STARTED;
+    game.timeTaken = 0;
   } else{
     console.info('Saved game state found, loading it up!');
     game = initFromSavedState();
-    game.newGame = false;
+    if (game.timeTaken > 0 && game.state === GAME_STATES.NOT_STARTED) {
+      game.state = GAME_STATES.IN_PROGRESS;
+    }
   }
 
   return game;
@@ -30,8 +31,7 @@ export const shuffleBoardPositions = (size, puzzle) => {
 }
 
 const initFromSavedState = () => {
-  const savedGameState = getSavedGameState();
-
+  const savedGameState = PersistentStorage.getSavedGameState();
   return savedGameState;
 }
 
@@ -56,19 +56,22 @@ const initFreshGame = (size, puzzleObj) => {
       };
     })
   }
-  saveGameState(board, puzzleObj, false);
-  return {
+
+  const game = {
     board,
+    state: GAME_STATES.NOT_STARTED,
+    timeTaken: 0,
     puzzle: puzzleObj,
-    solved: false,
-  };
+  }
+  // PersistentStorage.saveGameState(game);
+  return game;
 }
 
 // we know game exists if
 // LocalStorage has a saved game state dated from today
 const hasExistingGame = (puzzle, todaySlug) => {
 
-  const savedGameState = getSavedGameState();
+  const savedGameState = PersistentStorage.getSavedGameState();
 
   if (
     (savedGameState?.puzzle?.letters === puzzle?.letters) &&

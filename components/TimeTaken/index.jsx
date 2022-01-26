@@ -3,14 +3,12 @@ import classnames from "classnames";
 import { useGameContext } from "../../context/game-context";
 import styles from "./styles.module.scss";
 
-export const TimeTaken = () => {
+export const TimeTaken = ({ solved, timeTaken }) => {
   const {
-    solvedPuzzle,
-    timeTaken,
     userPreferences
   } = useGameContext();
 
-  if (solvedPuzzle && timeTaken === 0) {
+  if (solved && timeTaken === 0) {
     return null;
   }
 
@@ -18,42 +16,19 @@ export const TimeTaken = () => {
     <div
       className={
         classnames({
-          [styles.solved]: solvedPuzzle,
+          [styles.solved]: solved,
           [styles.timeContainer]: true,
         })
       }
     >
       {userPreferences.showTimer ? (
         <div className={styles.timeTaken}>
-          {solvedPuzzle ? 'Solved in ' : ''}
+          {solved ? 'Solved in ' : ''}
           {getTimeDisplay(timeTaken)}
         </div>
       ) : null}
     </div>
   );
-}
-
-
-// get time stored in local storage for this puzzle
-// if no time stored, return 0
-// if no game stored, return 0
-//  else return time stored
-const getStoredTime = () => {
-  if (typeof window !== "undefined") {
-
-    const savedGame = localStorage.getItem('board');
-    const timeTaken = localStorage.getItem('timeTaken');
-
-    if (!savedGame) {
-      return 0;
-    } else if (!timeTaken) {
-      return 0;
-    } else {
-      return parseInt(timeTaken);
-    }
-  }
-
-  return 0;
 }
 
 // if less than an hour, return minutes:seconds

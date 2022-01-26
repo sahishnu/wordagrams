@@ -3,18 +3,22 @@ import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
-import { BOARD_SIZE, MIN_TIME_FIRST_HINT } from '../constants';
+import { BOARD_SIZE, MIN_TIME_FIRST_HINT, GAME_STATES } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame, shuffleBoardPositions } from '../utils/initGame';
-import { getSavedUserPreferences, saveGameState, saveUserPreferencesToState } from '../utils/storedGameState';
-import { LocalStorage } from '../utils/LocalStorage';
+import { PersistentStorage } from '../utils/storedGameState';
 import { getTimeDisplay } from '../components/TimeTaken';
 
 const todaySlug = dayjs().tz("America/New_York").format('YYYY-MM-DD');
 
 export const GameContext = React.createContext({
-  currentBoardPositions: {},
-  setCurrentBoardPositions: () => {},
+  gameState: {
+    board: {},
+    state: GAME_STATES.NOT_STARTED, // 'NOT_STARTED', 'IN_PROGRESS', 'SOLVED'
+    timeTaken: 0,
+    puzzle: {},
+  },
+  startGame: () => {},
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
   shuffleBoard: () => {},
@@ -25,11 +29,7 @@ export const GameContext = React.createContext({
     showTimer: true,
     showHintButton: true
   },
-  solvedPuzzle: false,
   solvedCount: 0,
-  timeTaken: 0,
-  past4MinMark: false,
-  takenHint1: false,
   gameInitialized: false,
   fastestTime: 0
 });
@@ -40,17 +40,19 @@ export const GameProvider = ({
   children,
   puzzle
 }) => {
-  // position stored and displayed on board
-  const [currentBoardPositions, setCurrentBoardPositions] = useState({});
+  const [gameState, setGameState] = useState({
+    board: {},
+    state: GAME_STATES.NOT_STARTED,
+    timeTaken: 0,
+    puzzle
+  });
+
   // stores whether puzzle is solved or not
   const [solvedPuzzle, setSolvedPuzzle] = useState(false);
   // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
-  const [timeTaken, setTimeTaken] = useState(0);
   const [gameInitialized, setGameInitialized] = useState(false);
   const [fastestTime, setFastestTime] = useState(0);
-  const [takenHint1, setTakenHint1] = useState(false);
-  const [past4MinMark, setPast4MinMark] = useState(false);
   const [userPreferences, setUserPreferences] = useState({
     showTimer: true,
     showHintButton: true
@@ -60,7 +62,7 @@ export const GameProvider = ({
     // init board on mount
     initBoardOnMount();
     // init user preferences
-    const savedUserPrefs = getSavedUserPreferences();
+    const savedUserPrefs = PersistentStorage.getSavedUserPreferences();
     if (savedUserPrefs) {
       const savedPrefTimer = savedUserPrefs.showTimer;
       const savedPrefHintButton = savedUserPrefs.showHintButton;
@@ -70,7 +72,7 @@ export const GameProvider = ({
       });
     }
     // on mount, read stored time from local storage and set timeTaken
-    setTimeTaken(getStoredTime());
+    // setTimeTaken(getStoredTime());
   }, []);
 
   // update time taken each second
@@ -78,18 +80,22 @@ export const GameProvider = ({
   // this is written to local storage for persistence
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!solvedPuzzle && gameInitialized) {
-        localStorage.setItem('timeTaken', timeTaken + 1);
-        setTimeTaken(timeTaken + 1);
-
-        if (timeTaken >= MIN_TIME_FIRST_HINT && !past4MinMark) {
-          setPast4MinMark(true);
-        }
+      if (gameState.state === GAME_STATES.IN_PROGRESS && gameInitialized) {
+        const timeTaken = gameState.timeTaken;
+        setGameState({
+          ...gameState,
+          timeTaken: timeTaken + 1
+        });
       }
     }, 1000);
 
     return () => clearTimeout(timer);
   });
+
+  useEffect(() => {
+    // updating local storage with new game state
+    PersistentStorage.saveGameState(gameState);
+  }, [gameState.timeTaken, gameState.state, gameState.board]);
 
   // initializes the game on mount
   // if there is a saved game state, use that, otherwise get fresh game
@@ -100,9 +106,14 @@ export const GameProvider = ({
       puzzle,
       todaySlug
     });
-    setCurrentBoardPositions(game.board);
-    setSolvedPuzzle(game.solved);
-    setTakenHint1(!!game.takenHint1);
+    setGameState({
+      ...gameState,
+      board: game.board,
+      state: game.state,
+      timeTaken: game.timeTaken,
+      // game.solved
+    });
+    // setSolvedPuzzle(game.solved);
     setGameInitialized(true);
     fetch(`api/solved-count?slug=${todaySlug}`)
     .then((res) => res.json())
@@ -114,12 +125,26 @@ export const GameProvider = ({
         setFastestTime(data.fastestTime);
       }
     });
-  }
+  };
+
+  const startGame = () => {
+    if (gameState.state === GAME_STATES.NOT_STARTED) {
+      setGameState({
+        ...gameState,
+        state: GAME_STATES.IN_PROGRESS,
+      });
+    } else {
+      console.error('Game already started');
+    }
+  };
 
   // shuffles tiles on board
   const shuffleBoard = () => {
     const game = shuffleBoardPositions(BOARD_SIZE, puzzle);
-    setCurrentBoardPositions(game.board);
+    setGameState({
+      ...gameState,
+      board: game.board,
+    });
   };
 
   /**
@@ -131,16 +156,18 @@ export const GameProvider = ({
    * if invalid, display toasters with approprate message
    */
   const checkBoardSolution = async () => {
-    const check = await checkBoard(currentBoardPositions)
+    const check = await checkBoard(gameState.board)
 
     if (check.pass) {
       toast.success("Congratulations! You solved the puzzle!");
-      saveGameState(currentBoardPositions, puzzle, check.pass);
-      setSolvedPuzzle(true);
+      setGameState({
+        ...gameState,
+        state: GAME_STATES.SOLVED,
+      })
 
       if (process.env.NODE_ENV === 'production') {
         // update solved count
-        const timeTaken = parseInt(LocalStorage.getItem('timeTaken'));
+        const { timeTaken } = gameState;
         const isTimeTakenValid = !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60*60*24;
 
         fetch(`api/solved-count?slug=${todaySlug}`, {
@@ -160,8 +187,8 @@ export const GameProvider = ({
             }
           })
       }
-      console.log(process.env.NODE_ENV);
     } else {
+      // display toasters with approprate error messages
       check.errors.forEach(error => toast.error(error));
     }
 
@@ -169,24 +196,22 @@ export const GameProvider = ({
   };
 
   // handles dropping a piece in a new spot
-  // has to be an empty spot, different than the old spot
+  // has to be different than the old spot
   const handleChangePosition = (sourceSq, targetSq, piece) => {
     if (sourceSq === targetSq) {
       return;
     }
 
-    const newBoardPositions = Object.assign({}, currentBoardPositions);
+    const newBoard = swapBoardPieces(gameState.board, sourceSq, targetSq);
 
-    const temp = newBoardPositions[sourceSq].letter;
-    newBoardPositions[sourceSq].letter = newBoardPositions[targetSq].letter;
-    newBoardPositions[targetSq].letter = temp;
-
-    saveGameState(newBoardPositions, puzzle, solvedPuzzle);
-    setCurrentBoardPositions(newBoardPositions);
+    setGameState({
+      ...gameState,
+      board: newBoard,
+    });
   }
 
   const showHint = () => {
-    const timeTaken = parseInt(LocalStorage.getItem('timeTaken'));
+    const timeTaken = gameState.timeTaken;
     const timeLeftForHint = MIN_TIME_FIRST_HINT - timeTaken;
 
     if (timeLeftForHint > 0) {
@@ -194,14 +219,12 @@ export const GameProvider = ({
     } else {
       const hint = puzzle.words[0];
       toast(`Have you tried ${hint.toUpperCase()} 👀`);
-      setTakenHint1(true);
-      LocalStorage.setItem('takenHint1', true);
     }
 
   }
 
   useEffect(()=> {
-    saveUserPreferencesToState(userPreferences);
+    PersistentStorage.saveUserPreferencesToState(userPreferences);
   }, [userPreferences])
 
   const changeShowTimerPreference = (val) => {
@@ -220,20 +243,16 @@ export const GameProvider = ({
   return (
     <GameContext.Provider
       value={{
-        currentBoardPositions,
-        setCurrentBoardPositions,
+        gameState,
+        startGame,
         handleChangePosition,
         checkBoardSolution,
-        solvedPuzzle,
         puzzle,
         gameInitialized,
         shuffleBoard,
         showHint,
         solvedCount,
         fastestTime,
-        timeTaken,
-        past4MinMark,
-        takenHint1,
         userPreferences,
         changeShowHintButtonPreference,
         changeShowTimerPreference
@@ -244,24 +263,11 @@ export const GameProvider = ({
   );
 };
 
-// get time stored in local storage for this puzzle
-// if no time stored, return 0
-// if no game stored, return 0
-//  else return time stored
-const getStoredTime = () => {
-  if (typeof window !== "undefined") {
+const swapBoardPieces = (board, i, j) => {
+  const newBoard = Object.assign({}, board);
+  const temp = newBoard[i].letter;
+  newBoard[i].letter = newBoard[j].letter;
+  newBoard[j].letter = temp;
 
-    const savedGame = localStorage.getItem('board');
-    const timeTaken = localStorage.getItem('timeTaken');
-
-    if (!savedGame) {
-      return 0;
-    } else if (!timeTaken) {
-      return 0;
-    } else {
-      return parseInt(timeTaken);
-    }
-  }
-
-  return 0;
+  return newBoard;
 }

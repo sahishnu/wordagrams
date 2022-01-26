@@ -8,15 +8,15 @@ import { Button } from '../Button';
 import styles from './styles.module.scss';
 import { getShareString } from '../../utils/share';
 
-export function SolvedLabel({ board }) {
+export function SolvedLabel({ board, timeTaken }) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        text: getShareString(board)
+        text: getShareString(board, timeTaken)
       })
     } else {
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(getShareString(board))
+        navigator.clipboard.writeText(getShareString(board, timeTaken))
         .then(() => {
           toast.success('Copied to clipboard');
         });
