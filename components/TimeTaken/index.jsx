@@ -10,7 +10,7 @@ export const TimeTaken = ({ solved, timeTaken }) => {
 
   if (solved && timeTaken === 0) {
     return null;
-  }
+  };
 
   return (
     <div

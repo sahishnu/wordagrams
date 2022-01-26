@@ -26,6 +26,7 @@ export function SolvedLabel({ board, timeTaken }) {
   // gets time till midnight
   const today = dayjs().tz("America/New_York");
   const midnight = today.add(1, 'day').startOf('day');
+
   return (
     <div className={styles.solvedContainer}>
       <h2 className={styles.solvedMessage}>
@@ -35,7 +36,7 @@ export function SolvedLabel({ board, timeTaken }) {
         <div className={styles.nextPuzzleSection}>
           Next puzzle
           <CountDown
-            date={midnight}
+            date={midnight.valueOf()}
             zeroPadTime={2}
             renderer={props => (<div
               className={styles.countdown}>
