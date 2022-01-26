@@ -46,9 +46,6 @@ export const GameProvider = ({
     timeTaken: 0,
     puzzle
   });
-
-  // stores whether puzzle is solved or not
-  const [solvedPuzzle, setSolvedPuzzle] = useState(false);
   // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
   const [gameInitialized, setGameInitialized] = useState(false);
@@ -129,10 +126,18 @@ export const GameProvider = ({
 
   const startGame = () => {
     if (gameState.state === GAME_STATES.NOT_STARTED) {
-      setGameState({
-        ...gameState,
-        state: GAME_STATES.IN_PROGRESS,
-      });
+      const countdown = 3;
+      Array(countdown).fill(0).map((_, i) => {
+        setTimeout(() => {
+          toast(countdown - i, { duration: 1000 });
+        }, 1000 * i);
+      })
+      setTimeout(() => {
+        setGameState({
+          ...gameState,
+          state: GAME_STATES.IN_PROGRESS,
+        });
+      }, 1000 * countdown);
     } else {
       console.error('Game already started');
     }
