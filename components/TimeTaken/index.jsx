@@ -1,16 +1,27 @@
+import { useRouter } from 'next/router'
 import classnames from "classnames";
 
 import { useGameContext } from "../../context/game-context";
 import styles from "./styles.module.scss";
+import { LocalStorage } from '../../utils/LocalStorage';
 
 export const TimeTaken = ({ solved, timeTaken }) => {
   const {
     userPreferences
   } = useGameContext();
+  const router = useRouter();
+  const { query } = router;
 
   if (solved && timeTaken === 0) {
     return null;
   };
+
+  const handleClickTimer = () => {
+    if (query.dev === 'true') {
+      LocalStorage.clear();
+      router.reload()
+    }
+  }
 
   return (
     <div
@@ -22,7 +33,7 @@ export const TimeTaken = ({ solved, timeTaken }) => {
       }
     >
       {userPreferences.showTimer ? (
-        <div className={styles.timeTaken}>
+        <div onClick={handleClickTimer} className={styles.timeTaken}>
           {solved ? 'Solved in ' : ''}
           {getTimeDisplay(timeTaken)}
         </div>

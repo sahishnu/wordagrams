@@ -79,7 +79,8 @@ export const GameProvider = ({
   // this is written to local storage for persistence
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (gameState.state === GAME_STATES.IN_PROGRESS && gameInitialized) {
+      const savedGame = PersistentStorage.getSavedGameState();
+      if (gameState.state === GAME_STATES.IN_PROGRESS && gameInitialized && savedGame) {
         const timeTaken = gameState.timeTaken;
         setGameState({
           ...gameState,
