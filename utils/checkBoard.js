@@ -45,7 +45,7 @@ const testAreAllWordsInDictionary = async (words) => {
   const errors = [];
 
   words.forEach(word => {
-    const inDictionary = DICTIONARY[word]
+    const inDictionary = DICTIONARY[word.toLowerCase()]
     if (word.length >= MIN_WORD_LENGTH && !inDictionary) {
       errors.push(`${word.toUpperCase()} is not in the dictionary!`);
     }
