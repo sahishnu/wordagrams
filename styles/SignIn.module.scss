@@ -1,0 +1,87 @@
+.container {
+  max-width: 350px;
+
+  height: 100%;
+  margin: 0 auto;
+
+  @media (min-width: 512px) {
+    max-width: 500px;
+  }
+}
+
+.main {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & header {
+    position: absolute;
+    top: 16px;
+  }
+
+  & h1 {
+    font-size: 20px;
+    color: white;
+    text-transform: uppercase;
+    font-family: 'Rubik', sans-serif;
+    letter-spacing: 6px;
+
+    @media (min-width: 512px) {
+      font-size: 32px;
+    }
+  }
+}
+
+.board {
+  position: relative;
+  width: 350px;
+  height: 350px;
+  padding: 6px;
+  border-radius: 8px;
+  background-color: #5A6583;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px -4px 1px rgba(0, 0, 0, 0.25);
+
+  @media (min-width: 512px) {
+    width: 500px;
+    height: 500px;
+    padding: 12px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px -6px 1px rgba(0, 0, 0, 0.25);
+  }
+
+  & footer {
+    position: absolute;
+    bottom: 1.5rem;
+    color: white;
+    padding: 0 2rem;
+  }
+}
+
+.providerLogo {
+  height: 22px;
+}
+
+.signInButton {
+  height: 48px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer;
+  font-family: "Rubik", sans-serif;
+  font-size: 18px;
+  background-color: white;
+  color: #2C3036;
+  border-radius: 24px;
+  outline: none;
+  border: none;
+  min-width: 250px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px -4px 1px rgba(0, 0, 0, 0.25);
+}
+

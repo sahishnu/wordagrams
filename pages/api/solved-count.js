@@ -1,6 +1,18 @@
 import faunadb from 'faunadb';
+import { getSession } from "next-auth/react";
+
+const ANON_USER = 'anon';
 
 export default async function handler(req, res) {
+
+  const session = await getSession({ req })
+  let user;
+
+  if (session?.user) {
+    user = session.user;
+  } else {
+    user = ANON_USER;
+  }
 
   const q = faunadb.query;
   const client = new faunadb.Client({
@@ -24,7 +36,7 @@ export default async function handler(req, res) {
   if (!doesDocExist) {
     await client.query(
       q.Create(q.Collection('hits'), {
-        data: { slug: slug, hits: 0 },
+        data: { slug: slug, hits: 0, solveTimes: [] },
       })
     );
   }
@@ -37,6 +49,27 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const body = JSON.parse(req.body);
     const { timeTaken } = body;
+    const obj = {
+      timeTaken,
+      solvedAt: new Date().toISOString(),
+      user
+    };
+
+    const solveTimes = document.data.solveTimes || [];
+    let newSolveTimes = [...solveTimes];
+
+    // solve times should be sorted in increasing order
+    // as soon as we find a time that is greater than the current time, insert before
+    if (newSolveTimes.length > 0) {
+      for (let i = 0; i < newSolveTimes.length; i++) {
+        if (newSolveTimes[i].timeTaken > timeTaken) {
+          newSolveTimes.splice(i, 0, obj);
+          break;
+        }
+      }
+    } else {
+      newSolveTimes.push(obj);
+    }
 
     const currFastestTime = document.data.fastestTime || 0;
     let newFastestTime = currFastestTime;
@@ -48,6 +81,7 @@ export default async function handler(req, res) {
       q.Update(document.ref, {
         data: {
           hits: document.data.hits + 1,
+          solveTimes: newSolveTimes,
           fastestTime: newFastestTime,
         },
       })
@@ -56,11 +90,13 @@ export default async function handler(req, res) {
     return res.status(200).json({
       hits: document.data.hits + 1,
       fastestTime: newFastestTime,
+      solveTimes: newSolveTimes,
     });
   }
 
   return res.status(200).json({
     hits: document.data.hits,
     fastestTime: document.data.fastestTime,
+    solveTimes: document.data.solveTimes,
   });
 }

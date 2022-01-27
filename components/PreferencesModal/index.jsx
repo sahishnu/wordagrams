@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useSession, signIn, signOut } from "next-auth/react";
 import Modal from 'react-modal';
 import Switch from 'react-switch';
+import classnames from "classnames";
 
 import { useGameContext } from '../../context/game-context';
 import styles from './styles.module.scss';
@@ -11,6 +12,7 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
     changeShowHintButtonPreference,
     changeShowTimerPreference
   } = useGameContext();
+  const { data: session } = useSession();
 
   return (
       <Modal
@@ -33,6 +35,32 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
           />
           <div className={styles.settings}>
             <ul>
+              <li className={classnames(styles.settingRow, styles.loginRow)}>
+                <div className={styles.loginLeft}>
+                    {session ? 'Signed in as: ' : (
+                      <div>
+                        <div>
+                          Sign in with Google
+                        </div>
+                        <div className={styles.subInstruction}>
+                          'Fastest Time' only submitted if signed in
+                        </div>
+                      </div>
+                    )}
+                </div>
+                <div className={styles.loginRight}>
+                  {session ? (
+                      <div style={{textAlign: "right"}}>
+                        <div className={styles.email} onClick={() => signOut()}>
+                          {session.user.email}
+                        </div>
+                        <div className={styles.subInstruction}>Click to sign out</div>
+                      </div>
+                    ) : (
+                      <img className={styles.loginIcon} alt='Sign in' src="./log-in.svg" onClick={() => signIn()} />
+                    )}
+                </div>
+              </li>
               <li className={styles.settingRow}>
                 Show timer above board
                 <Switch

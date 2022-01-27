@@ -1,12 +1,11 @@
 import React from 'react'
-
 import { Square } from '../Square'
 import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
 import { SolvedLabel } from '../SolvedLabel';
 import { TimeTaken } from '../TimeTaken';
 import styles from './styles.module.scss';
-import { GAME_STATES, MIN_TIME_FIRST_HINT } from '../../constants';
+import { GAME_STATES } from '../../constants';
 import { BoardButtons } from './BoardButtons';
 
 export function Board() {

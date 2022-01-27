@@ -108,5 +108,32 @@
 .feedback {
   color: #6E6D6E;
   font-size: 16px;
+}
+
+.subInstruction {
+  font-size: 12px;
+  max-width: 150px;
   color: #CE82C7;
+
+  @media (min-width: 512px) {
+    max-width: 250px;
+  }
+}
+
+.email {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.loginRow {
+  flex-direction: column;
+
+  @media (min-width: 512px) {
+    flex-direction: row;
+  }
+}
+
+.loginIcon {
+  margin-right: 1rem;
+  cursor: pointer;
 }

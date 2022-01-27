@@ -12,6 +12,7 @@
     "dayjs": "^1.10.7",
     "faunadb": "^4.4.1",
     "next": "12.0.7",
+    "next-auth": "^4.1.2",
     "react": "17.0.2",
     "react-countdown": "^2.3.2",
     "react-device-detect": "^2.1.2",
