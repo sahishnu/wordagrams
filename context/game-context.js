@@ -33,7 +33,6 @@ export const GameContext = React.createContext({
   },
   solvedCount: 0,
   gameInitialized: false,
-  fastestTime: 0
 });
 
 export const useGameContext = () => useContext(GameContext);
@@ -52,7 +51,6 @@ export const GameProvider = ({
   // stores how many people have solved the puzzle
   const [solvedCount, setSolvedCount] = useState(0);
   const [gameInitialized, setGameInitialized] = useState(false);
-  const [fastestTime, setFastestTime] = useState(0);
   const [leaderBoard, setLeaderBoard] = useState([]);
   const [userPreferences, setUserPreferences] = useState({
     showTimer: true,
@@ -122,9 +120,6 @@ export const GameProvider = ({
     .then((data) => {
       if (data?.hits) {
         setSolvedCount(data.hits);
-      }
-      if (data?.fastestTime) {
-        setFastestTime(data.fastestTime);
       }
       if (data?.solveTimes) {
         setLeaderBoard(data.solveTimes);
@@ -216,9 +211,6 @@ export const GameProvider = ({
           if (data?.hits) {
             setSolvedCount(data.hits);
           }
-          if (data?.fastestTime) {
-            setFastestTime(data.fastestTime);
-          }
           if (data?.solveTimes) {
             setLeaderBoard(data.solveTimes);
           }
@@ -285,7 +277,6 @@ export const GameProvider = ({
         shuffleBoard,
         showHint,
         solvedCount,
-        fastestTime,
         userPreferences,
         changeShowHintButtonPreference,
         changeShowTimerPreference

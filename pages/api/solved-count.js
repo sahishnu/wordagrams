@@ -7,7 +7,6 @@ export default async function handler(req, res) {
 
   const session = await getSession({ req })
   let user;
-
   if (session?.user) {
     user = session.user;
   } else {
@@ -71,21 +70,11 @@ export default async function handler(req, res) {
       newSolveTimes.push(obj);
     }
 
-    const currFastestTime = document.data.fastestTime || 0;
-
-    let newFastestTime = currFastestTime;
-    if (!currFastestTime || timeTaken < currFastestTime) {
-      newFastestTime = timeTaken;
-    }
-
-
-
     await client.query(
       q.Update(document.ref, {
         data: {
           hits: document.data.hits + 1,
-          solveTimes: newSolveTimes,
-          fastestTime: newFastestTime,
+          solveTimes: newSolveTimes
         },
       })
     );
@@ -103,8 +92,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       hits: document.data.hits + 1,
-      solveTimes: filteredSolveTimes,
-      fastestTime: newFastestTime,
+      solveTimes: filteredSolveTimes
     });
   }
 
@@ -121,7 +109,6 @@ export default async function handler(req, res) {
 
   return res.status(200).json({
     hits: document.data.hits,
-    fastestTime: document.data.fastestTime,
-    solveTimes: filteredSolveTimes,
+    solveTimes: filteredSolveTimes
   });
 }
