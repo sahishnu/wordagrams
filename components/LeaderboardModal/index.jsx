@@ -43,6 +43,13 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
                       </li>
                     )
                   })}
+                  {
+                    leaderBoard.length < 10 ? (
+                      <p className={styles.emptyMessage}>
+                        Your name could be here!
+                      </p>
+                    ) : null
+                  }
                 </ol>
               ) : (
                 <p className={styles.emptyMessage}>
@@ -75,5 +82,5 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
 
 const getLeaderboardName = (name) => {
   const [firstName, lastName] = name.split(' ');
-  return `${firstName.substring(0, 3)} ${lastName[0]}.`;
+  return `${firstName.substring(0, 4)} ${lastName.substring(0, 1)}.`;
 }
