@@ -16,12 +16,13 @@ export const Good_Luck_Messages = [
   'Happy Puzzle Solving! 🧩',
   'Happy Hunting! 🐯',
   'Good luck, you will need it! 😅',
-];
-
-export const Emojis = [
-  '🤪', '💩', '😄', '🎮', '💪🏽',
-  '🫀', '❤️', '💙', '🧡', '💜',
-  '🎼', '🤌🏽', '🙏🏽' ,'🤖', '🦾'
+  'Fingers croses! 🤞🏽',
+  'You\'ll do great! 🧡',
+  'Godspeed, friend 🤝',
+  'May the force be with you 🤘🏽',
+  'You were made for this. You got it! 😝',
+  'Don\'t give up! 💪',
+  'Believe in yourself! 👴🏽',
 ];
 
 export const BOARD_SIZE = COLS;

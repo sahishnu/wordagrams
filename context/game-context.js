@@ -140,7 +140,7 @@ export const GameProvider = ({
         }, 1000 * i);
       })
       setTimeout(() => {
-        toast(`${Good_Luck_Messages[Math.floor(Math.random() * Good_Luck_Messages.length)]} - Sahishnu`);
+        toast(`${Good_Luck_Messages[Math.floor(Math.random() * Good_Luck_Messages.length)]}${'  '} - Sahishnu`);
         setGameState({
           ...gameState,
           state: GAME_STATES.IN_PROGRESS,
