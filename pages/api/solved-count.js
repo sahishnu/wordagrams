@@ -78,6 +78,18 @@ export default async function handler(req, res) {
       newFastestTime = timeTaken;
     }
 
+
+
+    await client.query(
+      q.Update(document.ref, {
+        data: {
+          hits: document.data.hits + 1,
+          solveTimes: newSolveTimes,
+          fastestTime: newFastestTime,
+        },
+      })
+    );
+
     // filter out anonymous users
     // get top 10 solve times
     // only send users name and not email
@@ -85,24 +97,14 @@ export default async function handler(req, res) {
       .filter(time => time.user !== ANON_USER)
       .slice(0, 10)
       .map(time => ({
-        ...time,
+        timeTaken: time.timeTaken,
         user: time.user.name
       }));
 
-    await client.query(
-      q.Update(document.ref, {
-        data: {
-          hits: document.data.hits + 1,
-          solveTimes: filteredSolveTimes,
-          fastestTime: newFastestTime,
-        },
-      })
-    );
-
     return res.status(200).json({
       hits: document.data.hits + 1,
+      solveTimes: filteredSolveTimes,
       fastestTime: newFastestTime,
-      solveTimes: newSolveTimes,
     });
   }
 
@@ -113,7 +115,7 @@ export default async function handler(req, res) {
     .filter(time => time.user !== ANON_USER)
     .slice(0, 10)
     .map(time => ({
-      ...time,
+      timeTaken: time.timeTaken,
       user: time.user.name
     }));
 
