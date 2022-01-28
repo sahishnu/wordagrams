@@ -1,5 +1,6 @@
 import Modal from 'react-modal';
 import { useSession, signIn } from "next-auth/react";
+import classnames from 'classnames';
 
 import { getTimeDisplay } from '../TimeTaken';
 import { useGameContext } from '../../context/game-context';
@@ -11,6 +12,8 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
     leaderBoard
   } = useGameContext();
   const { data: session } = useSession();
+
+  let isUserInLeaderboard = leaderBoard.some(({ isUser }) => isUser);
 
   return (
       <Modal
@@ -37,14 +40,14 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
                 <ol>
                   {leaderBoard.map((leader, index) => {
                     return (
-                      <li className={styles.row} key={index}>
-                        <span className={styles.name}>{getLeaderboardName(leader.user)}</span>
+                      <li className={classnames(styles.row, {[styles.highlight]: leader.isUser})} key={index}>
+                        <span className={styles.name}>{getLeaderboardName(leader.user)}{leader.isUser ? ' 🎉' : null}</span>
                         <span className={styles.time}>{getTimeDisplay(leader.timeTaken)}</span>
                       </li>
                     )
                   })}
                   {
-                    leaderBoard.length < 10 ? (
+                    (leaderBoard.length < 10 && !isUserInLeaderboard) ? (
                       <p className={styles.emptyMessage}>
                         Your name could be here!
                       </p>

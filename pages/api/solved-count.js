@@ -92,7 +92,8 @@ export default async function handler(req, res) {
       .slice(0, 10)
       .map(time => ({
         timeTaken: time.timeTaken,
-        user: time.user.name
+        user: time.user.name,
+        isUser: time.user.email === user.email
       }));
 
     return res.status(200).json({
@@ -109,7 +110,8 @@ export default async function handler(req, res) {
     .slice(0, 10)
     .map(time => ({
       timeTaken: time.timeTaken,
-      user: time.user.name
+      user: time.user.name,
+      isUser: time.user.email === user.email
     }));
 
   return res.status(200).json({
