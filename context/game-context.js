@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useSession, signIn, signOut } from "next-auth/react";
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
@@ -56,6 +57,8 @@ export const GameProvider = ({
     showTimer: true,
     showHintButton: true
   });
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     // init board on mount
@@ -178,34 +181,7 @@ export const GameProvider = ({
     const check = await checkBoard(gameState.board)
 
     if (check.pass) {
-      toast.success("Congratulations! You solved the puzzle!");
-      setGameState({
-        ...gameState,
-        state: GAME_STATES.SOLVED,
-      })
-
-      if (process.env.NODE_ENV === 'production') {
-        // update solved count
-        const { timeTaken } = gameState;
-        const isTimeTakenValid = !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60*60*24;
-
-        fetch(`api/solved-count?slug=${todaySlug}`, {
-          method: 'POST',
-          // include timetaken if it's valid
-          ...(isTimeTakenValid ? {
-            body: JSON.stringify({ timeTaken})
-          } : {}),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data?.hits) {
-              setSolvedCount(data.hits);
-            }
-            if (data?.fastestTime) {
-              setFastestTime(data.fastestTime);
-            }
-          })
-      }
+      handleValidSolution();
     } else {
       // display toasters with approprate error messages
       check.errors.forEach(error => toast.error(error));
@@ -213,6 +189,37 @@ export const GameProvider = ({
 
     return check.pass;
   };
+
+  const handleValidSolution = async () => {
+    toast.success("Congratulations! You solved the puzzle!");
+    setGameState({
+      ...gameState,
+      state: GAME_STATES.SOLVED,
+    });
+
+    if (process.env.NODE_ENV === 'production') {
+      // update solved count
+      const { timeTaken } = gameState;
+      const isTimeTakenValid = !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60*60*24;
+
+      fetch(`api/solved-count?slug=${todaySlug}`, {
+        method: 'POST',
+        // include timetaken if it's valid
+        ...(isTimeTakenValid ? {
+          body: JSON.stringify({timeTaken})
+        } : {}),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.hits) {
+            setSolvedCount(data.hits);
+          }
+          if (data?.fastestTime) {
+            setFastestTime(data.fastestTime);
+          }
+        })
+    }
+  }
 
   // handles dropping a piece in a new spot
   // has to be different than the old spot
