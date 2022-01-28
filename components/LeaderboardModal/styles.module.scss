@@ -1,0 +1,179 @@
+.modalContent {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.close {
+  cursor: pointer;
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  opacity: 0.7;
+}
+
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.instructions {
+
+  ol li {
+    counter-increment: muffins;
+  }
+
+  ol li:before {
+    content: counter(muffins) ". ";
+    color: #CE82C7;
+  }
+
+  ol {
+    list-style: none;
+    counter-reset: muffins;
+  }
+}
+
+.name {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  background-color: #141A32;
+  border-radius: 16px;
+  border: 2px solid #2F3763;
+  color: white;
+  padding: 16px;
+  line-height: 20px;
+  width: 300px;
+  height: 500px;
+  margin: auto auto;
+
+  & hr {
+    opacity: 0.3;
+  }
+
+  & ol {
+    padding-inline-start: 0px;
+  }
+
+  @media (min-width: 512px) {
+    & ol {
+      padding: 0;
+      margin: 1rem 4rem;
+    }
+    width: 500px;
+    height: 500px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  // opacity: 0.6;
+}
+
+.userNameField {
+
+  .inputLabel {
+    color: #CE82C7;
+    margin-bottom: 8px;
+  }
+
+  .inputRow {
+    display: flex;
+  }
+
+  .submitArrow {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+
+  .disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+
+  .input {
+    background-color: #5A6583;
+    border: none;
+    font-size: 16px;
+    font-family: "Rubik", sans-serif;
+    padding: 6px 12px;
+    color: white;
+    border-radius: 12px;
+    margin-right: 16px;
+    max-width: 120px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    :focus {
+      outline: none;
+    }
+  }
+
+  .fieldMessage {
+    color: #5A6583;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+.emptyMessage {
+  color: #5A6583;
+  text-align: center;
+}
+
+
+.message {
+  color: #CE82C7;
+  font-size: 16px;
+  margin-bottom: 16px;
+
+  @media (min-width: 512px) {
+    font-size: 20px;
+  }
+}
+
+.signInLink {
+  padding-top: 8px;
+  color: #CE82C7;
+  cursor: pointer;
+  text-decoration: underline;
+}

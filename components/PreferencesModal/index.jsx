@@ -13,7 +13,6 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
     changeShowTimerPreference
   } = useGameContext();
   const { data: session } = useSession();
-
   return (
       <Modal
         isOpen={isOpen}
@@ -35,31 +34,32 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
           />
           <div className={styles.settings}>
             <ul>
-              <li className={classnames(styles.settingRow, styles.loginRow)}>
-                <div className={styles.loginLeft}>
-                    {session ? 'Signed in as: ' : (
-                      <div>
-                        <div>
-                          Sign in with Google
-                        </div>
-                        <div className={styles.subInstruction}>
-                          'Fastest Time' only submitted if signed in
-                        </div>
+              <li className={classnames(styles.settingRow, styles.loginRow, { [styles.notSignedIn]: !session })}>
+                {session ? (
+                  <>
+                    <div className={styles.loginLeft}>
+                      Signed in as:
+                    </div>
+                    <div className={styles.loginRight}>
+                      <div className={styles.email} onClick={() => signOut()}>
+                        {session.user.email}
                       </div>
-                    )}
-                </div>
-                <div className={styles.loginRight}>
-                  {session ? (
-                      <div style={{textAlign: "right"}}>
-                        <div className={styles.email} onClick={() => signOut()}>
-                          {session.user.email}
-                        </div>
-                        <div className={styles.subInstruction}>Click to sign out</div>
+                      <div className={styles.subInstruction}>Click to sign out</div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.loginLeft}>
+                      Sign in with Google
+                      <div className={styles.subInstruction}>
+                        'Fastest Time' only submitted if signed in
                       </div>
-                    ) : (
+                    </div>
+                    <div className={styles.loginRight}>
                       <img className={styles.loginIcon} alt='Sign in' src="./log-in.svg" onClick={() => signIn()} />
-                    )}
-                </div>
+                    </div>
+                  </>
+                )}
               </li>
               <li className={styles.settingRow}>
                 Show timer above board

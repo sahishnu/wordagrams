@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useSession, signIn, signOut } from "next-auth/react";
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
@@ -27,6 +26,7 @@ export const GameContext = React.createContext({
   changeShowHintButtonPreference: () => {},
   changeShowTimerPreference: () => {},
   showHint: () => {},
+  leaderBoard: [],
   userPreferences: {
     showTimer: true,
     showHintButton: true
@@ -53,12 +53,11 @@ export const GameProvider = ({
   const [solvedCount, setSolvedCount] = useState(0);
   const [gameInitialized, setGameInitialized] = useState(false);
   const [fastestTime, setFastestTime] = useState(0);
+  const [leaderBoard, setLeaderBoard] = useState([]);
   const [userPreferences, setUserPreferences] = useState({
     showTimer: true,
     showHintButton: true
   });
-
-  const { data: session } = useSession();
 
   useEffect(() => {
     // init board on mount
@@ -126,6 +125,9 @@ export const GameProvider = ({
       }
       if (data?.fastestTime) {
         setFastestTime(data.fastestTime);
+      }
+      if (data?.solveTimes) {
+        setLeaderBoard(data.solveTimes);
       }
     });
   };
@@ -217,6 +219,9 @@ export const GameProvider = ({
           if (data?.fastestTime) {
             setFastestTime(data.fastestTime);
           }
+          if (data?.solveTimes) {
+            setLeaderBoard(data.solveTimes);
+          }
         })
     }
   }
@@ -275,6 +280,7 @@ export const GameProvider = ({
         checkBoardSolution,
         disableButtons,
         puzzle,
+        leaderBoard,
         gameInitialized,
         shuffleBoard,
         showHint,

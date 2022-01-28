@@ -126,6 +126,7 @@
 }
 
 .loginRow {
+
   flex-direction: column;
 
   @media (min-width: 512px) {
@@ -133,7 +134,32 @@
   }
 }
 
+.notSignedIn {
+  flex-direction: row;
+}
+
 .loginIcon {
   margin-right: 1rem;
   cursor: pointer;
+}
+
+.loginLeft {
+  // & .subInstruction {
+  //   text-align: center;
+
+  //   @media (min-width: 512px) {
+  //     text-align: right;
+  //   }
+  // }
+}
+
+.loginRight {
+  & .subInstruction {
+    text-align: center;
+    margin: 0 auto;
+
+    @media (min-width: 512px) {
+      text-align: right;
+    }
+  }
 }

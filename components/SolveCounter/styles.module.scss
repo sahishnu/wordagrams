@@ -10,3 +10,15 @@
     font-size: 11px;
   }
 }
+
+.notSignedIn {
+  color: #CE82C7;
+  cursor: pointer;
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.signedIn {
+  text-align: center;
+  opacity: 0.5;
+}

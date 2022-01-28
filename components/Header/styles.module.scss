@@ -8,7 +8,6 @@
 }
 
 .helpIcon {
-  filter: invert(0);
   opacity: 0.5;
   cursor: pointer;
   position: absolute;
@@ -16,7 +15,6 @@
 }
 
 .settingsIcon {
-  filter: invert(0);
   opacity: 0.5;
   cursor: pointer;
   position: absolute;
@@ -26,6 +24,13 @@
   @media (min-width: 512px) {
     right: 50px;
   }
+}
+
+.leaderboardIcon {
+  opacity: 0.5;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
 }
 
 .title {
