@@ -1,6 +1,4 @@
-import { useSession, signIn } from "next-auth/react";
 import Modal from 'react-modal';
-import classnames from "classnames";
 
 import styles from './styles.module.scss';
 

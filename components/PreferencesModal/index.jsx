@@ -91,6 +91,17 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
                   </a>
                 </span>
               </li>
+              <li className={styles.settingRow}>
+                Privacy Policy
+                <span>
+                  <a
+                    target={'_blank'}
+                    href="https://www.termsfeed.com/live/c8e7a8a2-39c1-4a93-9ca3-a1c674bd3eb8"
+                  >
+                    Visit
+                  </a>
+                </span>
+              </li>
             </ul>
           </div>
           <div className={styles.modalFooter}>
