@@ -16,7 +16,7 @@ export const Good_Luck_Messages = [
   'Happy Puzzle Solving! 🧩',
   'Happy Hunting! 🐯',
   'Good luck, you will need it! 😅',
-  'Fingers croses! 🤞🏽',
+  'Fingers crossed! 🤞🏽',
   'You\'ll do great! 🧡',
   'Godspeed, friend 🤝',
   'May the force be with you 🤘🏽',
