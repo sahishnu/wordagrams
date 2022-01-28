@@ -1,6 +1,5 @@
 import Modal from 'react-modal';
-import classnames from 'classnames';
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 
 import { getTimeDisplay } from '../TimeTaken';
 import { useGameContext } from '../../context/game-context';

@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useSession, signIn } from "next-auth/react";
+
 import { Square } from '../Square'
 import { Tile } from '../Tile'
 import { useGameContext } from '../../context/game-context';
@@ -6,7 +8,8 @@ import { SolvedLabel } from '../SolvedLabel';
 import { TimeTaken } from '../TimeTaken';
 import styles from './styles.module.scss';
 import { GAME_STATES } from '../../constants';
-import { BoardButtons } from './BoardButtons';
+import { BoardButtons } from './BoardButtons'
+import { PromptSignInModal } from '../PromptSignInModal';
 
 export function Board() {
   const {
@@ -19,6 +22,8 @@ export function Board() {
     disableButtons,
     gameState
   } = useGameContext();
+  const { data: session } = useSession();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     board,
@@ -27,6 +32,14 @@ export function Board() {
   } = gameState;
 
   const isSolved = state === GAME_STATES.SOLVED;
+
+  const handleStartGame = () => {
+    if (session) {
+      startGame();
+    } else {
+      setIsModalOpen(true);
+    }
+  }
 
   return (
     <>
@@ -55,13 +68,19 @@ export function Board() {
           shuffleBoard={shuffleBoard}
           state={state}
           disableButtons={disableButtons}
-          startGame={startGame}
+          startGame={handleStartGame}
           checkBoardSolution={checkBoardSolution}
           timeTaken={timeTaken}
           showHint={showHint}
           userPreferences={userPreferences}
         />
       )}
+      <PromptSignInModal
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        startGame={startGame}
+        signIn={signIn}
+      />
     </>
   )
 }

@@ -1,0 +1,96 @@
+.modalContent {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  background-color: #141A32;
+  border-radius: 16px;
+  border: 2px solid #2F3763;
+  color: white;
+  padding: 16px;
+  line-height: 20px;
+  width: 300px;
+  height: 400px;
+  margin: auto auto;
+
+  @media (min-width: 512px) {
+    width: 500px;
+    height: 300px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  // opacity: 0.6;
+}
+
+.message {
+  color: #6E6D6E;
+  font-size: 12px;
+}
+
+.signInSection {
+  margin-bottom: 2rem;
+}
+
+.reminderHeader {
+  margin-bottom: 1rem;
+}
+
+.skipText {
+  margin-bottom: 1rem;
+}
+
+.skip {
+  color: #6E6D6E;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  width: fit-content;
+}
+
+.reminderText {
+  margin-bottom: 1rem;
+}
+
+.link {
+  color: #CE82C7;
+  text-decoration: underline;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+
+  & img {
+    margin-left: 4px;
+    height: 20px;
+  }
+}
