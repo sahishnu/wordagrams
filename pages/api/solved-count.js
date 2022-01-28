@@ -72,16 +72,28 @@ export default async function handler(req, res) {
     }
 
     const currFastestTime = document.data.fastestTime || 0;
+
     let newFastestTime = currFastestTime;
     if (!currFastestTime || timeTaken < currFastestTime) {
       newFastestTime = timeTaken;
     }
 
+    // filter out anonymous users
+    // get top 10 solve times
+    // only send users name and not email
+    const filteredSolveTimes = newSolveTimes
+      .filter(time => time.user !== ANON_USER)
+      .slice(0, 10)
+      .map(time => ({
+        ...time,
+        user: time.user.name
+      }));
+
     await client.query(
       q.Update(document.ref, {
         data: {
           hits: document.data.hits + 1,
-          solveTimes: newSolveTimes,
+          solveTimes: filteredSolveTimes,
           fastestTime: newFastestTime,
         },
       })
@@ -94,9 +106,20 @@ export default async function handler(req, res) {
     });
   }
 
+  const solveTimes = document.data.solveTimes || [];
+  // filter out anonymous users
+  // only send users name and not email
+  const filteredSolveTimes = solveTimes
+    .filter(time => time.user !== ANON_USER)
+    .slice(0, 10)
+    .map(time => ({
+      ...time,
+      user: time.user.name
+    }));
+
   return res.status(200).json({
     hits: document.data.hits,
     fastestTime: document.data.fastestTime,
-    solveTimes: document.data.solveTimes,
+    solveTimes: filteredSolveTimes,
   });
 }
