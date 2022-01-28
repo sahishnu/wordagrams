@@ -60,11 +60,16 @@ export default async function handler(req, res) {
     // solve times should be sorted in increasing order
     // as soon as we find a time that is greater than the current time, insert before
     if (newSolveTimes.length > 0) {
+      let added = false;
       for (let i = 0; i < newSolveTimes.length; i++) {
         if (newSolveTimes[i].timeTaken > timeTaken) {
           newSolveTimes.splice(i, 0, obj);
+          added = true;
           break;
         }
+      }
+      if (!added) {
+        newSolveTimes.push(obj);
       }
     } else {
       newSolveTimes.push(obj);
