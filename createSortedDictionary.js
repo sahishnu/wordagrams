@@ -21,7 +21,11 @@ const dictionary = JSON.parse(rawDictionary);
 const newObj = Object.keys(dictionary).reduce((acc, word) => {
   const key = word.split('').sort().join('');
 
-  acc[key] = word;
+  if (acc[key]) {
+    acc[key] = [...acc[key], word];
+  } else {
+    acc[key] = [word];
+  }
 
   return acc;
 }, {})

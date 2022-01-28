@@ -25,9 +25,11 @@ export default async function handler(req, res) {
 
       const findInSortedDictionary = dictionarySorted[comboString];
       if (findInSortedDictionary !== undefined) {
-        if (!possibleWords.includes(findInSortedDictionary)) {
-          possibleWords.push(findInSortedDictionary);
-        }
+        findInSortedDictionary.forEach(word => {
+          if (!possibleWords.includes(word)) {
+            possibleWords.push(word);
+          }
+        })
       }
     }
   });
