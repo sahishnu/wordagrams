@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import {isMobile} from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend'

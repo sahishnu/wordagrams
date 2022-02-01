@@ -1,11 +1,12 @@
 import React from 'react'
 import { useDrop } from 'react-dnd';
+import classnames from 'classnames';
 
 import { useGameContext } from '../../context/game-context';
 import { ItemTypes, BOARD_SIZE, GAME_STATES } from '../../constants';
 import styles from './styles.module.scss';
 
-export function Square({ position, children }) {
+export function Square({ position, highlighted, children }) {
   const {
     handleChangePosition,
     gameState
@@ -28,10 +29,11 @@ export function Square({ position, children }) {
     }),
     [position, children, handleChangePosition, isSolved]
   );
+
   return (
     <div
       ref={drop}
-      className={styles.square}
+      className={classnames(styles.square, { [styles.highlighted]: highlighted })}
       data-col={position % BOARD_SIZE}
       data-row={Math.floor(position / BOARD_SIZE)}
     >

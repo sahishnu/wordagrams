@@ -20,7 +20,8 @@ export function Board() {
     showHint,
     userPreferences,
     disableButtons,
-    gameState
+    gameState,
+    highlightedPositions
   } = useGameContext();
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +29,7 @@ export function Board() {
   const {
     board,
     state,
-    timeTaken
+    timeTaken,
   } = gameState;
 
   const isSolved = state === GAME_STATES.SOLVED;
@@ -60,7 +61,8 @@ export function Board() {
           if (state === GAME_STATES.NOT_STARTED) {
             tile = null;
           }
-          return <Square key={key} position={key}>{tile}</Square>;
+
+          return <Square key={key} highlighted={highlightedPositions[key]} position={key}>{tile}</Square>;
         })}
       </div>
       {isSolved ? <SolvedLabel board={board} timeTaken={timeTaken} /> : (

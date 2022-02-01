@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
-import { BOARD_SIZE, MIN_TIME_FIRST_HINT, GAME_STATES, Good_Luck_Messages } from '../constants';
+import { BOARD_SIZE, MIN_TIME_FIRST_HINT, GAME_STATES, Good_Luck_Messages, HIGHLIGHTED_POSITIONS } from '../constants';
 import { checkBoard } from '../utils/checkBoard';
 import { initGame, shuffleBoardPositions } from '../utils/initGame';
 import { PersistentStorage } from '../utils/storedGameState';
@@ -33,6 +33,7 @@ export const GameContext = React.createContext({
   },
   solvedCount: 0,
   gameInitialized: false,
+  highlightedPositions: {}
 });
 
 export const useGameContext = () => useContext(GameContext);
@@ -56,6 +57,7 @@ export const GameProvider = ({
     showTimer: true,
     showHintButton: true
   });
+  const [highlightedPositions, setHighlightedPositions] = useState({});
 
   useEffect(() => {
     // init board on mount
@@ -70,8 +72,6 @@ export const GameProvider = ({
         showHintButton: savedPrefHintButton
       });
     }
-    // on mount, read stored time from local storage and set timeTaken
-    // setTimeTaken(getStoredTime());
   }, []);
 
   // update time taken each second
@@ -136,11 +136,12 @@ export const GameProvider = ({
       const countdown = 3;
       Array(countdown).fill(0).map((_, i) => {
         setTimeout(() => {
-          toast(countdown - i, { duration: 1000 });
+          setHighlightedPositions(HIGHLIGHTED_POSITIONS[countdown-i])
         }, 1000 * i);
       })
       setTimeout(() => {
-        toast(`${Good_Luck_Messages[Math.floor(Math.random() * Good_Luck_Messages.length)]}${'  '} - Sahishnu`);
+        toast(Good_Luck_Messages[Math.floor(Math.random() * Good_Luck_Messages.length)]);
+        setHighlightedPositions({});
         setGameState({
           ...gameState,
           state: GAME_STATES.IN_PROGRESS,
@@ -279,7 +280,8 @@ export const GameProvider = ({
         solvedCount,
         userPreferences,
         changeShowHintButtonPreference,
-        changeShowTimerPreference
+        changeShowTimerPreference,
+        highlightedPositions
       }}
     >
       {children}

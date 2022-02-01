@@ -54,3 +54,48 @@ export const DICE = [
   'AEIOUU',
   'AAEEOO'
 ];
+
+export const HIGHLIGHTED_3 = {
+  21: true,
+  22: true,
+  23: true,
+  32: true,
+  41: true,
+  40: true,
+  39: true,
+  50: true,
+  59: true,
+  58: true,
+  57: true,
+};
+
+export const HIGHLIGHTED_2 = {
+  21: true,
+  22: true,
+  23: true,
+  32: true,
+  41: true,
+  40: true,
+  39: true,
+  48: true,
+  59: true,
+  58: true,
+  57: true,
+};
+
+export const HIGHLIGHTED_1 = {
+  21: true,
+  22: true,
+  31: true,
+  40: true,
+  49: true,
+  59: true,
+  58: true,
+  57: true,
+};
+
+export const HIGHLIGHTED_POSITIONS = {
+  1: HIGHLIGHTED_1,
+  2: HIGHLIGHTED_2,
+  3: HIGHLIGHTED_3
+}
