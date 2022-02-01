@@ -2,7 +2,7 @@ import {isMobile} from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Toaster } from 'react-hot-toast';
+import { Toaster, ToastBar, toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
@@ -39,7 +39,18 @@ export default function MainGame({ puzzle }) {
                   border: '2px solid #2F3763'
                 },
               }}
-            />
+            >
+              {(t) => (
+                <ToastBar toast={t}>
+                  {({ icon, message }) => (
+                    <div style={{ display: 'flex' }} onClick={() => toast.dismiss(t.id)}>
+                      {icon}
+                      {message}
+                    </div>
+                  )}
+                </ToastBar>
+              )}
+            </Toaster>
             <footer className={styles.footer}>
               <SolveCounter />
             </footer>
