@@ -38,7 +38,33 @@ export const META_CONTENT = {
 }
 
 export const MIN_TIME_FIRST_HINT = 4*60;
-export const MIN_TIME_SECOND_HINT = 7*60;
+
+export const SOLVED_MESSAGES_BY_TIME = [
+  {
+    time: 30,
+    message: 'Holy cow! You\'re a genius! 🤯'
+  },
+  {
+    time: 45,
+    message: 'Amazing! You\'re fast! 🤩'
+  },
+  {
+    time: 60,
+    message: 'Impressive! You deserve a 🌟'
+  },
+  {
+    time: 90,
+    message: 'Wow! You\'re really quick! 👍🏽'
+  },
+  {
+    time: 120,
+    message: 'Great! You\'re pretty quick! 👍🏽'
+  },
+  {
+    time: 180,
+    message: 'Good job! You did it'
+  },
+]
 
 export const DICE = [
   'MMLLBY',

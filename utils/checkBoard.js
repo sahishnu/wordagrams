@@ -1,4 +1,4 @@
-import { BOARD_SIZE, MIN_WORD_LENGTH } from "../constants";
+import { BOARD_SIZE, MIN_WORD_LENGTH, SOLVED_MESSAGES_BY_TIME } from "../constants";
 import DICTIONARY from '../dictionary.json';
 
 /**
@@ -288,4 +288,16 @@ const countNumberOfIslands = (board2D) => {
   }
 
   return counter;
+}
+
+export const getSuccessMessage = (timeTaken) => {
+  let success = SOLVED_MESSAGES_BY_TIME[SOLVED_MESSAGES_BY_TIME.length - 1].message;
+
+  SOLVED_MESSAGES_BY_TIME.reverse().forEach(({time, message}) => {
+    if (timeTaken <= time) {
+      success = message;
+    }
+  });
+
+  return success;
 }

@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
 import { BOARD_SIZE, MIN_TIME_FIRST_HINT, GAME_STATES, Good_Luck_Messages, HIGHLIGHTED_POSITIONS } from '../constants';
-import { checkBoard } from '../utils/checkBoard';
+import { checkBoard, getSuccessMessage } from '../utils/checkBoard';
 import { initGame, shuffleBoardPositions } from '../utils/initGame';
 import { PersistentStorage } from '../utils/storedGameState';
 import { getTimeDisplay } from '../components/TimeTaken';
@@ -189,7 +189,9 @@ export const GameProvider = ({
   };
 
   const handleValidSolution = async () => {
-    toast.success("Congratulations! You solved the puzzle!");
+    const { timeTaken } = gameState;
+
+    toast.success(getSuccessMessage(timeTaken));
     setGameState({
       ...gameState,
       state: GAME_STATES.SOLVED,
@@ -197,7 +199,6 @@ export const GameProvider = ({
 
     if (process.env.NODE_ENV === 'production') {
       // update solved count
-      const { timeTaken } = gameState;
       const isTimeTakenValid = !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60*60*24;
 
       fetch(`api/solved-count?slug=${todaySlug}`, {
