@@ -30,6 +30,7 @@ export function Board() {
     board,
     state,
     timeTaken,
+    puzzle
   } = gameState;
 
   const isSolved = state === GAME_STATES.SOLVED;
@@ -74,6 +75,7 @@ export function Board() {
           checkBoardSolution={checkBoardSolution}
           timeTaken={timeTaken}
           showHint={showHint}
+          puzzle={puzzle}
           userPreferences={userPreferences}
         />
       )}

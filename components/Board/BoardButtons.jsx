@@ -10,7 +10,8 @@ export const BoardButtons = ({
   showHint,
   state,
   disableButtons,
-  userPreferences
+  userPreferences,
+  puzzle
 }) => {
 
   switch (state) {
@@ -28,7 +29,7 @@ export const BoardButtons = ({
           <Button label={<img src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
           <Button label="Submit" onClick={checkBoardSolution} />
           {
-            userPreferences.showHintButton ? (
+            (userPreferences.showHintButton && puzzle.words?.length) ? (
               <Button
                 disabled={timeTaken < MIN_TIME_FIRST_HINT}
                 narrow
