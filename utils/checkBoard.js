@@ -35,7 +35,8 @@ export const checkBoard = async (boardPositions) => {
       ...inDictionaryErrors,
       ...unusedTilesErrors,
       ...multipleIslandsErrors
-    ]
+    ],
+    words: stringWords
   };
 
   return check;

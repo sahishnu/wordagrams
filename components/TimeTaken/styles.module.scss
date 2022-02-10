@@ -9,6 +9,11 @@
 }
 .timeTaken {
   align-self: flex-end;
+  font-size: 14px;
+
+  @media (min-width: 512px) {
+    font-size: 16px;
+  }
 }
 
 .solved {

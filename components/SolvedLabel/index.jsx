@@ -8,7 +8,7 @@ import { Button } from '../Button';
 import styles from './styles.module.scss';
 import { getShareString } from '../../utils/share';
 
-export function SolvedLabel({ board, timeTaken }) {
+export function SolvedLabel({ board, timeTaken, wordsFound }) {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
@@ -32,6 +32,12 @@ export function SolvedLabel({ board, timeTaken }) {
       <h2 className={styles.solvedMessage}>
         You got it, good job! 🎉
       </h2>
+      <div className={styles.wordsFound}>
+        <h3>Words found:</h3>
+        <ul>
+        {wordsFound.map(word => (<li className={styles.foundWord}>{word}</li>))}
+        </ul>
+      </div>
       <div className={styles.bottomRow}>
         <div className={styles.nextPuzzleSection}>
           Next puzzle

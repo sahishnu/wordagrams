@@ -46,7 +46,8 @@ export const GameProvider = ({
     board: {},
     state: GAME_STATES.NOT_STARTED,
     timeTaken: 0,
-    puzzle
+    puzzle,
+    wordsFound: []
   });
   const [disableButtons, setDisableButtons] = useState(false);
   // stores how many people have solved the puzzle
@@ -108,10 +109,7 @@ export const GameProvider = ({
     });
     setGameState({
       ...gameState,
-      board: game.board,
-      state: game.state,
-      timeTaken: game.timeTaken,
-      // game.solved
+      ...game
     });
     // setSolvedPuzzle(game.solved);
     setGameInitialized(true);
@@ -179,7 +177,7 @@ export const GameProvider = ({
     const check = await checkBoard(gameState.board)
 
     if (check.pass) {
-      handleValidSolution();
+      handleValidSolution(check.words);
     } else {
       // display toasters with approprate error messages
       check.errors.forEach(error => toast.error(error));
@@ -188,12 +186,13 @@ export const GameProvider = ({
     return check.pass;
   };
 
-  const handleValidSolution = async () => {
+  const handleValidSolution = async (words) => {
     const { timeTaken } = gameState;
 
     toast.success(getSuccessMessage(timeTaken));
     setGameState({
       ...gameState,
+      wordsFound: [...gameState.wordsFound, ...words],
       state: GAME_STATES.SOLVED,
     });
 

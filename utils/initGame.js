@@ -62,6 +62,7 @@ const initFreshGame = (size, puzzleObj) => {
     state: GAME_STATES.NOT_STARTED,
     timeTaken: 0,
     puzzle: puzzleObj,
+    wordsFound: [],
   }
   // PersistentStorage.saveGameState(game);
   return game;

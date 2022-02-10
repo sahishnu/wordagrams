@@ -30,7 +30,8 @@ export function Board() {
     board,
     state,
     timeTaken,
-    puzzle
+    puzzle,
+    wordsFound
   } = gameState;
 
   const isSolved = state === GAME_STATES.SOLVED;
@@ -66,7 +67,7 @@ export function Board() {
           return <Square key={key} highlighted={highlightedPositions[key]} position={key}>{tile}</Square>;
         })}
       </div>
-      {isSolved ? <SolvedLabel board={board} timeTaken={timeTaken} /> : (
+      {isSolved ? <SolvedLabel wordsFound={wordsFound} board={board} timeTaken={timeTaken} /> : (
         <BoardButtons
           shuffleBoard={shuffleBoard}
           state={state}

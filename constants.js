@@ -8,10 +8,17 @@ export const ItemTypes = {
 export const GAME_STATES = {
   NOT_STARTED: 'NOT_STARTED',
   IN_PROGRESS: 'IN_PROGRESS',
-  SOLVED: 'SOLVED'
+  SOLVED: 'SOLVED',
+  RETRY: 'RETRY'
 }
 
 export const Good_Luck_Messages = [
+  'Good Luck - you\'ll need it!',
+  'You can do it!',
+  'I\'m rooting for you!',
+]
+
+export const Motivational_Quotes = [
   'It always seems impossible until it\'s done 🔥 \n - N. Mandela',
   'Don\'t watch the clock; do what it does. Keep going 🕰️ \n - S. Levenson',
   'If you can dream it, you can do it 🐭 \n - W. Disney',
