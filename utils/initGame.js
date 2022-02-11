@@ -1,5 +1,6 @@
 import { GAME_STATES } from "../constants";
 import { PersistentStorage } from "./storedGameState";
+import { INIT_GAME_STATE } from "../context/game-context";
 
 export const initGame = ({
   size,
@@ -58,13 +59,11 @@ const initFreshGame = (size, puzzleObj) => {
   }
 
   const game = {
+    ...INIT_GAME_STATE,
     board,
-    state: GAME_STATES.NOT_STARTED,
-    timeTaken: 0,
-    puzzle: puzzleObj,
-    wordsFound: [],
+    puzzle: puzzleObj
   }
-  // PersistentStorage.saveGameState(game);
+
   return game;
 }
 

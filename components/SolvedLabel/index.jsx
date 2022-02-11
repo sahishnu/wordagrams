@@ -1,8 +1,8 @@
-
+import { handleShare } from '../../utils/share';
 import { Button } from '../Button';
 import styles from './styles.module.scss';
 
-export function SolvedLabel({ wordsFound, playAgain, isSolved }) {
+export function SolvedLabel({ wordsFound, playAgain, isSolved, board, timeTaken }) {
 
   return (
     <div className={styles.solvedContainer}>
@@ -16,6 +16,7 @@ export function SolvedLabel({ wordsFound, playAgain, isSolved }) {
             Play again to find more words and earn more 🌟
             </div> */}
             <Button color='purple' onClick={playAgain} label={'Play Again'} />
+            <Button color='green' onClick={() => handleShare(board, timeTaken)} label={<img src='/share.svg' />} />
           </div>
         </>
       ) : null}

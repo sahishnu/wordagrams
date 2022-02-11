@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast';
+
 import { getTimeDisplay } from "../components/TimeTaken";
 import { BOARD_SIZE, META_CONTENT } from "../constants";
 
@@ -46,6 +48,21 @@ export const getShareString = (board, timeTaken) => {
   }
 
   return shareString;
+}
+
+export const handleShare = (board, timeTaken) => {
+  if (navigator.share) {
+    navigator.share({
+      text: getShareString(board, timeTaken)
+    })
+  } else {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(getShareString(board, timeTaken))
+      .then(() => {
+        toast.success('Copied to clipboard');
+      });
+    }
+  }
 }
 
 const getNumberSuffix = (number) => {

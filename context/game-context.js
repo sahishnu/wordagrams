@@ -11,13 +11,15 @@ import { getTimeDisplay } from '../components/TimeTaken';
 
 const todaySlug = dayjs().tz("America/New_York").format('YYYY-MM-DD');
 
+export const INIT_GAME_STATE = {
+  board: {},
+  state: GAME_STATES.NOT_STARTED,
+  timeTaken: 0,
+  wordsFound: []
+}
+
 export const GameContext = React.createContext({
-  gameState: {
-    board: {},
-    state: GAME_STATES.NOT_STARTED, // 'NOT_STARTED', 'IN_PROGRESS', 'SOLVED'
-    timeTaken: 0,
-    puzzle: {},
-  },
+  gameState: INIT_GAME_STATE,
   disableButtons: false,
   startGame: () => {},
   playAgain: () => {},
@@ -44,11 +46,8 @@ export const GameProvider = ({
   puzzle
 }) => {
   const [gameState, setGameState] = useState({
-    board: {},
-    state: GAME_STATES.NOT_STARTED,
-    timeTaken: 0,
-    puzzle,
-    wordsFound: []
+    ...INIT_GAME_STATE,
+    puzzle
   });
   const [disableButtons, setDisableButtons] = useState(false);
   // stores how many people have solved the puzzle
@@ -77,12 +76,11 @@ export const GameProvider = ({
   }, []);
 
   // update time taken each second
-  // IF game is NOT solved & game is initialized
+  // IF game is IN PROGRESS && initializes
   // this is written to local storage for persistence
   useEffect(() => {
     const timer = setTimeout(() => {
-      const savedGame = PersistentStorage.getSavedGameState();
-      if (gameState.state === GAME_STATES.IN_PROGRESS && gameInitialized && savedGame) {
+      if (gameState.state === GAME_STATES.IN_PROGRESS && gameInitialized) {
         const timeTaken = gameState.timeTaken;
         setGameState({
           ...gameState,

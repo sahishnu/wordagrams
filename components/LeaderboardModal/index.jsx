@@ -2,14 +2,15 @@ import dayjs from 'dayjs';
 dayjs.extend(require('dayjs/plugin/utc'));
 dayjs.extend(require('dayjs/plugin/timezone'));
 import Modal from 'react-modal';
-import { useSession, signIn } from "next-auth/react";
+import toast from 'react-hot-toast';
+import { useSession } from "next-auth/react";
 import classnames from 'classnames';
 import CountDown from 'react-countdown';
 
 import { getTimeDisplay } from '../TimeTaken';
 import { Button } from '../Button';
 import { useGameContext } from '../../context/game-context';
-import { getShareString } from '../../utils/share';
+import { handleShare } from '../../utils/share';
 
 import styles from './styles.module.scss';
 import { GAME_STATES } from '../../constants';
@@ -22,23 +23,9 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
   const { data: session } = useSession();
   const {
     state,
+    board,
     timeTaken
   } = gameState;
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        text: getShareString(board, timeTaken)
-      })
-    } else {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(getShareString(board, timeTaken))
-        .then(() => {
-          toast.success('Copied to clipboard');
-        });
-      }
-    }
-  }
 
   let isUserInLeaderboard = leaderBoard.some(({ isUser }) => isUser);
   // gets time till midnight
@@ -109,7 +96,7 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
                       </div>)}
                     />
                   </div>
-                    <Button color='green' onClick={handleShare} label={<img src='/share.svg' />} />
+                    <Button color='green' onClick={() => handleShare(board, timeTaken)} label={<img src='/share.svg' />} />
                 </div>
               </>
             ) : null }
