@@ -1,7 +1,6 @@
 .timeContainer {
   color: #6E6D6E;
-  margin-top: -6px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -15,6 +14,7 @@
 }
 .timeTaken {
   align-self: flex-end;
+  margin-bottom: 2px;
 }
 
 .solved {

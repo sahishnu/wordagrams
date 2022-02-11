@@ -32,9 +32,11 @@ export const TimeTaken = ({ solved, timeTaken, wordsFound }) => {
         })
       }
     >
-      {solved ? (<div className={styles.wordsFoundCount}>
-      <div className={styles.star}>🌟</div> {wordsFound.length}
-      </div>) : <div></div>}
+      {solved ? (
+      <div className={styles.wordsFoundCount}>
+        <div className={styles.star}>🌟</div> {wordsFound.length} words found
+      </div>
+      ) : <div></div>}
       {userPreferences.showTimer ? (
         <div onClick={handleClickTimer} className={styles.timeTaken}>
           {solved ? 'Solved in ' : ''}
