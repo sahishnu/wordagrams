@@ -83,3 +83,16 @@
     }
   }
 }
+
+.playAgainSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.playAgainMessage {
+  color: white;
+  margin-right: 1rem;
+  text-align: center;
+}

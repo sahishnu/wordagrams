@@ -20,6 +20,7 @@ export const GameContext = React.createContext({
   },
   disableButtons: false,
   startGame: () => {},
+  playAgain: () => {},
   handleChangePosition: () => {},
   checkBoardSolution: () => {},
   shuffleBoard: () => {},
@@ -151,6 +152,14 @@ export const GameProvider = ({
     }
   };
 
+  const playAgain = () => {
+    toast('Play again to find more words!');
+    setGameState({
+      ...gameState,
+      state: GAME_STATES.PLAY_AGAIN
+    })
+  }
+
   // shuffles tiles on board
   const shuffleBoard = () => {
     const game = shuffleBoardPositions(BOARD_SIZE, puzzle);
@@ -174,10 +183,10 @@ export const GameProvider = ({
     }
     setDisableButtons(true);
     setTimeout(() => setDisableButtons(false), 2000);
-    const check = await checkBoard(gameState.board)
+    const check = await checkBoard(gameState.board, gameState.wordsFound)
 
     if (check.pass) {
-      handleValidSolution(check.words);
+      handleValidSolution(check.newWords);
     } else {
       // display toasters with approprate error messages
       check.errors.forEach(error => toast.error(error));
@@ -269,6 +278,7 @@ export const GameProvider = ({
       value={{
         gameState,
         startGame,
+        playAgain,
         handleChangePosition,
         checkBoardSolution,
         disableButtons,

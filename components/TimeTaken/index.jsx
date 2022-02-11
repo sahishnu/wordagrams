@@ -5,7 +5,7 @@ import { useGameContext } from "../../context/game-context";
 import styles from "./styles.module.scss";
 import { LocalStorage } from '../../utils/LocalStorage';
 
-export const TimeTaken = ({ solved, timeTaken }) => {
+export const TimeTaken = ({ solved, timeTaken, wordsFound }) => {
   const {
     userPreferences
   } = useGameContext();
@@ -32,6 +32,9 @@ export const TimeTaken = ({ solved, timeTaken }) => {
         })
       }
     >
+      {solved ? (<div className={styles.wordsFoundCount}>
+      <div className={styles.star}>🌟</div> {wordsFound.length}
+      </div>) : <div></div>}
       {userPreferences.showTimer ? (
         <div onClick={handleClickTimer} className={styles.timeTaken}>
           {solved ? 'Solved in ' : ''}
