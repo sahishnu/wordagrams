@@ -199,13 +199,8 @@ export const GameProvider = ({
     const { timeTaken } = gameState;
 
     toast.success(getSuccessMessage(timeTaken));
-    setGameState({
-      ...gameState,
-      wordsFound: [...gameState.wordsFound, ...words],
-      state: GAME_STATES.SOLVED,
-    });
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' && gameState.state === GAME_STATES.IN_PROGRESS) {
       // update solved count
       const isTimeTakenValid = !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60*60*24;
 
@@ -226,6 +221,11 @@ export const GameProvider = ({
           }
         })
     }
+    setGameState({
+      ...gameState,
+      wordsFound: [...gameState.wordsFound, ...words],
+      state: GAME_STATES.SOLVED,
+    });
   }
 
   // handles dropping a piece in a new spot
