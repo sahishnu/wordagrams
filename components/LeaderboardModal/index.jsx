@@ -1,19 +1,49 @@
+import dayjs from 'dayjs';
+dayjs.extend(require('dayjs/plugin/utc'));
+dayjs.extend(require('dayjs/plugin/timezone'));
 import Modal from 'react-modal';
 import { useSession, signIn } from "next-auth/react";
 import classnames from 'classnames';
+import CountDown from 'react-countdown';
 
 import { getTimeDisplay } from '../TimeTaken';
+import { Button } from '../Button';
 import { useGameContext } from '../../context/game-context';
+import { getShareString } from '../../utils/share';
 
 import styles from './styles.module.scss';
+import { GAME_STATES } from '../../constants';
 
 export const LeaderboardModal = ({ isOpen, onClose }) => {
   const {
-    leaderBoard
+    leaderBoard,
+    gameState,
   } = useGameContext();
   const { data: session } = useSession();
+  const {
+    state,
+    timeTaken
+  } = gameState;
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        text: getShareString(board, timeTaken)
+      })
+    } else {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(getShareString(board, timeTaken))
+        .then(() => {
+          toast.success('Copied to clipboard');
+        });
+      }
+    }
+  }
 
   let isUserInLeaderboard = leaderBoard.some(({ isUser }) => isUser);
+  // gets time till midnight
+  const today = dayjs().tz("America/New_York");
+  const midnight = today.add(1, 'day').startOf('day');
 
   return (
       <Modal
@@ -64,19 +94,28 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
 
           </div>
           <div className={styles.modalFooter}>
-            {
-              session ? (
-                <div style={{ opacity: 0.5 }}>
-                  You are signed in as {session.user.email}
+            {(state === GAME_STATES.SOLVED || state === GAME_STATES.PLAY_AGAIN) ? (
+              <>
+                {!isUserInLeaderboard ? <div className={styles.yourTime}>Your time: {getTimeDisplay(timeTaken)}</div> : null}
+                <div className={styles.nextAndShare}>
+                  <div className={styles.nextPuzzleSection}>
+                    Next puzzle
+                    <CountDown
+                      date={midnight.valueOf()}
+                      zeroPadTime={2}
+                      renderer={props => (<div
+                        className={styles.countdown}>
+                        {props.hours}h {props.minutes}m {props.seconds}s
+                      </div>)}
+                    />
+                  </div>
+                    <Button color='green' onClick={handleShare} label={<img src='/share.svg' />} />
                 </div>
-              ) : (
-                <div>
-                  You must be signed in to participate in the daily leaderboard.
-                  <br />
-                  <div className={styles.signInLink} onClick={signIn}>Sign in with Google now</div>
-                </div>
-              )
-            }
+              </>
+            ) : null }
+            <div style={{ opacity: 0.5 }}>
+              { session ? `You are signed in as ${session.user.email}` : 'Sign in to participate in the daily leaderboard.'}
+            </div>
           </div>
         </div>
       </Modal>

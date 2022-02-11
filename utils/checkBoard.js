@@ -10,7 +10,7 @@ import DICTIONARY from '../dictionary.json';
  * return true if all words are valid
  * return false if any words are invalid
  */
-export const checkBoard = async (boardPositions) => {
+export const checkBoard = async (boardPositions, wordsFound) => {
   const { words, flags } = getLetterSequencesOnBoard(boardPositions);
   const stringWords = convertObjectsToWords(words);
 
@@ -23,20 +23,25 @@ export const checkBoard = async (boardPositions) => {
     multipleIslandsErrors = testAreMultipleIslands(boardPositions);
   }
 
+  const { errors: isUniqueSolutionErrors, uniqueWords} = testIsUniqueSolution(stringWords, wordsFound);
+
   const check = {
     pass: (
       validLengthErrors.length === 0
       && inDictionaryErrors.length === 0
       && unusedTilesErrors.length === 0
       && multipleIslandsErrors.length === 0
+      && isUniqueSolutionErrors.length === 0
     ),
     errors: [
       ...validLengthErrors,
       ...inDictionaryErrors,
       ...unusedTilesErrors,
-      ...multipleIslandsErrors
+      ...multipleIslandsErrors,
+      ...isUniqueSolutionErrors
     ],
-    words: stringWords
+    words: stringWords,
+    newWords: uniqueWords
   };
 
   return check;
@@ -91,6 +96,23 @@ const testAreMultipleIslands = (boardPositions) => {
   }
 
   return errors;
+}
+
+const testIsUniqueSolution = (words, wordsFound) => {
+  // we check if any at least 1 new word is found
+  const errors = [];
+  const wordsFoundMap = wordsFound.reduce((acc, word) => {
+    acc[word] = true;
+    return acc;
+  }, {})
+
+  const uniqueWords = words.filter(word => !wordsFoundMap[word]);
+
+  if (uniqueWords.length === 0) {
+    errors.push('At least one word must be unique!');
+  }
+
+  return {uniqueWords, errors};
 }
 
 // converts an array of letter objects to a single string
