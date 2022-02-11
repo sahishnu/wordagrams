@@ -20,6 +20,7 @@ export function Board() {
     showHint,
     userPreferences,
     disableButtons,
+    playAgain,
     gameState,
     highlightedPositions
   } = useGameContext();
@@ -35,6 +36,7 @@ export function Board() {
   } = gameState;
 
   const isSolved = state === GAME_STATES.SOLVED;
+  const isPlayAgain = state === GAME_STATES.PLAY_AGAIN;
 
   const handleStartGame = () => {
     if (session) {
@@ -49,7 +51,8 @@ export function Board() {
       {gameInitialized ? (
         <TimeTaken
           gameInitialized={gameInitialized}
-          solved={isSolved}
+          solved={isSolved || isPlayAgain}
+          wordsFound={wordsFound}
           timeTaken={timeTaken}
         />
       ) : null}
@@ -67,8 +70,7 @@ export function Board() {
           return <Square key={key} highlighted={highlightedPositions[key]} position={key}>{tile}</Square>;
         })}
       </div>
-      {isSolved ? <SolvedLabel wordsFound={wordsFound} board={board} timeTaken={timeTaken} /> : (
-        <BoardButtons
+      <BoardButtons
           shuffleBoard={shuffleBoard}
           state={state}
           disableButtons={disableButtons}
@@ -78,8 +80,15 @@ export function Board() {
           showHint={showHint}
           puzzle={puzzle}
           userPreferences={userPreferences}
-        />
-      )}
+      />
+      {(isSolved || isPlayAgain) ? (<SolvedLabel
+        playAgain={playAgain}
+        wordsFound={wordsFound}
+        board={board}
+        timeTaken={timeTaken}
+        isSolved={isSolved}
+        isPlayAgain={isPlayAgain}
+      />) : null}
       <PromptSignInModal
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}

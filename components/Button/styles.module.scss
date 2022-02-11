@@ -102,6 +102,15 @@
     #1C5E46 100%
   );
 }
+.yellowEdge {
+  background: linear-gradient(
+    to left,
+    #6E5308 0%,
+    #A88A32 8%,
+    #A88A32 92%,
+    #6E5308 100%
+  );
+}
 .edge {
   position: absolute;
   top: 0;
@@ -121,6 +130,10 @@
 .greenFront {
   color: white;
   background: #0AB377;
+}
+.yellowFront {
+  color: white;
+  background: #FFCD00;
 }
 .front {
   display: block;

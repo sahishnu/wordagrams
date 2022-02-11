@@ -1,11 +1,16 @@
 import { useSession, signIn } from "next-auth/react";
+import dayjs from 'dayjs';
+dayjs.extend(require('dayjs/plugin/utc'));
+dayjs.extend(require('dayjs/plugin/timezone'));
+import CountDown from 'react-countdown';
 
 import { useGameContext } from '../../context/game-context';
 import { getTimeDisplay } from '../TimeTaken';
 import styles from './styles.module.scss';
+import { GAME_STATES } from "../../constants";
 
 export const SolveCounter = ({  }) => {
-  const { solvedCount, gameInitialized, leaderBoard } = useGameContext();
+  const { solvedCount, gameInitialized, leaderBoard, gameState } = useGameContext();
   const { data: session } = useSession();
 
   if (!gameInitialized) {
@@ -48,17 +53,44 @@ export const SolveCounter = ({  }) => {
     )
   }
 
+  // gets time till midnight
+  const today = dayjs().tz("America/New_York");
+  const midnight = today.add(1, 'day').startOf('day');
+
+  const Countdown = () => (
+    <CountDown
+      date={midnight.valueOf()}
+      zeroPadTime={2}
+      renderer={props => (<div
+        className={styles.countdown}>
+        {props.hours}h {props.minutes}m {props.seconds}s
+      </div>)}
+    />);
+  const NextPuzzleRow = () => {
+    if (gameState.state === GAME_STATES.SOLVED || gameState.state === GAME_STATES.PLAY_AGAIN) {
+      return (
+        <div className={styles.nextPuzzleRow}>
+          Next puzzle in {Countdown()}.
+        </div>
+      )
+    }
+
+    return null;
+  }
+
   return (
     <div className={styles.text}>
       {
         session ? (
           <>
+            <NextPuzzleRow />
             <StatsRow />
             <AuthRow />
           </>
         ) : (
           <>
             <AuthRow />
+            <NextPuzzleRow />
             <StatsRow />
           </>
         )

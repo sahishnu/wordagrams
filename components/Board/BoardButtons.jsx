@@ -21,8 +21,17 @@ export const BoardButtons = ({
           <Button disabled={disableButtons} label="Start Game" color="green" onClick={startGame} />
         </div>
       );
+      case GAME_STATES.PLAY_AGAIN:
+      // this is the case where the user has solved the puzzle and wants to play again
+      // dont display hint button since the puzzle is solved
+      return (
+        <div className={styles.buttonRow}>
+          <Button label={<img src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
+          <Button label="Submit" onClick={checkBoardSolution} />
+        </div>
+      )
     case GAME_STATES.SOLVED:
-      return '';
+      return null;
     case GAME_STATES.IN_PROGRESS:
       return (
         <div className={styles.buttonRow}>

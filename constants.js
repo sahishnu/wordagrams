@@ -9,7 +9,7 @@ export const GAME_STATES = {
   NOT_STARTED: 'NOT_STARTED',
   IN_PROGRESS: 'IN_PROGRESS',
   SOLVED: 'SOLVED',
-  RETRY: 'RETRY'
+  PLAY_AGAIN: 'PLAY_AGAIN'
 }
 
 export const Good_Luck_Messages = [

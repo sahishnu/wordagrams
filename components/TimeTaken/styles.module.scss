@@ -1,21 +1,31 @@
 .timeContainer {
   color: #6E6D6E;
-  margin-top: -6px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   opacity: 0.2;
-}
-.timeTaken {
-  align-self: flex-end;
   font-size: 14px;
 
   @media (min-width: 512px) {
     font-size: 16px;
   }
 }
+.timeTaken {
+  align-self: flex-end;
+  margin-bottom: 2px;
+}
 
 .solved {
   opacity: 1;
+}
+
+.wordsFoundCount {
+  display: flex;
+  align-items: center;
+}
+
+.star {
+  margin-right: 8px;
 }
