@@ -19,7 +19,7 @@ export const Header = () => {
       setInstructionsModalIsOpen(true);
       LocalStorage.setItem('firstTime', 'false');
     }
-  }, [])
+  }, []);
 
   return (
     <header className={styles.header}>
@@ -60,5 +60,5 @@ export const Header = () => {
         onClose={() => setLeaderboardIsOpen(false)}
       />
     </header>
-  )
-}
+  );
+};

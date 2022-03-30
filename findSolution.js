@@ -73,13 +73,13 @@ const getRandomWordByLength = (words, len) => {
   return wordsOfLength[randomIndex];
 }
 
-let ALL_LETTERS = 'LGNLLZPTCOAA';
+let ALL_LETTERS = 'LVHFRBHTCUUA';
 ALL_LETTERS = ALL_LETTERS.toLowerCase();
 
 let words = findPossibleWords(ALL_LETTERS, dictionarySorted);
 // console.log(words);
 // const startingWord = getRandomWordByLength(words, 5);
-const startingWord = 'gallon';
+const startingWord = 'ultra';
 
 console.log('Starting Word: ', startingWord);
 
