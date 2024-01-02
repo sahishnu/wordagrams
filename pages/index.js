@@ -15,6 +15,8 @@ import { Board } from '../components/Board';
 import { Header } from '../components/Header';
 import { Layout } from '../components/Layout';
 
+import backupPuzzles from './api/data/backup-puzzles.json';
+
 export default function MainGame({ puzzle }) {
 
   return (
@@ -75,10 +77,21 @@ export async function getServerSideProps() {
     const doesDocExist = await client.query(
       q.Exists(q.Match(q.Index('puzzle_by_day'), date))
     );
-
     if (!doesDocExist) {
       // handle is no puzzle exists for today
       // maybe fallback to a random puzzle?
+      const randomBackupPuzzle = backupPuzzles[Math.floor(Math.random()*backupPuzzles.length)];
+      const fallback = {
+        date,
+        letters: randomBackupPuzzle.letters,
+        words: randomBackupPuzzle.words
+      }
+
+      return {
+        props: {
+          puzzle: fallback,
+        },
+      }
     }
 
     // Fetch the document for-real
