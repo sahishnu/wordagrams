@@ -31,8 +31,6 @@ export const Header = () => {
       />
       <h1 className={styles.title}>
         {META_CONTENT.title}
-        <br />
-        <span className={styles.byline}>By Sahishnu</span>
       </h1>
       {/*  */}
       <img
