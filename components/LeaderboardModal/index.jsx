@@ -96,7 +96,7 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
                       </div>)}
                     />
                   </div>
-                    <Button color='green' onClick={() => handleShare(board, timeTaken)} label={<img src='/share.svg' />} />
+                    <Button color='green' onClick={() => handleShare(board, timeTaken)} label={<img alt='Share' src='/share.svg' />} />
                 </div>
               </>
             ) : null }

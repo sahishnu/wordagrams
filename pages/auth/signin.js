@@ -1,7 +1,7 @@
-import { getProviders, signIn, getSession } from "next-auth/react"
+import { getProviders, signIn, getSession } from "next-auth/react";
 
-import { META_CONTENT } from '../../constants';
-import styles from '../../styles/SignIn.module.scss';
+import { META_CONTENT } from "../../constants";
+import styles from "../../styles/SignIn.module.scss";
 
 export default function SignIn({ providers }) {
   return (
@@ -12,16 +12,29 @@ export default function SignIn({ providers }) {
         </header>
         <div className={styles.board}>
           {Object.values(providers).map((provider) => (
-            <button className={styles.signInButton} key={provider.name} onClick={() => signIn(provider.id)}>
-              {provider.id === 'google' ? <img className={styles.providerLogo} src='../google-logo.svg' /> : null}
+            <button
+              className={styles.signInButton}
+              key={provider.name}
+              onClick={() => signIn(provider.id)}
+            >
+              {provider.id === "google" ? (
+                <img
+                  alt="Google"
+                  className={styles.providerLogo}
+                  src="/google-logo.svg"
+                />
+              ) : null}
               Sign in with {provider.name}
             </button>
           ))}
-          <footer>Signing in gives you the ability to count your score towards the ‘Fastest Time’ and Leaderboard. </footer>
+          <footer>
+            Signing in gives you the ability to count your score towards the
+            ‘Fastest Time’ and Leaderboard.{" "}
+          </footer>
         </div>
       </main>
     </div>
-  )
+  );
 }
 
 // This is the recommended way for Next.js 9.3 or newer
@@ -35,8 +48,8 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const providers = await getProviders()
+  const providers = await getProviders();
   return {
     props: { providers },
-  }
+  };
 }

@@ -41,7 +41,7 @@ export default function CheatPage() {
   return (
     <Layout>
       <main className={styles.main}>
-        <h1>Cheat 'em up</h1>
+        <h1>Cheat &apos;em up</h1>
         <div className={styles.field}>
           <span className={styles.fieldLabel}>Enter letters to find all possible words</span>
           <div className={styles.inputRow}>

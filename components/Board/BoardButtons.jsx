@@ -26,7 +26,7 @@ export const BoardButtons = ({
       // dont display hint button since the puzzle is solved
       return (
         <div className={styles.buttonRow}>
-          <Button label={<img src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
+          <Button label={<img alt='Shuffle Board' src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
           <Button label="Submit" onClick={checkBoardSolution} />
         </div>
       )
@@ -35,14 +35,14 @@ export const BoardButtons = ({
     case GAME_STATES.IN_PROGRESS:
       return (
         <div className={styles.buttonRow}>
-          <Button label={<img src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
+          <Button label={<img alt='Shuffle' src='/shuffle.svg' />} color='orange' onClick={shuffleBoard} />
           <Button label="Submit" onClick={checkBoardSolution} />
           {
             (userPreferences.showHintButton && puzzle.words?.length) ? (
               <Button
                 disabled={timeTaken < MIN_TIME_FIRST_HINT}
                 narrow
-                label={<img src='/hint.svg' />}
+                label={<img alt='Get Hint' src='/hint.svg' />}
                 color='green'
                 onClick={showHint}
               />

@@ -52,7 +52,7 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
                     <div className={styles.loginLeft}>
                       Sign in with Google
                       <div className={styles.subInstruction}>
-                        'Fastest Time' only submitted if signed in
+                        &apos;Fastest Time&apos; only submitted if signed in
                       </div>
                     </div>
                     <div className={styles.loginRight}>
