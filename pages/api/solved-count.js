@@ -1,11 +1,10 @@
-import faunadb from 'faunadb';
 import { getSession } from "next-auth/react";
+import { supabaseAdmin } from "../../lib/supabase";
 
-const ANON_USER = 'anon';
+const ANON_USER = "anon";
 
 export default async function handler(req, res) {
-
-  const session = await getSession({ req })
+  const session = await getSession({ req });
   let user;
   if (session?.user) {
     user = session.user;
@@ -13,109 +12,120 @@ export default async function handler(req, res) {
     user = ANON_USER;
   }
 
-  const q = faunadb.query;
-  const client = new faunadb.Client({
-    secret: process.env.NEXT_PUBLIC_FAUNA_SECRET_KEY,
-    domain: 'db.us.fauna.com',
-  });
-
   const { slug } = req.query;
 
   if (!slug) {
     return res.status(400).json({
-      message: 'Day slug not provided',
+      message: "Day slug not provided",
     });
   }
 
-  // Check and see if the doc exists.
-  const doesDocExist = await client.query(
-    q.Exists(q.Match(q.Index('hits_by_slug'), slug))
-  );
+  // Check if solved count exists
+  const { data: existingCount, error: fetchError } = await supabaseAdmin
+    .from("solved_counts")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
-  if (!doesDocExist) {
-    await client.query(
-      q.Create(q.Collection('hits'), {
-        data: { slug: slug, hits: 0, solveTimes: [] },
-      })
-    );
+  // TODO: What is going on here.
+  if (fetchError && fetchError.code !== "PGRST116") {
+    return res.status(500).json({ error: fetchError.message });
   }
 
-  // Fetch the document for-real
-  const document = await client.query(
-    q.Get(q.Match(q.Index('hits_by_slug'), slug))
-  );
+  // If no solved count exists, create it
+  if (!existingCount) {
+    const { data: newCount, error: insertError } = await supabaseAdmin
+      .from("solved_counts")
+      .insert([{ slug, hits: 0 }])
+      .select()
+      .single();
 
-  if (req.method === 'POST') {
+    if (insertError) {
+      return res.status(500).json({ error: insertError.message });
+    }
+  }
+
+  if (req.method === "POST") {
     const body = JSON.parse(req.body);
     const { timeTaken } = body;
-    const obj = {
-      timeTaken,
-      solvedAt: new Date().toISOString(),
-      user
-    };
 
-    const solveTimes = document.data.solveTimes || [];
-    let newSolveTimes = [...solveTimes];
+    // Insert solve time
+    const { error: solveTimeError } = await supabaseAdmin
+      .from("solve_times")
+      .insert([
+        {
+          solved_count_id: existingCount?.id || newCount.id,
+          time_taken: timeTaken,
+          user_email: user !== ANON_USER ? user.email : null,
+          user_name: user !== ANON_USER ? user.name : null,
+        },
+      ]);
 
-    // solve times should be sorted in increasing order
-    // as soon as we find a time that is greater than the current time, insert before
-    if (newSolveTimes.length > 0) {
-      let added = false;
-      for (let i = 0; i < newSolveTimes.length; i++) {
-        if (newSolveTimes[i].timeTaken > timeTaken) {
-          newSolveTimes.splice(i, 0, obj);
-          added = true;
-          break;
-        }
-      }
-      if (!added) {
-        newSolveTimes.push(obj);
-      }
-    } else {
-      newSolveTimes.push(obj);
+    if (solveTimeError) {
+      return res.status(500).json({ error: solveTimeError.message });
     }
 
-    await client.query(
-      q.Update(document.ref, {
-        data: {
-          hits: document.data.hits + 1,
-          solveTimes: newSolveTimes
-        },
-      })
-    );
+    // Update hits count
+    const { data: updatedCount, error: updateError } = await supabaseAdmin
+      .from("solved_counts")
+      .update({ hits: (existingCount?.hits || 0) + 1 })
+      .eq("slug", slug)
+      .select()
+      .single();
 
-    // filter out anonymous users
-    // get top 10 solve times
-    // only send users name and not email
-    const filteredSolveTimes = newSolveTimes
-      .filter(time => time.user !== ANON_USER)
-      .slice(0, 10)
-      .map(time => ({
-        timeTaken: time.timeTaken,
-        user: time.user.name,
-        isUser: time.user.email === user.email
+    if (updateError) {
+      return res.status(500).json({ error: updateError.message });
+    }
+
+    // Get top 10 solve times
+    const { data: solveTimes, error: solveTimesError } = await supabaseAdmin
+      .from("solve_times")
+      .select("*")
+      .eq("solved_count_id", updatedCount.id)
+      .order("time_taken", { ascending: true })
+      .limit(10);
+
+    if (solveTimesError) {
+      return res.status(500).json({ error: solveTimesError.message });
+    }
+
+    // Filter and format solve times
+    const filteredSolveTimes = solveTimes
+      .filter((time) => time.user_email !== null)
+      .map((time) => ({
+        timeTaken: time.time_taken,
+        user: time.user_name,
+        isUser: time.user_email === user.email,
       }));
 
     return res.status(200).json({
-      hits: document.data.hits + 1,
-      solveTimes: filteredSolveTimes
+      hits: updatedCount.hits,
+      solveTimes: filteredSolveTimes,
     });
   }
 
-  const solveTimes = document.data.solveTimes || [];
-  // filter out anonymous users
-  // only send users name and not email
+  // For GET requests, fetch existing solve times
+  const { data: solveTimes, error: solveTimesError } = await supabaseAdmin
+    .from("solve_times")
+    .select("*")
+    .eq("solved_count_id", existingCount?.id)
+    .order("time_taken", { ascending: true })
+    .limit(10);
+
+  if (solveTimesError) {
+    return res.status(500).json({ error: solveTimesError.message });
+  }
+
   const filteredSolveTimes = solveTimes
-    .filter(time => time.user !== ANON_USER)
-    .slice(0, 10)
-    .map(time => ({
-      timeTaken: time.timeTaken,
-      user: time.user.name,
-      isUser: time.user.email === user.email
+    .filter((time) => time.user_email !== null)
+    .map((time) => ({
+      timeTaken: time.time_taken,
+      user: time.user_name,
+      isUser: time.user_email === user.email,
     }));
 
   return res.status(200).json({
-    hits: document.data.hits,
-    solveTimes: filteredSolveTimes
+    hits: existingCount?.hits || 0,
+    solveTimes: filteredSolveTimes,
   });
 }

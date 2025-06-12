@@ -1,5 +1,9 @@
-import { BOARD_SIZE, MIN_WORD_LENGTH, SOLVED_MESSAGES_BY_TIME } from "../constants";
-import DICTIONARY from '../dictionary.json';
+import {
+  BOARD_SIZE,
+  MIN_WORD_LENGTH,
+  SOLVED_MESSAGES_BY_TIME,
+} from "../constants";
+import DICTIONARY from "../dictionary.json";
 
 /**
  * 1. find all word/letter sequences on board
@@ -23,67 +27,69 @@ export const checkBoard = async (boardPositions, wordsFound) => {
     multipleIslandsErrors = testAreMultipleIslands(boardPositions);
   }
 
-  const { errors: isUniqueSolutionErrors, uniqueWords} = testIsUniqueSolution(stringWords, wordsFound);
+  const { errors: isUniqueSolutionErrors, uniqueWords } = testIsUniqueSolution(
+    stringWords,
+    wordsFound
+  );
 
   const check = {
-    pass: (
-      validLengthErrors.length === 0
-      && inDictionaryErrors.length === 0
-      && unusedTilesErrors.length === 0
-      && multipleIslandsErrors.length === 0
-      && isUniqueSolutionErrors.length === 0
-    ),
+    pass:
+      validLengthErrors.length === 0 &&
+      inDictionaryErrors.length === 0 &&
+      unusedTilesErrors.length === 0 &&
+      multipleIslandsErrors.length === 0 &&
+      isUniqueSolutionErrors.length === 0,
     errors: [
       ...validLengthErrors,
       ...inDictionaryErrors,
       ...unusedTilesErrors,
       ...multipleIslandsErrors,
-      ...isUniqueSolutionErrors
+      ...isUniqueSolutionErrors,
     ],
     words: stringWords,
-    newWords: uniqueWords
+    newWords: uniqueWords,
   };
 
   return check;
-}
+};
 
 const testAreAllWordsInDictionary = async (words) => {
-  const errors = [];
+  let errors = [];
 
-  words.forEach(word => {
-    const inDictionary = DICTIONARY[word.toLowerCase()]
+  words.forEach((word) => {
+    const inDictionary = DICTIONARY[word.toLowerCase()];
     if (word.length >= MIN_WORD_LENGTH && !inDictionary) {
       errors.push(`${word.toUpperCase()} is not in the dictionary!`);
     }
   });
   if (errors.length >= 3) {
-    errors = ['Many words are not in the dictionary!'];
+    errors = ["Many words are not in the dictionary!"];
   }
   return errors;
-}
+};
 
 const testAreAllWordsValidLength = (words) => {
-  const errors = [];
-  words.forEach(word => {
+  let errors = [];
+  words.forEach((word) => {
     const validLength = word.length >= MIN_WORD_LENGTH;
     if (!validLength) {
       errors.push(`${word.toUpperCase()} is not long enough!`);
     }
   });
   if (errors.length >= 3) {
-    errors = ['Many words are not long enough!'];
+    errors = ["Many words are not long enough!"];
   }
   return errors;
-}
+};
 
 const testAreNoUnusedTiles = (flags) => {
   const errors = [];
   const unusedTiles = flags.length === 0;
   if (!unusedTiles) {
-    errors.push('There are unused tiles!');
+    errors.push("There are unused tiles!");
   }
   return errors;
-}
+};
 
 const testAreMultipleIslands = (boardPositions) => {
   const board2D = positionsTo2DArray(boardPositions);
@@ -92,11 +98,11 @@ const testAreMultipleIslands = (boardPositions) => {
   const errors = [];
 
   if (numberOfIslands > 1) {
-    errors.push('All the words must connect!');
+    errors.push("All the words must connect!");
   }
 
   return errors;
-}
+};
 
 const testIsUniqueSolution = (words, wordsFound) => {
   // we check if any at least 1 new word is found
@@ -104,50 +110,50 @@ const testIsUniqueSolution = (words, wordsFound) => {
   const wordsFoundMap = wordsFound.reduce((acc, word) => {
     acc[word] = true;
     return acc;
-  }, {})
+  }, {});
 
-  const uniqueWords = words.filter(word => !wordsFoundMap[word]);
+  const uniqueWords = words.filter((word) => !wordsFoundMap[word]);
 
   if (uniqueWords.length === 0) {
-    errors.push('At least one word must be unique!');
+    errors.push("At least one word must be unique!");
   }
 
-  return {uniqueWords, errors};
-}
+  return { uniqueWords, errors };
+};
 
 // converts an array of letter objects to a single string
 const convertObjectsToWords = (wordArray) => {
-  return wordArray.map(wordWithObjs => {
+  return wordArray.map((wordWithObjs) => {
     return wordWithObjs.reduce((acc, letter) => {
       return `${acc}${letter.letter}`;
-    }, '')
+    }, "");
   });
-}
+};
 
 // transpose a 2d array (really this is a mapped 1D array)
 const tranposeBoard = (board) => {
   const newBoard = {};
 
-  Object.keys(board).forEach(key => {
+  Object.keys(board).forEach((key) => {
     const row = Math.floor(key / BOARD_SIZE);
     const col = key % BOARD_SIZE;
 
-    const newKey = (col * BOARD_SIZE) + row;
+    const newKey = col * BOARD_SIZE + row;
     newBoard[newKey] = board[key];
   });
 
   return newBoard;
-}
+};
 
 // checks if letter TOP is above letter BOTTOM
 const isLetterAbove = (top, bottom, size) => {
-  return (top - bottom) === -size;
-}
+  return top - bottom === -size;
+};
 
 // checks if letter LEFT is to the left of letter RIGHT
 const isLetterLeft = (left, right, size) => {
-  return (left - right) === -1;
-}
+  return left - right === -1;
+};
 
 const getLetterSequencesOnBoard = (boardPositions) => {
   const words = [];
@@ -155,17 +161,17 @@ const getLetterSequencesOnBoard = (boardPositions) => {
   for (let rowNum = 0; rowNum < BOARD_SIZE; rowNum++) {
     const leftLim = rowNum * BOARD_SIZE;
     const rightLim = leftLim + BOARD_SIZE - 1;
-    const buffer = [];
+    let buffer = [];
 
     for (let col = leftLim; col <= rightLim; col++) {
       const letter = boardPositions[col].letter;
 
       // if we find a letter, check if there is a buffer
-      if (letter !== '') {
+      if (letter !== "") {
         // if there is a buffer, see if letter is adjacent
         if (buffer.length) {
           const lastletterInBuffer = buffer[buffer.length - 1].pos;
-          const isAdjacent = isLetterLeft(lastletterInBuffer, col, BOARD_SIZE)
+          const isAdjacent = isLetterLeft(lastletterInBuffer, col, BOARD_SIZE);
 
           if (isAdjacent) {
             buffer.push({ pos: col, letter, id: boardPositions[col].id });
@@ -175,7 +181,7 @@ const getLetterSequencesOnBoard = (boardPositions) => {
 
             // if buffer only had 1 letter, need to double check its part of a word
             if (buffer.length === 1) {
-              doubleCheck.push(buffer[0])
+              doubleCheck.push(buffer[0]);
             } else {
               words.push(buffer);
             }
@@ -190,7 +196,7 @@ const getLetterSequencesOnBoard = (boardPositions) => {
     // before moving to next row, check if there is a buffer
     // if buffer only had 1 letter, need to double check its part of a word
     if (buffer.length === 1) {
-      doubleCheck.push(buffer[0])
+      doubleCheck.push(buffer[0]);
     } else if (buffer.length > 1) {
       words.push(buffer);
     }
@@ -201,20 +207,20 @@ const getLetterSequencesOnBoard = (boardPositions) => {
   for (let rowNum = 0; rowNum < BOARD_SIZE; rowNum++) {
     const leftLim = rowNum * BOARD_SIZE;
     const rightLim = leftLim + BOARD_SIZE - 1;
-    const buffer = [];
+    let buffer = [];
 
     for (let col = leftLim; col <= rightLim; col++) {
       const letter = transposedBoard[col].letter;
 
       // if we find a letter, check if there is a buffer
-      if (letter !== '') {
+      if (letter !== "") {
         // if there is a buffer, see if letter is adjacent
         if (buffer.length) {
           const lastletterInBuffer = buffer[buffer.length - 1].pos;
-          const isAdjacent = isLetterLeft(lastletterInBuffer, col, BOARD_SIZE)
+          const isAdjacent = isLetterLeft(lastletterInBuffer, col, BOARD_SIZE);
 
           if (isAdjacent) {
-            buffer.push({ pos: col, letter, id: transposedBoard[col].id })
+            buffer.push({ pos: col, letter, id: transposedBoard[col].id });
           } else {
             // there is an existing buffer. and this letter is not adjacent
             // so copy buffer to words and reset buffer
@@ -222,7 +228,7 @@ const getLetterSequencesOnBoard = (boardPositions) => {
             // if buffer only had 1 letter, need to double check its part of a word
             if (buffer.length === 1) {
               if (!isLetterInDoubleCheck(buffer[0], doubleCheck)) {
-                doubleCheck.push(buffer[0])
+                doubleCheck.push(buffer[0]);
               }
             } else {
               words.push(buffer);
@@ -239,7 +245,7 @@ const getLetterSequencesOnBoard = (boardPositions) => {
     // if buffer only had 1 letter, need to double check its part of a word
     if (buffer.length === 1) {
       if (!isLetterInDoubleCheck(buffer[0], doubleCheck)) {
-        doubleCheck.push(buffer[0])
+        doubleCheck.push(buffer[0]);
       }
     } else if (buffer.length > 1) {
       words.push(buffer);
@@ -249,38 +255,40 @@ const getLetterSequencesOnBoard = (boardPositions) => {
 
   // double check words
   // TODO: can have duplicate standalone letters because of transposition
-  const flags = doubleCheck.filter(letterToCheck => {
+  const flags = doubleCheck.filter((letterToCheck) => {
     const { id } = letterToCheck;
 
-    const isPartOfWord = words.some(word => {
-      return word.some(letter => {
+    const isPartOfWord = words.some((word) => {
+      return word.some((letter) => {
         return letter.id === id;
-      })
+      });
     });
 
     return !isPartOfWord;
   });
 
   return { words, flags };
-}
+};
 
 const isLetterInDoubleCheck = (letter, doubleCheck) => {
-  return doubleCheck.some(letterToCheck => {
+  return doubleCheck.some((letterToCheck) => {
     return letterToCheck.id === letter.id;
   });
-}
+};
 
 const positionsTo2DArray = (positions) => {
-  const board = Array(BOARD_SIZE).fill([]).map(() => Array(BOARD_SIZE).fill(''));
+  const board = Array(BOARD_SIZE)
+    .fill([])
+    .map(() => Array(BOARD_SIZE).fill(""));
 
-  Object.keys(positions).forEach(key => {
+  Object.keys(positions).forEach((key) => {
     const row = Math.floor(key / BOARD_SIZE);
     const col = key % BOARD_SIZE;
     board[row][col] = positions[key].letter;
   });
 
   return board;
-}
+};
 
 const countNumberOfIslands = (board2D) => {
   let counter = 0;
@@ -291,9 +299,9 @@ const countNumberOfIslands = (board2D) => {
       j >= 0 &&
       i < board2D.length &&
       j < board2D[i].length &&
-      board2D[i][j] !== ''
+      board2D[i][j] !== ""
     ) {
-      board2D[i][j] = '';
+      board2D[i][j] = "";
       dfs(i + 1, j); // top
       dfs(i, j + 1); // right
       dfs(i - 1, j); // bottom
@@ -303,7 +311,7 @@ const countNumberOfIslands = (board2D) => {
 
   for (let i = 0; i < board2D.length; i += 1) {
     for (let j = 0; j < board2D[i].length; j += 1) {
-      if (board2D[i][j] !== '') {
+      if (board2D[i][j] !== "") {
         counter += 1;
         dfs(i, j);
       }
@@ -311,16 +319,17 @@ const countNumberOfIslands = (board2D) => {
   }
 
   return counter;
-}
+};
 
 export const getSuccessMessage = (timeTaken) => {
-  let success = SOLVED_MESSAGES_BY_TIME[SOLVED_MESSAGES_BY_TIME.length - 1].message;
+  let success =
+    SOLVED_MESSAGES_BY_TIME[SOLVED_MESSAGES_BY_TIME.length - 1].message;
 
-  SOLVED_MESSAGES_BY_TIME.reverse().forEach(({time, message}) => {
+  SOLVED_MESSAGES_BY_TIME.reverse().forEach(({ time, message }) => {
     if (timeTaken <= time) {
       success = message;
     }
   });
 
   return success;
-}
+};

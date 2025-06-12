@@ -2,50 +2,47 @@ import { GAME_STATES } from "../constants";
 import { PersistentStorage } from "./storedGameState";
 import { INIT_GAME_STATE } from "../context/game-context";
 
-export const initGame = ({
-  size,
-  puzzle: puzzleObj,
-  todaySlug
-}) => {
-  const game = {};
-
+export const initGame = ({ size, puzzle: puzzleObj, todaySlug }) => {
   if (!hasExistingGame(puzzleObj, todaySlug)) {
-    console.info('No saved game state found, initializing fresh game!');
-    game = initFreshGame(size, puzzleObj);
+    console.info("No saved game state found, initializing fresh game!");
+    const game = initFreshGame(size, puzzleObj);
     game.newGame = true;
     game.state = GAME_STATES.NOT_STARTED;
     game.timeTaken = 0;
-  } else{
-    console.info('Saved game state found, loading it up!');
-    game = initFromSavedState();
-    if (game.timeTaken > 0 && game.state === GAME_STATES.NOT_STARTED) {
-      game.state = GAME_STATES.IN_PROGRESS;
-    }
+
+    return game;
+  }
+
+  console.info("Saved game state found, loading it up!");
+  const game = initFromSavedState();
+  if (game.timeTaken > 0 && game.state === GAME_STATES.NOT_STARTED) {
+    game.state = GAME_STATES.IN_PROGRESS;
   }
 
   return game;
-}
+};
 
 export const shuffleBoardPositions = (size, puzzle) => {
-  console.info('Mixing up the board!');
+  console.info("Mixing up the board!");
   return initFreshGame(size, puzzle);
-}
+};
 
 const initFromSavedState = () => {
   const savedGameState = PersistentStorage.getSavedGameState();
   return savedGameState;
-}
+};
 
 const initFreshGame = (size, puzzleObj) => {
   const board = {};
   const totalSquares = size * size;
 
-  for (let i = 0; i < (totalSquares); i++) {
+  for (let i = 0; i < totalSquares; i++) {
     board[i] = {
       id: i,
-      letter: '',
+      letter: "",
     };
   }
+  console.log("board", board);
   if (puzzleObj?.letters) {
     const puzzleLetters = shuffleString(puzzleObj.letters);
     const initPositions = getTileInitPositions(size, puzzleLetters);
@@ -55,35 +52,42 @@ const initFreshGame = (size, puzzleObj) => {
         id: pos,
         letter: puzzleLetters[ind],
       };
-    })
+    });
   }
 
   const game = {
     ...INIT_GAME_STATE,
     board,
-    puzzle: puzzleObj
-  }
+    puzzle: puzzleObj,
+  };
 
   return game;
-}
+};
 
 // we know game exists if
 // LocalStorage has a saved game state dated from today
 const hasExistingGame = (puzzle, todaySlug) => {
-
   const savedGameState = PersistentStorage.getSavedGameState();
 
+  console.log("savedGameState", savedGameState);
   if (
-    (savedGameState?.puzzle?.letters === puzzle?.letters) &&
-    (savedGameState?.puzzle?.date === todaySlug)
+    !savedGameState ||
+    savedGameState?.puzzle?.state === GAME_STATES.NOT_STARTED
+  ) {
+    return false;
+  }
+
+  if (
+    savedGameState?.puzzle?.letters === puzzle?.letters &&
+    savedGameState?.puzzle?.date === todaySlug
   ) {
     return true;
   }
   return false;
-}
+};
 
 const shuffleString = (value) => {
-  const letters = value.split('');
+  const letters = value.split("");
   const len = letters.length;
 
   for (let i = len - 1; i > 0; i--) {
@@ -93,20 +97,21 @@ const shuffleString = (value) => {
     letters[j] = temp;
   }
 
-  return letters.join('');
-}
+  return letters.join("");
+};
 
 const getTileInitPositions = (BOARD_SIZE, puzzle) => {
-
   if (BOARD_SIZE === 9 && puzzle.length === 12) {
     return [65, 66, 67, 68, 69, 73, 74, 75, 76, 77, 78, 79];
   } else {
     const totalSquares = BOARD_SIZE * BOARD_SIZE;
     const puzzleTileStarts = totalSquares - puzzle.length;
-    const positions = Array(puzzle.length).fill(0).map((_, ind) => {
-      console.log(puzzleTileStarts+ind);
-      return puzzleTileStarts + ind;
-    });
+    const positions = Array(puzzle.length)
+      .fill(0)
+      .map((_, ind) => {
+        console.log(puzzleTileStarts + ind);
+        return puzzleTileStarts + ind;
+      });
     return positions;
   }
-}
+};

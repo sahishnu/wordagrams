@@ -1,22 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import dayjs from 'dayjs';
-dayjs.extend(require('dayjs/plugin/utc'));
-dayjs.extend(require('dayjs/plugin/timezone'));
-import { BOARD_SIZE, MIN_TIME_FIRST_HINT, GAME_STATES, Good_Luck_Messages, HIGHLIGHTED_POSITIONS } from '../constants';
-import { checkBoard, getSuccessMessage } from '../utils/checkBoard';
-import { initGame, shuffleBoardPositions } from '../utils/initGame';
-import { PersistentStorage } from '../utils/storedGameState';
-import { getTimeDisplay } from '../components/TimeTaken';
+import React, { useContext, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import dayjs from "dayjs";
+dayjs.extend(require("dayjs/plugin/utc"));
+dayjs.extend(require("dayjs/plugin/timezone"));
+import {
+  BOARD_SIZE,
+  MIN_TIME_FIRST_HINT,
+  GAME_STATES,
+  Good_Luck_Messages,
+  HIGHLIGHTED_POSITIONS,
+} from "../constants";
+import { checkBoard, getSuccessMessage } from "../utils/checkBoard";
+import { initGame, shuffleBoardPositions } from "../utils/initGame";
+import { PersistentStorage } from "../utils/storedGameState";
+import { getTimeDisplay } from "../components/TimeTaken";
 
-const todaySlug = dayjs().tz("America/New_York").format('YYYY-MM-DD');
+const todaySlug = dayjs().tz("America/New_York").format("YYYY-MM-DD");
 
 export const INIT_GAME_STATE = {
   board: {},
   state: GAME_STATES.NOT_STARTED,
   timeTaken: 0,
-  wordsFound: []
-}
+  wordsFound: [],
+};
 
 export const GameContext = React.createContext({
   gameState: INIT_GAME_STATE,
@@ -32,22 +38,19 @@ export const GameContext = React.createContext({
   leaderBoard: [],
   userPreferences: {
     showTimer: true,
-    showHintButton: true
+    showHintButton: true,
   },
   solvedCount: 0,
   gameInitialized: false,
-  highlightedPositions: {}
+  highlightedPositions: {},
 });
 
 export const useGameContext = () => useContext(GameContext);
 
-export const GameProvider = ({
-  children,
-  puzzle
-}) => {
+export const GameProvider = ({ children, puzzle }) => {
   const [gameState, setGameState] = useState({
     ...INIT_GAME_STATE,
-    puzzle
+    puzzle,
   });
   const [disableButtons, setDisableButtons] = useState(false);
   // stores how many people have solved the puzzle
@@ -56,9 +59,10 @@ export const GameProvider = ({
   const [leaderBoard, setLeaderBoard] = useState([]);
   const [userPreferences, setUserPreferences] = useState({
     showTimer: true,
-    showHintButton: true
+    showHintButton: true,
   });
   const [highlightedPositions, setHighlightedPositions] = useState({});
+  const isGameInitialized = useRef(false);
 
   useEffect(() => {
     // init board on mount
@@ -70,7 +74,7 @@ export const GameProvider = ({
       const savedPrefHintButton = savedUserPrefs.showHintButton;
       setUserPreferences({
         showTimer: savedPrefTimer,
-        showHintButton: savedPrefHintButton
+        showHintButton: savedPrefHintButton,
       });
     }
   }, []);
@@ -84,7 +88,7 @@ export const GameProvider = ({
         const timeTaken = gameState.timeTaken;
         setGameState({
           ...gameState,
-          timeTaken: timeTaken + 1
+          timeTaken: timeTaken + 1,
         });
       }
     }, 1000);
@@ -101,27 +105,31 @@ export const GameProvider = ({
   // if there is a saved game state, use that, otherwise get fresh game
   // fetch the solved count to display
   const initBoardOnMount = () => {
+    if (isGameInitialized.current) {
+      return;
+    }
+    isGameInitialized.current = true;
+
     const game = initGame({
       size: BOARD_SIZE,
       puzzle,
-      todaySlug
+      todaySlug,
     });
     setGameState({
       ...gameState,
-      ...game
+      ...game,
     });
-    // setSolvedPuzzle(game.solved);
     setGameInitialized(true);
     fetch(`api/solved-count?slug=${todaySlug}`)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data?.hits) {
-        setSolvedCount(data.hits);
-      }
-      if (data?.solveTimes) {
-        setLeaderBoard(data.solveTimes);
-      }
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.hits) {
+          setSolvedCount(data.hits);
+        }
+        if (data?.solveTimes) {
+          setLeaderBoard(data.solveTimes);
+        }
+      });
   };
 
   const startGame = () => {
@@ -131,13 +139,19 @@ export const GameProvider = ({
     if (gameState.state === GAME_STATES.NOT_STARTED) {
       setDisableButtons(true);
       const countdown = 3;
-      Array(countdown).fill(0).map((_, i) => {
-        setTimeout(() => {
-          setHighlightedPositions(HIGHLIGHTED_POSITIONS[countdown-i])
-        }, 1000 * i);
-      })
+      Array(countdown)
+        .fill(0)
+        .map((_, i) => {
+          setTimeout(() => {
+            setHighlightedPositions(HIGHLIGHTED_POSITIONS[countdown - i]);
+          }, 1000 * i);
+        });
       setTimeout(() => {
-        toast(Good_Luck_Messages[Math.floor(Math.random() * Good_Luck_Messages.length)]);
+        toast(
+          Good_Luck_Messages[
+            Math.floor(Math.random() * Good_Luck_Messages.length)
+          ]
+        );
         setHighlightedPositions({});
         setGameState({
           ...gameState,
@@ -146,17 +160,17 @@ export const GameProvider = ({
         setDisableButtons(false);
       }, 1000 * countdown);
     } else {
-      console.error('Game already started');
+      console.error("Game already started");
     }
   };
 
   const playAgain = () => {
-    toast('Play again to find more words!');
+    toast("Play again to find more words!");
     setGameState({
       ...gameState,
-      state: GAME_STATES.PLAY_AGAIN
-    })
-  }
+      state: GAME_STATES.PLAY_AGAIN,
+    });
+  };
 
   // shuffles tiles on board
   const shuffleBoard = () => {
@@ -181,13 +195,13 @@ export const GameProvider = ({
     }
     setDisableButtons(true);
     setTimeout(() => setDisableButtons(false), 2000);
-    const check = await checkBoard(gameState.board, gameState.wordsFound)
+    const check = await checkBoard(gameState.board, gameState.wordsFound);
 
     if (check.pass) {
       handleValidSolution(check.newWords);
     } else {
-      // display toasters with approprate error messages
-      check.errors.forEach(error => toast.error(error));
+      // display toasters with appropriate error messages
+      check.errors.forEach((error) => toast.error(error));
     }
 
     return check.pass;
@@ -198,16 +212,22 @@ export const GameProvider = ({
 
     toast.success(getSuccessMessage(timeTaken));
 
-    if (process.env.NODE_ENV === 'production' && gameState.state === GAME_STATES.IN_PROGRESS) {
+    if (
+      process.env.NODE_ENV === "production" &&
+      gameState.state === GAME_STATES.IN_PROGRESS
+    ) {
       // update solved count
-      const isTimeTakenValid = !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60*60*24;
+      const isTimeTakenValid =
+        !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60 * 60 * 24;
 
       fetch(`api/solved-count?slug=${todaySlug}`, {
-        method: 'POST',
+        method: "POST",
         // include timetaken if it's valid
-        ...(isTimeTakenValid ? {
-          body: JSON.stringify({timeTaken})
-        } : {}),
+        ...(isTimeTakenValid
+          ? {
+              body: JSON.stringify({ timeTaken }),
+            }
+          : {}),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -217,14 +237,14 @@ export const GameProvider = ({
           if (data?.solveTimes) {
             setLeaderBoard(data.solveTimes);
           }
-        })
+        });
     }
     setGameState({
       ...gameState,
       wordsFound: [...gameState.wordsFound, ...words],
       state: GAME_STATES.SOLVED,
     });
-  }
+  };
 
   // handles dropping a piece in a new spot
   // has to be different than the old spot
@@ -239,37 +259,38 @@ export const GameProvider = ({
       ...gameState,
       board: newBoard,
     });
-  }
+  };
 
   const showHint = () => {
     const timeTaken = gameState.timeTaken;
     const timeLeftForHint = MIN_TIME_FIRST_HINT - timeTaken;
 
     if (timeLeftForHint > 0) {
-      toast(`Hint available at 4 mins (in ${getTimeDisplay(timeLeftForHint)}) ⏲️`);
+      toast(
+        `Hint available at 4 mins (in ${getTimeDisplay(timeLeftForHint)}) ⏲️`
+      );
     } else {
       const hint = puzzle.words[0];
       toast(`Have you tried ${hint.toUpperCase()} 👀`);
     }
+  };
 
-  }
-
-  useEffect(()=> {
+  useEffect(() => {
     PersistentStorage.saveUserPreferencesToState(userPreferences);
-  }, [userPreferences])
+  }, [userPreferences]);
 
   const changeShowTimerPreference = (val) => {
     setUserPreferences({
       ...userPreferences,
-      showTimer: val
+      showTimer: val,
     });
-  }
+  };
   const changeShowHintButtonPreference = (val) => {
     setUserPreferences({
       ...userPreferences,
-      showHintButton: val
+      showHintButton: val,
     });
-  }
+  };
 
   return (
     <GameContext.Provider
@@ -289,7 +310,7 @@ export const GameProvider = ({
         userPreferences,
         changeShowHintButtonPreference,
         changeShowTimerPreference,
-        highlightedPositions
+        highlightedPositions,
       }}
     >
       {children}
@@ -304,4 +325,4 @@ const swapBoardPieces = (board, i, j) => {
   newBoard[j].letter = temp;
 
   return newBoard;
-}
+};
