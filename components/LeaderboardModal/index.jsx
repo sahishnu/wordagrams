@@ -111,5 +111,8 @@ export const LeaderboardModal = ({ isOpen, onClose }) => {
 
 const getLeaderboardName = (name) => {
   const [firstName, lastName] = name.split(' ');
-  return `${firstName.substring(0, 10)} ${lastName.substring(0, 1)}.`;
+  if (firstName && lastName) {
+    return `${firstName.substring(0, 10)} ${lastName.substring(0, 1)}.`;
+  }
+  return name.substring(0, 10);
 }
