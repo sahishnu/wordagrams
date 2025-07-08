@@ -85,11 +85,11 @@ export const SolveCounter = ({  }) => {
           <>
             <NextPuzzleRow />
             <StatsRow />
-            <AuthRow />
+            {/* <AuthRow /> */}
           </>
         ) : (
           <>
-            <AuthRow />
+            {/* <AuthRow /> */}
             <NextPuzzleRow />
             <StatsRow />
           </>

@@ -26,7 +26,7 @@ export const PromptSignInModal = ({ isOpen, startGame, signIn, closeModal }) => 
           <div className={styles.skipSection}>
             <div className={styles.skipText}>Or else, you can play for fun without signing in!</div>
             <div onClick={handleSkip} className={styles.skip}>Skip sign in, and start game</div>
-            <div className={styles.message}>Sorry for the dark UX pattern 😢</div>
+            {/* <div className={styles.message}>Sorry for the dark UX pattern 😢</div> */}
           </div>
         </div>
       </Modal>

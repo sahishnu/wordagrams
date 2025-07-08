@@ -39,11 +39,13 @@ export function Board() {
   const isPlayAgain = state === GAME_STATES.PLAY_AGAIN;
 
   const handleStartGame = () => {
-    if (session) {
-      startGame();
-    } else {
-      setIsModalOpen(true);
-    }
+    startGame();
+
+    // if (session) {
+    //   startGame();
+    // } else {
+    //   setIsModalOpen(true);
+    // }
   }
 
   return (

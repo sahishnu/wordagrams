@@ -34,7 +34,7 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
           />
           <div className={styles.settings}>
             <ul>
-              <li className={classnames(styles.settingRow, styles.loginRow, { [styles.notSignedIn]: !session })}>
+              {/* <li className={classnames(styles.settingRow, styles.loginRow, { [styles.notSignedIn]: !session })}>
                 {session ? (
                   <>
                     <div className={styles.loginLeft}>
@@ -60,7 +60,7 @@ export const PerferencesModal = ({ isOpen, onClose }) => {
                     </div>
                   </>
                 )}
-              </li>
+              </li> */}
               <li className={styles.settingRow}>
                 Show timer above board
                 <Switch

@@ -4,13 +4,9 @@ import { supabaseAdmin } from "../../lib/supabase";
 const ANON_USER = "anon";
 
 export default async function handler(req, res) {
+  // If the user is logged in, their email & name will be available in session.user. We can use this to store
+  // their solve times.
   const session = await getSession({ req });
-  let user;
-  if (session?.user) {
-    user = session.user;
-  } else {
-    user = ANON_USER;
-  }
 
   const { slug } = req.query;
 
@@ -21,6 +17,7 @@ export default async function handler(req, res) {
   }
 
   // Check if solved count exists
+  let solvedCountId;
   const { data: existingCount, error: fetchError } = await supabaseAdmin
     .from("solved_counts")
     .select("*")
@@ -43,21 +40,26 @@ export default async function handler(req, res) {
     if (insertError) {
       return res.status(500).json({ error: insertError.message });
     }
+
+    solvedCountId = newCount.id;
+  } else {
+    solvedCountId = existingCount.id;
   }
 
   if (req.method === "POST") {
     const body = JSON.parse(req.body);
     const { timeTaken } = body;
 
+    console.log(session?.user);
     // Insert solve time
     const { error: solveTimeError } = await supabaseAdmin
       .from("solve_times")
       .insert([
         {
-          solved_count_id: existingCount?.id || newCount.id,
+          solved_count_id: solvedCountId,
           time_taken: timeTaken,
-          user_email: user !== ANON_USER ? user.email : null,
-          user_name: user !== ANON_USER ? user.name : null,
+          user_email: session?.user?.email ?? ANON_USER,
+          user_name: session?.user?.name ?? ANON_USER,
         },
       ]);
 
@@ -95,7 +97,7 @@ export default async function handler(req, res) {
       .map((time) => ({
         timeTaken: time.time_taken,
         user: time.user_name,
-        isUser: time.user_email === user.email,
+        isUser: time.user_email === session?.user?.email,
       }));
 
     return res.status(200).json({
@@ -121,7 +123,7 @@ export default async function handler(req, res) {
     .map((time) => ({
       timeTaken: time.time_taken,
       user: time.user_name,
-      isUser: time.user_email === user.email,
+      isUser: time.user_email === session?.user?.email,
     }));
 
   return res.status(200).json({

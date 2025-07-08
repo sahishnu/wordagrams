@@ -187,7 +187,7 @@ export const GameProvider = ({ children, puzzle }) => {
    * if valid, update solved state in localStorage and useState
    * hit api to increment solved count
    *
-   * if invalid, display toasters with approprate message
+   * if invalid, display toasters with appropriate message
    */
   const checkBoardSolution = async () => {
     if (disableButtons) {
@@ -218,11 +218,11 @@ export const GameProvider = ({ children, puzzle }) => {
     ) {
       // update solved count
       const isTimeTakenValid =
-        !isNaN(timeTaken) && timeTaken > 0 && timeTaken < 60 * 60 * 24;
+        !isNaN(timeTaken) && timeTaken > 10 && timeTaken < 60 * 60 * 24;
 
       fetch(`api/solved-count?slug=${todaySlug}`, {
         method: "POST",
-        // include timetaken if it's valid
+        credentials: "include",
         ...(isTimeTakenValid
           ? {
               body: JSON.stringify({ timeTaken }),

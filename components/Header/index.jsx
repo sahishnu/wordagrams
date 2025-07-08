@@ -23,12 +23,12 @@ export const Header = () => {
 
   return (
     <header className={styles.header}>
-      <img
+      {/* <img
         alt='Open Leaderboard'
         className={styles.leaderboardIcon}
         onClick={() => setLeaderboardIsOpen(true)}
         src='/award.svg'
-      />
+      /> */}
       <h1 className={styles.title}>
         {META_CONTENT.title}
       </h1>
