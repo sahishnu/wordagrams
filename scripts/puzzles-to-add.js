@@ -1,124 +1,88 @@
 const puzzles = [
   {
-    letters: "fttarjxraimg",
-    words: ["farm", "taxi", "tram", "jig"],
+    letters: "ffnocirrsmts",
+    words: ["confirms", "first"],
   },
   {
-    letters: "zlenngtrhows",
-    words: ["length", "grows", "zen"],
+    letters: "cfhloirncahp",
+    words: ["flinch", "choir", "cap"],
   },
   {
-    letters: "wntaiclvkasl",
-    words: ["naval", "walks", "tick"],
+    letters: "wfhomiumbgld",
+    words: ["would", "whim", "fib", "mug"],
   },
   {
-    letters: "ccurltbriefl",
-    words: ["curb", "cult", "brig", "gel"],
+    letters: "wtrwnogletrs",
+    words: [],
   },
   {
-    letters: "jtolmtekduns",
-    words: ["jolts", "tome", "dunks"],
+    letters: "pnlduatcnked",
+    words: ["plucked", "nuts", "dank"],
   },
   {
-    letters: "svhuemlxfdro",
-    words: ["shelf", "ford", "vex", "sum"],
+    letters: "cbrarlfultsy",
+    words: ["crafty", "balls", "rut"],
   },
   {
-    letters: "fabldsirmotp",
-    words: ["blimp", "fab", "dirt", "sop"],
+    letters: "ohiclllorcbk",
+    words: ["hill", "clock", "oil", "orb"],
   },
   {
-    letters: "mhtautpxgrpy",
-    words: ["happy", "hug", "max", "tux", "try"],
+    letters: "djriabfmsthy",
+    words: ["draft", "dibs", "shy", "jam"],
   },
   {
-    letters: "hwbootrtrokm",
-    words: ["broth", "rot", "hook", "mow"],
+    letters: "bhurgplcodnk",
+    words: ["burp", "hug", "plonk", "cod"],
   },
   {
-    letters: "bproinmngsch",
-    words: ["pinch", "brims", "bong"],
+    letters: "sctopbnolndy",
+    words: ["stony", "cob", "only", "pod"],
   },
   {
-    letters: "bsrhinckmend",
-    words: ["bricked", "shin", "men"],
+    letters: "acrmcehlimps",
+    words: ["arch", "acme", "elms", "hips"],
   },
   {
-    letters: "ycctniapfsur",
-    words: ["fancy", "pit", "icy", "surf"],
+    letters: "zcwcoognplef",
+    words: ["cope", "wolf", "zone", "cog"],
   },
   {
-    letters: "ntenxtrallkc",
-    words: ["track", "next", "ten", "all"],
+    letters: "fbihrlacmnhd",
+    words: ["birch", "film", "ham", "and"],
   },
   {
-    letters: "pdidxhacluct",
-    words: ["cult", "taxi", "add", "chip"],
+    letters: "wrtotynuggly",
+    words: ["wrong", "ugly", "toy", "tug"],
   },
   {
-    letters: "cdbaendrgdry",
-    words: ["caddy", "berry", "pang"],
+    letters: "ndicknkletil",
+    words: ["nickel", "dink", "tile"],
   },
   {
-    letters: "shwdiiamfpdt",
-    words: ["swift", "shim", "apt", "dad"],
+    letters: "cmjzhaawlnpt",
+    words: ["chant", "malt", "zap", "jaw"],
   },
   {
-    letters: "vdtomiarlsmt",
-    words: ["volt", "dorm", "mist", "mat"],
+    letters: "fdlaodbrotks",
+    words: ["flab", "look", "dart", "darts"],
   },
   {
-    letters: "tfhonxgldisb",
-    words: ["boxing", "loft", "dish"],
+    letters: "tpenntrllorb",
+    words: ["troll", "orb", "tent", "pen"],
   },
   {
-    letters: "whofmibtsker",
-    words: ["whisker", "womb", "fit"]
+    letters: "mhpeirnnbtid",
+    words: ["herb", "hint", "pin", "bid", "herb"],
   },
   {
-    letters: "secldudnmigp",
-    words: ["plunge", "music", "did"]
+    letters: "wljwiivncgek",
+    words: ["wink", "live", "wick", "jig"],
   },
   {
-    letters: "chfoiozvndyd",
-    words: ["cozy", "hood", "find", "ivy"]
+    letters: "mwriahlcnukt",
+    words: ["milk", "rack", "want", "hut"],
   },
-  {
-    letters: "frrocgspkgry",
-    words: ["froggy", "spry", "rock"]
-  },
-  {
-    letters: "zlamgbrhonwk",
-    words: ["lamb", "zag", "brow", "honk"]
-  },
-  {
-    letters: "hzafwzllyush",
-    words: ["flush", "hazy", "jaw", "fly"]
-  },
-  {
-    letters: "vmoclktasrhh",
-    words: ["thrash", "mock", "volt"]
-  },
-  {
-    letters: "dcehfnutrmsp",
-    words: ["chump", "dents", "furs"]
-  },
-  {
-    letters: "mbogvwnecrhs",
-    words: ["wrench", "moves", "bog"]
-  },
-  {
-    letters: "bltiomrpthda",
-    words: ["birth", "limp", "top", "had"]
-  },
-  {
-    letters: "khnfoipbgsht",
-    words: ["knight", "hops", "fibs"]
-  },
-  {
-    letters: "bohrneifptpt",
-    words: ["hefty", "nippy", "bore"]
-  }
   // 1370
 ];
 
